@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="stylesheet" href="/Public/css/employee.css">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+</head>
+
+<body>
+    <header class="d-flex justify-content-between align-items-center text-white p-3">
+        <div class="d-flex align-items-center">
+            <!-- Logo -->
+            <a href="#">
+                <img src="/Public/images/CarLogo.png" alt="Logo"
+                    style="width: 40px; height: auto; margin-right: 10px;">
+            </a>
+            <!-- Navigation Links -->
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active text-white fw-bold" href="/employee/dashboard">Quản lý sản phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/news/employee/tin-tuc">Quản lý tin tức</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/lichhen">Lịch được đặt</a>
+                </li>
+            </ul>
+        </div>
+        <!-- User Greeting and Logout -->
+        <div class="text-end">
+            <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
+            <p class="mb-0"><a href="#" class="text-white">Đăng xuất</a></p>
+        </div>
+    </header>
+
+
+    <div class="p-5">
+        <h1>Danh sách Sản Phẩm</h1>
+        <div class="container-fluid d-flex justify-content-between table-options">
+            <div>
+                <form class="input-group">
+                    <input class="form-control" type="search" placeholder="Tìm kiếm tin tức" aria-label="Search">
+                    <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div>
+                <button type="button" class="btn btn-trans" data-bs-toggle="modal" data-bs-target="#createModal">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="btn btn-trans" id="deleteSelected"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fa-solid fa-rectangle-list"></i></th>
+                        <th>Tên</th>
+                        <th>Hãng</th>
+                        <th>Giá niêm yết</th>
+                        <th>Loại sản phẩm</th>
+                        <th>Trạng thái</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="carList">
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+            <!-- The Modal for Creating Xe Ô Tô / Phụ Kiện -->
+            <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createModalLabel">Thêm Ô Tô / Phụ Kiện Mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-tabs" id="productTypeTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="car-tab" data-bs-toggle="tab" href="#car" role="tab"
+                                        aria-controls="car" aria-selected="true">Ô TÔ</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="accessory-tab" data-bs-toggle="tab" href="#accessory" role="tab"
+                                        aria-controls="accessory" aria-selected="false">PHỤ KIỆN</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="productTypeTabContent">
+                                <div class="tab-pane fade show active" id="car" role="tabpanel" aria-labelledby="car-tab">
+                                    <form id="createCarForm" method="POST" enctype="multipart/form-data">
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="tenSP" class="form-label">Tên Sản Phẩm</label>
+                                                    <input type="text" class="form-control" name="tenSP" id="tenSP" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="iDthuongHieu" class="form-label">Thương hiệu</label>
+                                                    <select class="form-select" name="iDthuongHieu" id="iDthuongHieu" required>
+                                                        <option value="THXE001">Toyota</option>
+                                                        <option value="THXE002">Honda</option>
+                                                        <option value="THXE003">Ford</option>
+                                                        <option value="THXE004">Hyundai</option>
+                                                        <option value="THXE005">Kia</option>
+                                                        <option value="THXE006">Mazda</option>
+                                                        <option value="THXE007">Chevrolet</option>
+                                                        <option value="THXE008">BMW</option>
+                                                        <option value="THXE009">Mercedes-Benz</option>
+                                                        <option value="THXE010">Audi</option>
+                                                        <option value="THXE011">Nissan</option>
+                                                        <option value="THXE012">Mitsubishi</option>
+                                                        <option value="THXE013">Lexus</option>
+                                                        <option value="THXE014">Volkswagen</option>
+                                                        <option value="THXE015">Subaru</option>
+                                                        <option value="THKHAC0">Khác</option>
+                                                    </select>                                                                                                  
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="namSanXuat" class="form-label">Năm Sản Xuất</label>
+                                                    <input type="text" class="form-control" name="namSanXuat" id="namSanXuat" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="GiaNiemYet" class="form-label">Giá Niêm Yết (₫)</label>
+                                                    <input type="number" class="form-control" name="GiaNiemYet" id="GiaNiemYet" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="soKm" class="form-label">Số km đã đi</label>
+                                                    <input type="number" class="form-control" name="soKm" id="soKm">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="trangThai" class="form-label">Trạng Thái Sản Phẩm</label>
+                                                    <select class="form-select" name="trangThai" id="trangThai" required>
+                                                        <option value="Mới">Mới</option>
+                                                        <option value="Đã Qua Sử Dụng">Đã Qua Sử Dụng</option>
+                                                        <option value="Tân Trang">Tân Trang</option>
+                                                        <option value="Hide">Ẩn sản phẩm</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label for="uploadImage" class="form-label">Upload Hình Ảnh</label>
+                                                    <input type="file" class="form-control" name="uploadImage" id="uploadImage" accept="image/*" multiple required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="nguyenLieuXe" class="form-label">Nguyên Liệu Xe</label>
+                                                    <select class="form-select" name="nguyenLieuXe" id="nguyenLieuXe" required>
+                                                        <option value="Xăng">Xăng</option>
+                                                        <option value="Dầu">Dầu</option>
+                                                        <option value="Điện">Điện</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="kieuDang" class="form-label">Kiểu Dáng</label>
+                                                    <select class="form-select" name="kieuDang" id="kieuDang" required>
+                                                        <option value="sedan">Sedan</option>
+                                                        <option value="suv">SUV</option>
+                                                        <option value="coupe">Coupe</option>
+                                                        <option value="hatchback">Hatchback</option>
+                                                        <option value="wagon">Wagon</option>
+                                                        <option value="convertible">Convertible</option>
+                                                        <option value="pickup">Pickup</option>
+                                                        <option value="van">Van</option>
+                                                        <option value="minivan">Minivan</option>
+                                                        <option value="crossover">Crossover</option>
+                                                        <option value="roadster">Roadster</option>
+                                                        <option value="luxury">Luxury</option>
+                                                        <option value="sports">Sports</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="soChoNgoi" class="form-label">Số Chỗ Ngồi</label>
+                                                    <select class="form-select" name="soChoNgoi" id="soChoNgoi" required>
+                                                        <option value="2">2</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="12">12</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="20">20</option>
+                                                        <option value="24">24</option>
+                                                        <option value="30">30</option>
+                                                        <option value="45">45</option>
+                                                        <option value="50">50</option>
+                                                        <option value="60">60</option>
+                                                    </select>                                                    
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="mauXe" class="form-label">Màu Xe</label>
+                                                    <select class="form-select" name="mauXe" id="mauXe" required>
+                                                        <option value="xanh">Xanh</option>
+                                                        <option value="do">Đỏ</option>
+                                                        <option value="tim">Tím</option>
+                                                        <option value="vang">Vàng</option>
+                                                        <option value="trang">Trắng</option>
+                                                        <option value="den">Đen</option>
+                                                        <option value="hong">Hồng</option>
+                                                        <option value="cam">Cam</option>
+                                                        <option value="nau">Nâu</option>
+                                                        <option value="xam">Xám</option>
+                                                    </select>                                                    
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="loaiCanSo" class="form-label">Loại cần số</label>
+                                                    <select class="form-select" name="loaiCanSo" id="loaiCanSo" required>
+                                                        <option value="automatic">Tự động</option>
+                                                        <option value="manual">Số sàn</option>
+                                                        <option value="cvt">Vô cấp (CVT)</option>
+                                                        <option value="dct">Ly hợp kép (DCT)</option>
+                                                        <option value="tiptronic">Tiptronic</option>
+                                                        <option value="semi-automatic">Bán tự động</option>
+                                                    </select>                                                    
+                                                </div>
+                                                <div class="form-check mt-5">
+                                                    <input class="form-check-input" type="checkbox" name="dangkilaithu" id="dangkilaithu">
+                                                    <label class="form-check-label" for="dangkilaithu">Đăng kí lái thử</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="chiTietSP" class="form-label">Chi Tiết Sản Phẩm</label>
+                                                <textarea class="form-control" name="chiTietSP" id="chiTietSP" rows="20" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-start px-0">
+                                            <button type="submit" id="submit" name="submit" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i>
+                                                Thêm
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                        <!-- Accessory Tab Content -->
+                        <div class="tab-pane fade" id="accessory" role="tabpanel" aria-labelledby="accessory-tab">
+                            <form id="createAccessoryForm" method="POST" enctype="multipart/form-data">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="tenSP" class="form-label">Tên Sản Phẩm</label>
+                                            <input type="text" class="form-control" id="tenSP" name="tenSP" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="iDthuongHieu" class="form-label">Thương hiệu</label>
+                                            <select class="form-select" id="iDthuongHieu" name="iDthuongHieu" required>
+                                                <option value="THPK001">Bosch</option>
+                                                <option value="THPK002">Pioneer</option>
+                                                <option value="THPK003">Bridgestone</option>
+                                                <option value="THPK004">Michelin</option>
+                                                <option value="THPK005">Philips</option>
+                                                <option value="THPK006">Hankook</option>
+                                                <option value="THPK007">Kenwood</option>
+                                                <option value="THPK008">Sony</option>
+                                                <option value="THPK009">Thule</option>
+                                                <option value="THPK010">Yokohama</option>
+                                                <option value="THPK011">Mobil 1</option>
+                                                <option value="THPK012">Castrol</option>
+                                                <option value="THPK013">Denso</option>
+                                                <option value="THPK014">NGK</option>
+                                                <option value="THPK015">Goodyear</option>
+                                                <option value="THKHAC0">Khác</option>                                                
+                                            </select>                                            
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="idLoai" class="form-label">Loại phụ kiện</label>
+                                            <select class="form-select" id="idLoai" name="idLoai" required>
+                                                <option value="LPK999">Khác</option>
+                                                <option value="LPK001">Camera</option>
+                                                <option value="LPK002">Cảm biến</option>
+                                                <option value="LPK003">Loa Bluetooth</option>
+                                                <option value="LPK004">Gương cầu lồi</option>
+                                                <option value="LPK005">Sạc điện thoại</option>
+                                                <option value="LPK006">Máy bơm lốp</option>
+                                                <option value="LPK007">Bọc ghế</option>
+                                                <option value="LPK008">Thảm lót sàn</option>
+                                                <option value="LPK009">Tẩu sạc đa năng</option>
+                                                <option value="LPK010">Hệ thống định vị GPS</option>
+                                                <option value="LPK011">Đèn LED</option>
+                                                <option value="LPK012">Kính chắn nắng</option>
+                                                <option value="LPK013">Túi khí bổ sung</option>
+                                            </select>
+                                            
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="GiaNiemYet" class="form-label">Giá Niêm Yết (₫)</label>
+                                            <input type="number" class="form-control" id="GiaNiemYet" name="GiaNiemYet" required>
+                                        </div>
+                                        <div>
+                                            <label for="uploadImage" class="form-label">Upload Hình Ảnh</label>
+                                            <input type="file" class="form-control" name="uploadImage" id="uploadImage" accept="image/*" multiple required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="trangThai" class="form-label">Trạng Thái Sản Phẩm</label>
+                                            <select class="form-select" id="trangThai" name="trangThai" required>
+                                                <option value="Mới">Mới</option>
+                                                <option value="Đã Qua Sử Dụng">Đã Qua Sử Dụng</option>
+                                                <option value="Tân Trang">Tân Trang</option>
+                                                <option value="Hide">Ẩn sản phẩm</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-check mt-5">
+                                            <input class="form-check-input" type="checkbox" id="datLich" name="datLich">
+                                            <label class="form-check-label" for="datLich">Cho phép đặt</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="chiTietSP" class="form-label">Chi Tiết Sản Phẩm</label>
+                                        <textarea class="form-control" id="chiTietSP" name="chiTietSP" rows="20" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-start px-0">
+                                    <button type="submit" id="submit" name="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Thêm
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Optional: JavaScript to handle tab switching and submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const productTypeTabs = document.querySelectorAll('.nav-link');
+            productTypeTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    // Hide the other form's submit button
+                    const otherForm = tab.getAttribute('href') === '#car' ? '#createAccessoryForm' : '#createCarForm';
+                    const currentForm = tab.getAttribute('href');
+
+                    document.querySelector(otherForm + ' + .btn-primary').style.display = 'none';
+                    document.querySelector(currentForm + ' + .btn-primary').style.display = 'inline-block';
+                });
+            });
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Public/JS/api/loadProduct.js"></script>
+</body>
+</html>

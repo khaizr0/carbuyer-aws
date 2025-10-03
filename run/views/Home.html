@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/Public/css/home.css">
+    <link rel="stylesheet" href="/Public/css/header.css">
+    <link rel="stylesheet" href="/Public/css/footer.css">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+    
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" 
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Configuration and Scripts -->
+    <script src="/config/config.js"></script>
+    <script src="/Public/JS/header.js" defer></script>
+</head>
+<body>
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        <div class="mySlides fade">
+            <img src="/Public/images/SlideShow/img5.png" style="width: 100%;" alt="Slide 1">
+        </div>
+        <div class="mySlides fade">
+            <img src="/Public/images/SlideShow/img2.png" style="width: 100%;" alt="Slide 2">
+        </div>
+        <div class="mySlides fade">
+            <img src="/Public/images/SlideShow/img3.jpg" style="width: 100%;" alt="Slide 3">
+        </div>
+        <div class="mySlides fade">
+            <img src="/Public/images/SlideShow/img4.webp" style="width: 100%;" alt="Slide 4">
+        </div>
+        <div class="mySlides fade">
+            <img src="/Public/images/SlideShow/img1.jpg" style="width: 100%;" alt="Slide 5">
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <!-- Slideshow Dots -->
+    <div style="text-align:center">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(4)"></span>
+        <span class="dot" onclick="currentSlide(5)"></span>
+    </div>
+
+    <!-- Slideshow Script -->
+    <script src="/Public/JS/slideshow.js"></script>
+
+    <!-- Recent Product Container -->
+    <div class="product-recent-container">
+        <h1>Xe mới về</h1>
+        <div class="grid" id="recent-products-grid">
+            <!-- Products will be dynamically inserted here -->
+        </div>
+        <br>
+        <a href="/xedangban" class="button">Xem thêm sản phẩm</a>
+    </div>
+
+    <!-- Why Us Container -->
+    <div class="why-choose-us-container">
+        <div class="image-placeholder">
+            <img src="/Public/images/CarLogo.png" alt="Company Logo">
+        </div>
+        <div class="content">
+            <h2>Vì sao chọn chúng tôi?</h2>
+            <p>
+                Là đơn vị chuyên hoạt động trong lĩnh vực kinh doanh các loại xe, đặc biệt là xe Ôtô Siêu Lướt.
+                Với tiêu chí tập trung vào những xe có số ODO (Km) thấp, ít năm sử dụng, còn bảo hành chính hãng và giá cả tối ưu nhất.
+                Tất cả các xe bán ra đều được trải qua quy trình kiểm tra nghiêm ngặt để đảm bảo tiêu chuẩn chất lượng cũng như độ an toàn cho khách hàng.
+                Ngoài ra, công ty sẽ ký văn bản cam kết để bảo đảm sự minh bạch, trung thực với khách hàng.
+            </p>
+        </div>
+    </div>
+
+    <!-- Reviews Container -->
+    <div class="reviews-container">
+        <div class="reviews-header">
+            <h2>Đánh giá của khách hàng</h2>
+        </div>
+        <div class="slider-wrapper">
+            <div class="slider" id="slider">
+                <div class="review">
+                    <img src="/Public/images/pro5-picture.jpg" alt="Anh Nam">
+                    <h3>Anh Nam</h3>
+                    <p>"Tư vấn nhiệt tình, thân thiện"</p>
+                </div>
+                <div class="review">
+                    <img src="/Public/images/pro5-picture.jpg" alt="Chị Hằng">
+                    <h3>Chị Hằng</h3>
+                    <p>"Dịch vụ chu đáo, chuyên nghiệp"</p>
+                </div>
+                <div class="review">
+                    <img src="/Public/images/pro5-picture.jpg" alt="Anh Tuấn">
+                    <h3>Anh Tuấn</h3>
+                    <p>"Giá cả hợp lý, chất lượng tốt"</p>
+                </div>
+                <div class="review">
+                    <img src="/Public/images/pro5-picture.jpg" alt="Chị Mai">
+                    <h3>Chị Mai</h3>
+                    <p>"Sẽ quay lại lần sau"</p>
+                </div>
+                <div class="review">
+                    <img src="/Public/images/pro5-picture.jpg" alt="Anh Minh">
+                    <h3>Anh Minh</h3>
+                    <p>"Rất hài lòng với dịch vụ"</p>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="button" id="prevBtn">&#10094;</button>
+                <button class="button" id="nextBtn">&#10095;</button>
+            </div>
+        </div>
+    </div>
+    <script src="/Public/JS/reviewSlider.js"></script>
+
+    <!-- News Container -->
+    <div class="news-container">
+        <div class="news-header">
+            <h2>Tin tức</h2>
+        </div>
+        <div class="news-grid" id="news-grid">
+            <!-- News items will be dynamically inserted here -->
+        </div>
+        <p id="no-news" style="text-align: center; color: #888;">Hiện tại chưa có tin tức nào.</p>
+    </div>
+
+    <!-- Google Maps Container -->
+    <div class="map-container">
+        <iframe id="mapFrame" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <script>
+        document.getElementById('mapFrame').src = mapConfig.url;
+    </script>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+    <script src="/Public/JS/footer.js"></script>
+
+    <!-- Product Fetching Script -->
+    <script>
+        fetch('/product/recent-products')
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(products => {
+                console.log('Received products:', products);
+                const gridContainer = document.getElementById('recent-products-grid');
+                
+                gridContainer.innerHTML = '';
+                
+                products.forEach(product => {
+                    const productCard = `
+                        <div class="card" onclick="window.location.href='/chitietxe?id=${product.id}'">
+                            <img 
+                                src="${product.imageUrl}" 
+                                alt="Car" 
+                                onerror="this.src='/Public/images/placeholder.png'"
+                            >
+                            <div class="card-content">
+                                <p class="card-title">${product.name}</p>
+                                <p class="card-price">${product.price}</p>
+                                <p class="card-details">
+                                    📅 ${product.year} / 🚗 ${product.mileage} / ⛽ ${product.fuelType}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    gridContainer.innerHTML += productCard;
+                });
+            })
+            .catch(error => console.error('Error fetching products:', error));
+    </script>
+    <script>
+        // Fetch news data dynamically
+        fetch('/news/api/showNewsOnHome')
+            .then(response => response.json())
+            .then(newsItems => {
+                const newsGrid = document.getElementById('news-grid');
+                const noNewsMessage = document.getElementById('no-news');
+                
+                if (newsItems.length > 0) {
+                    noNewsMessage.style.display = 'none';
+                    newsItems.forEach(news => {
+                        const newsItem = `
+                            <div class="news-item" onclick="window.location.href='/news/detail/${news._id}'">
+                                <img src="/Public/images/${news.anhDaiDien}" alt="${news.tenTT}">
+                                <div class="news-content">
+                                    <h3>${news.tenTT}</h3>
+                                    <p>${news.chiTietBaiViet.substring(0, 100)}...</p>
+                                    <div class="news-footer">
+                                        <p><strong>Ngày đăng:</strong> ${news.ngayDang}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        newsGrid.innerHTML += newsItem;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching news:', error);
+            });
+    </script>
+</body>
+</html>

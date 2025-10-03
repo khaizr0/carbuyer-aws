@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xe đang bán</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/Public/css/header.css">
+    <link rel="stylesheet" href="/Public/css/footer.css">
+    <script src="/Public/JS/header.js" defer></script>
+    
+    <link rel="stylesheet" href="/Public/css/productOption.css">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+    <script src="/Public/JS/productOption.js"></script>
+</head>
+<body>
+    <div class="header-text">
+        <img src="/Public/images/background.jpg" alt="background" class="background-image">
+        <div class="overlay"></div>
+        <h1>XE ĐANG BÁN</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>DANH MỤC</h2>
+
+            <!-- Thương hiệu -->
+            <div class="filter-section">
+                <h3>
+                    Thương hiệu 
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content">
+                    <ul>
+                        <li><input type="checkbox"> VINFAST</li>
+                        <li><input type="checkbox"> MERCEDES-BENZ</li>
+                        <li><input type="checkbox"> BMW</li>
+                        <li><input type="checkbox"> VOLVO</li>
+                        <li><input type="checkbox"> TESLA</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mức giá -->
+            <div class="filter-section">
+                <h3>
+                    Mức giá 
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content">
+                    <ul>
+                        <li><input type="checkbox"> Dưới 1 tỷ</li>
+                        <li><input type="checkbox"> Từ 1 tỷ đến 2 tỷ</li>
+                        <li><input type="checkbox"> Trên 2 tỷ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Kiểu dáng -->
+            <div class="filter-section">
+                <h3>
+                    Kiểu dáng 
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content">
+                    <ul>
+                        <li><input type="checkbox"> Sedan / Hatchback</li>
+                        <li><input type="checkbox"> SUV / CUV / MPV</li>
+                        <li><input type="checkbox"> Coupe / Convertible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Năm sản xuất -->
+            <div class="filter-section">
+                <h3>
+                    Năm sản xuất 
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content">
+                    <ul>
+                        <li><input type="checkbox"> 2024</li>
+                        <li><input type="checkbox"> 2023</li>
+                        <li><input type="checkbox"> 2022</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Màu xe -->
+            <div class="filter-section">
+                <h3>
+                    Màu xe 
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content">
+                    <ul>
+                        <li><input type="checkbox"> Trắng</li>
+                        <li><input type="checkbox"> Đen</li>
+                        <li><input type="checkbox"> Xám</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mức giá slider -->
+            <div class="filter-section">
+                <h3>MỨC GIÁ</h3>
+                <input type="range" min="0" max="20000000000" value="10000000000" class="price-slider">
+                <p>0 đ - 20.000.000.000 đ</p>
+            </div>
+        </aside>
+        <script>
+            function toggleSection(button) {
+                const content = button.parentElement.nextElementSibling;
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block"; // Mở mục
+                    button.innerHTML = '<i class="fas fa-angle-up"></i>'; // Thay đổi nút thành biểu tượng mũi tên lên
+                } else {
+                    content.style.display = "none"; // Thu gọn mục
+                    button.innerHTML = '<i class="fas fa-angle-down"></i>'; // Thay đổi nút thành biểu tượng mũi tên xuống
+                }
+            }
+        </script>
+        
+        <!-- Danh sách xe -->
+        <section class="product-list">
+            <div class="sort-section">
+                <label for="sort">Sắp xếp theo:</label>
+                <select id="sort">
+                    <option value="az">Tên: a -> z</option>
+                    <option value="za">Tên: z -> a</option>
+                    <option value="priceAsc">Giá: Tăng dần</option>
+                    <option value="priceDesc">Giá: Giảm dần</option>
+                    <option value="oldest">Cũ nhất</option>
+                    <option value="newest">Mới nhất</option>
+                </select>
+            </div>
+
+            <!-- HIện sản phẩm -->
+            <div class="products-grid"></div>
+
+            <!-- Nút điều hướng -->
+            <div class="pagination">
+                <button id="prev" onclick="changePage(-1)">Trước</button>
+                <span id="current-page">1</span>
+                <button id="next" onclick="changePage(1)">Tiếp theo</button>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Fetch products from the API and display them
+        async function fetchProducts() {
+            try {
+                const response = await fetch('/product/recent-products');
+                const products = await response.json();
+    
+                const productsGrid = document.querySelector('.products-grid');
+                productsGrid.innerHTML = ''; // Clear any existing products
+    
+                // Loop through the products and create HTML for each product
+                products.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    
+                    // Add product image, name, and details
+                    productCard.innerHTML = `
+                        <img src="${product.imageUrl}" alt="Car Image">
+                        <h3>${product.name}</h3>
+                        <p class="price">${product.price}</p>
+                        <div class="car-info">
+                            <span><i class="fas fa-calendar-alt"></i> ${product.year}</span>
+                            <span><i class="fas fa-tachometer-alt"></i> ${product.mileage}</span>
+                            <span><i class="fas fa-gas-pump"></i> ${product.fuelType}</span>
+                        </div>
+                    `;
+                    
+                    // Add click event to navigate to the product detail page
+                    productCard.addEventListener('click', () => {
+                        window.location.href = `/chitietxe?id=${product.id}`;
+                    });
+    
+                    // Append product card to grid
+                    productsGrid.appendChild(productCard);
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+    
+        // Fetch products when the page loads
+        window.onload = fetchProducts;
+    </script>
+    
+    <script src="/Public/JS/productOption.js"></script>
+
+    <br><br>
+    <!-- Footer -->
+    <div id="footer-container"></div>
+    <script src="/Public/JS/footer.js"></script>
+
+</body>
+</html>

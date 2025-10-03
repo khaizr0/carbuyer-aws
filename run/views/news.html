@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin tức</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/Public/css/header.css">
+    <link rel="stylesheet" href="/Public/css/footer.css">
+    <script src="/Public/JS/header.js" defer></script>
+    
+    <link rel="stylesheet" href="/Public/css/news.css">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+</head>
+<body>
+    <div class="header-text">
+        <img src="/Public/images/background.jpg" alt="background" class="background-image">
+        <div class="overlay"></div>
+        <h1>TIN TỨC</h1>
+    </div>
+
+    <!-- Main -->
+    <div class="container">
+        <!-- Mục nổi bật lớn nhất -->
+        <div class="featured-article">
+            <img src="/Public/images/Audi.webp" alt="Xe Audi" class="featured-image"> <!-- 800 x 400 -->
+            <div class="featured-content">
+                <h3>30/10/2024</h3>
+                <h2>AUDI - ĐỊNH HÌNH THƯƠNG HIỆU XE ĐẲNG CẤP</h2>
+                <p>Audi - một trong những thương hiệu xe hơi hàng đầu thế giới, không chỉ nổi tiếng với những chiếc xe sang trọng và hiện đại mà còn với lịch sử phát triển lâu dài và đầy ấn tượng. Mới...</p>
+                <a href="#" class="read-more">Đọc thêm</a> <!-- Thêm nút "Đọc thêm" -->
+            </div>
+        </div>
+    
+        <!-- Các mục khác nhỏ hơn -->
+        <div class="other-articles">
+            <div class="article">
+                <img src="/Public/images/toyota.jpg" alt="Toyota"> <!-- 200 x 150 -->
+                <div class="article-content">
+                    <h3>30/10/2024</h3>
+                    <h4>Toyota – Hành Trình Phát Triển Của Một Huyền Thoại Ô Tô</h4>
+                    <p>Toyota - một trong những nhà sản xuất ô tô hàng đầu thế giới, đã khẳng định vị thế của mình qua...</p>
+                </div>
+            </div>
+    
+            <div class="article">
+                <img src="/Public/images/mercedes.jpg" alt="Mercedes">
+                <div class="article-content">
+                    <h3>30/10/2024</h3>
+                    <h4>XE ĐIỆN MERCEDES-BENZ THIẾT LẬP KỶ LỤC 1000 KM</h4>
+                    <p>Dù mới chỉ ở dạng concept, Mercedes-Benz Vision EXXX đã đạt thành tích mà nhiều mẫu xe điện khác...</p>
+                </div>
+            </div>
+    
+            <div class="article">
+                <img src="/Public/images/mercedes.jpg" alt="Mercedes">
+                <div class="article-content">
+                    <h3>30/10/2024</h3>
+                    <h4>XE ĐIỆN MERCEDES-BENZ THIẾT LẬP KỶ LỤC 1000 KM</h4>
+                    <p>Dù mới chỉ ở dạng concept, Mercedes-Benz Vision EXXX đã đạt thành tích mà nhiều mẫu xe điện khác...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button id="prev" onclick="changePage(-1)">« Trước</button>
+            <span id="current-page">1</span> / <span id="total-pages">1</span>
+            <button id="next" onclick="changePage(1)">Sau »</button>
+        </div>
+    </div>
+    <script src="/Public/JS/news.js"></script>
+
+    <br><br>
+    <!-- Footer -->
+    <div id="footer-container"></div>
+    <script src="/Public/JS/footer.js"></script>
+</body>
+</html>

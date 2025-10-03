@@ -1,0 +1,142 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Header Section */
+.news-detail-header {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.news-detail-header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.back-btn::before {
+    content: "\2190"; /* Left arrow */
+    margin-right: 8px;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* News Content */
+.news-content {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.news-content:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.news-content h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 2px solid #1e3c72;
+    padding-bottom: 10px;
+}
+
+.news-date {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+.news-description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    overflow-wrap: break-word;
+    padding: 10px;
+    background: #f9f9f9;
+    border-left: 4px solid #2a5298;
+}
+
+.news-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.news-image:hover {
+    transform: scale(1.02);
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1e3c72;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #2a5298;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+.news-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.news-image:hover {
+    transform: scale(1.02);
+}

@@ -1,0 +1,25 @@
+[
+    {
+      "id": "U001",
+      "hoTen": "Nguyen Van B",
+      "email": "nguyenvanb@example.com",
+      "ngaySinh": "1990-05-10",
+      "gioiTinh": "Nam",
+      "cccd": "123456789",
+      "matKhau": "hashedpassword123",
+      "anhNhanVien": "avatar_nguyenvanb.png",
+      "PhanLoai": 0
+    },
+    {
+      "id": "U002",
+      "hoTen": "Le Thi C",
+      "email": "lethic@example.com",
+      "ngaySinh": "1985-08-20",
+      "gioiTinh": "Nữ",
+      "cccd": "987654321",
+      "matKhau": "hashedpassword456",
+      "anhNhanVien": "avatar_lethic.png",
+      "PhanLoai": 1
+    }
+  ]
+  

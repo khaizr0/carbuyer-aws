@@ -1,0 +1,27 @@
+[
+    {
+      "id": "DL001",
+      "hoTenKH": "Nguyen Van A",
+      "time": "10:30",
+      "date": "2024-10-20",
+      "soDT": "0909123456",
+      "email": "nguyenvana@example.com",
+      "tenDichVu": "Lái thử xe",
+      "idXe": "XE001",
+      "idPhuKien": null,
+      "trangThai": 0
+    },
+    {
+      "id": "DL002",
+      "hoTenKH": "Tran Thi B",
+      "time": "14:00",
+      "date": "2024-10-22",
+      "soDT": "0909234567",
+      "email": "tranthib@example.com",
+      "tenDichVu": "Mua phụ kiện",
+      "idXe": null,
+      "idPhuKien": "PK001",
+      "trangThai": 1
+    }
+  ]
+  

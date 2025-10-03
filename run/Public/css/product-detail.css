@@ -1,0 +1,342 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+.layout {
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    margin-top: 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+.come-back {
+    width: 90%;
+    min-height: 30px;
+    font-weight: bold;
+    
+}
+.ri-arrow-go-back-line{
+    border: 2px solid #000;
+    padding: 5px 5px;
+    border-radius: 10px;
+}
+.box-product-detail {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+}
+.img-detail-1 {
+    height: 400px; /* Chiều cao cố định */
+    width: 100%; /* Chiều rộng 100% */
+    object-fit: cover; /* Giữ tỷ lệ khung hình và cắt bớt nếu cần */
+    border-radius: 10px; /* Bo góc cho hình ảnh */
+}
+.img-detail-1:hover{
+    border-radius: 10px;
+    background: transparent;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.image-range {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.ri-arrow-left-circle-fill , .ri-arrow-right-circle-fill{
+    font-size: 40px;
+}
+.img-detail-2 {
+    height: 80px;
+    width: 120px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+.img-detail-2:hover {
+    transform: scale(1.05);
+    border: 2px solid #6185A8;
+}
+
+.box-price {
+    padding: 20px;
+    flex: 1;
+}
+.box-detail-model {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.product-detail-price {
+    font-size: 22px;
+    color: #34499E;
+    margin: 10px 0;
+}
+.product-detail-p{
+    font-size: 20px;
+}
+.product-detail-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.product-detail-model {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.ri-calendar-line, .ri-scan-line, .ri-gas-station-fill, .ri-settings-5-line, .ri-roadster-fill{
+    font-size: 30px;
+    font-weight: bold;
+    position: relative;
+    top: 6px;
+}
+
+.btn-regiter-callnow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+.register, .call {
+    width: 48%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.register {
+    background-color: #6185A8;
+    color: white;
+}
+.register:hover {
+    background-color: #4a6e8a;
+}
+
+.call {
+    background-color: #D9D9D9;
+    color: black;
+}
+
+.call:hover {
+    background-color: #c0c0c0;
+}
+/*  */
+.box-product-detail-infromation{
+    background-color: #EEEDF3;
+    width: 80%;
+    height: auto;
+    border-radius: 1px;
+    border: 1px solid #000;
+    padding: 30px;
+}
+
+ul li {
+    list-style: none;
+    font-size: 30px;
+}
+.menu-content{
+    font-size: 30px;
+}
+.caikhunggiday{
+    width: 100%;
+    height: 50px;
+    background: #D0CCE3;
+    margin-top: 100px;
+}
+.box-image-detail-panel{
+    width: 100%;
+    height: auto;
+}
+/* 
+ */
+ .quantam{
+    margin-top: 100px;
+    align-content: center;
+    text-align: center;
+ }
+ .bancothequantam {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.bancothequantam .col-xs-12 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.btn-change-lienquan-left, .btn-change-lienquan-right {
+    font-size: 24px;
+    color: #34499E;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.col-xs-4 {
+    flex: 1 1 30%;
+    max-width: 30%;
+    margin: 10px;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.image-lienquan {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.name-lienquan {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.price-lienquan {
+    font-size: 16px;
+    color: #34499E;
+    margin: 5px 0;
+}
+
+.box-detail-lienquan {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.product-detail-lienquan i {
+    margin-right: 5px;
+    color: #34499E;
+}
+
+@media (max-width: 992px) {
+    .col-xs-4 {
+        flex: 1 1 45%;
+        max-width: 45%;
+    }
+
+    .btn-change-lienquan-left, .btn-change-lienquan-right {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-xs-12 {
+        flex-wrap: wrap;
+    }
+
+    .col-xs-4 {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .btn-change-lienquan-left, .btn-change-lienquan-right {
+        display: none;
+    }
+    .box-product-detail {
+        flex-direction: column;
+    }
+
+    .img-detail-1 {
+        height: 300px;
+    }
+
+    .img-detail-2 {
+        height: 60px;
+        width: 90px;
+    }
+}
+.btn-change-lienquan-left{
+    background: transparent;
+    background-color: rgba(0,0,0,0.4);
+    border: 0;
+    position: absolute;
+    height: 533px;
+    width: 70px;
+    left: 0;
+}
+.btn-change-lienquan-right{
+    background: transparent;
+    background-color: rgba(0,0,0,0.4);
+    border: 0;
+    position: absolute;
+    height: 533px;
+    right: 0;
+    width: 70px;
+    max-width: 2000px;
+}
+
+.btn-change-lienquan-left:hover{
+    background: transparent;
+    background-color: rgba(0,0,0,0.1);
+    border: 0;
+    position: absolute;
+    height: 533px;
+    width: 70px;
+    left: 0;
+}
+.btn-change-lienquan-right:hover{
+    background: transparent;
+    background-color: rgba(0,0,0,0.1);
+    border: 0;
+    position: absolute;
+    height: 533px;
+    right: 0;
+    width: 70px;
+    max-width: 2000px;
+}
+.ri-arrow-left-circle-line , .ri-arrow-right-circle-line {
+    font-size: 50px;
+    color:white;
+}
+
+.menu a {
+    font-size: 16px; /* Thay 14px bằng giá trị bạn muốn */
+}
+
+/* Điều chỉnh kích thước và màu sắc icon */
+.product-detail-model i, 
+.product-detail-lienquan i {
+    font-size: 24px;
+    color: #34499E;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.btn-change-image i, 
+.btn-change-lienquan-left i, 
+.btn-change-lienquan-right i {
+    font-size: 40px;
+    color: rgba(255,255,255,0.7);
+    transition: color 0.3s ease;
+}
+
+.btn-change-image i:hover, 
+.btn-change-lienquan-left i:hover, 
+.btn-change-lienquan-right i:hover {
+    color: rgba(255,255,255,1);
+}

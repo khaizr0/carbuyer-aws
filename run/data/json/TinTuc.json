@@ -1,0 +1,19 @@
+[
+    {
+      "id": "TT001",
+      "tenTT": "Toyota ra mắt Camry mới",
+      "anhDaiDien": "camry_news.png",
+      "chiTietBaiViet": "Toyota chính thức ra mắt dòng Camry 2023...",
+      "ngayDang": "2024-10-16",
+      "trangThai": 1
+    },
+    {
+      "id": "TT002",
+      "tenTT": "Honda Civic 2023 - thể thao và mạnh mẽ",
+      "anhDaiDien": "civic_news.png",
+      "chiTietBaiViet": "Honda vừa giới thiệu mẫu Civic 2023 với nhiều cải tiến...",
+      "ngayDang": "2024-10-15",
+      "trangThai": 1
+    }
+  ]
+  
