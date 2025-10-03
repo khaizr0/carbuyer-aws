@@ -1,11 +1,12 @@
-const crypto = require('crypto');
+require('dotenv').config();
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const { getUserByEmail } = require('../models/User');
 const { getDB } = require('../config/db');
+const { hashPassword, comparePassword } = require('../utils/crypto-helper');
 const path = require('path');
 
-const JWT_SECRET = 'your_jwt_secret'; // Thay bằng secret thực tế của bạn
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const emailRS ="";
 const tokenRS ="";
@@ -21,8 +22,7 @@ const login = async (req, res) => {
       return res.status(400).send('User not found');
     }
 
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-    if (hashedPassword !== user.matKhau) {
+    if (!comparePassword(password, user.matKhau)) {
       return res.status(400).send('Invalid password');
     }
     console.log(user);
@@ -61,17 +61,17 @@ const forgotPassword = async (req, res) => {
     const resetUrl = `http://localhost:3000/reset-password/${user.email}/${token}`;
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
       secure: true,
       auth: {
-        user: 'khai.sendmail@gmail.com',
-        pass: 'bfsjnqexelavxnhi',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: 'khai.sendmail@gmail.com',
+      from: process.env.EMAIL_USER,
       to: user.email,
       subject: 'Password Reset Link',
       text: `Here is your password reset link: ${resetUrl}`,
@@ -160,7 +160,7 @@ const resetPassword = async (req, res) => {
     });
 
     // Mã hóa mật khẩu mới trước khi lưu vào cơ sở dữ liệu
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    const hashedPassword = hashPassword(password);
 
     // Cập nhật mật khẩu mới vào cơ sở dữ liệu
     await db.collection('User').updateOne(

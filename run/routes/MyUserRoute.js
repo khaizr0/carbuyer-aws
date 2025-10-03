@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -7,7 +8,7 @@ const adminAuth = require('../middlewares/adminAuth')
 const router = express.Router();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'Public/images/Database/Users/');
+        cb(null, process.env.UPLOAD_PATH_USERS);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024
+        fileSize: process.env.MAX_FILE_SIZE
     },
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];

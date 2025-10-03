@@ -1,5 +1,6 @@
-const crypto = require('crypto');
+require('dotenv').config();
 const userModel = require('../models/User')
+const { hashPassword } = require('../utils/crypto-helper');
 const fs = require('fs');
 const path = require('path');
 
@@ -32,7 +33,7 @@ const createUser = async (req, res) => {
         }
 
         const phanLoai = parseInt(PhanLoai, 10);
-        const hashedPassword = crypto.createHash('sha256').update(matKhau).digest('hex');
+        const hashedPassword = hashPassword(matKhau);
         const userID = await generateUserId();
         const newUser = {
             id: userID,
@@ -64,13 +65,14 @@ const updateUser = async (req, res) => {
         }
 
         if (newImage) {
-            const oldImagePath = path.join('Public/images/Database/Users/', user.anhNhanVien);
+            const uploadPath = process.env.UPLOAD_PATH_USERS;
+            const oldImagePath = path.join(uploadPath, user.anhNhanVien);
             if (user.anhNhanVien && fs.existsSync(oldImagePath)) {
                 fs.unlinkSync(oldImagePath);
             }
         }
         if (matKhau) {
-            hashedPassword = crypto.createHash('sha256').update(matKhau).digest('hex');
+            hashedPassword = hashPassword(matKhau);
         }
         const phanLoai = parseInt(PhanLoai, 10);
 
@@ -103,7 +105,8 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy người dùng nào' })
         }
 
-        const oldImagePath = path.join('Public/images/Database/Users/', existingUser.anhNhanVien);
+        const uploadPath = process.env.UPLOAD_PATH_USERS;
+        const oldImagePath = path.join(uploadPath, existingUser.anhNhanVien);
         fs.unlinkSync(oldImagePath);
 
         await User.deleteOne({ id });
