@@ -60,6 +60,12 @@ const tables = [
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
     ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'Slider',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
   }
 ];
 
@@ -135,7 +141,10 @@ async function createTables() {
     { TableName: 'XeOto', Item: { id: 'XE001', tenSP: 'Toyota Camry', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH001', namSanXuat: 2023, kieuDang: 'Sedan', GiaNiemYet: 1000000000, soChoNgoi: 5, soKm: 0, mauXe: 'Đen', loaiCanSo: 'automatic', hinhAnh: 'toyota_camry.jpg', chiTietSP: 'Xe nhập khẩu, đời mới 2023.', trangThai: 'Mới', datLich: 1, ngayTao: 0 }},
     { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH002', namSanXuat: 2023, kieuDang: 'SUV', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, mauXe: 'Trắng', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: 0 }},
     { TableName: 'DanhGia', Item: { id: 'DG001', tenKH: 'Anh Nam', noiDung: 'Tư vấn nhiệt tình, thân thiện', hinhAnh: '/Public/images/pro5-picture.jpg' }},
-    { TableName: 'DanhGia', Item: { id: 'DG002', tenKH: 'Chị Hằng', noiDung: 'Dịch vụ chu đáo, chuyên nghiệp', hinhAnh: '/Public/images/pro5-picture.jpg' }}
+    { TableName: 'DanhGia', Item: { id: 'DG002', tenKH: 'Chị Hằng', noiDung: 'Dịch vụ chu đáo, chuyên nghiệp', hinhAnh: '/Public/images/pro5-picture.jpg' }},
+    { TableName: 'Slider', Item: { id: 'SL001', tieuDe: 'Slide 1', hinhAnh: '/Public/images/SlideShow/img5.png' }},
+    { TableName: 'Slider', Item: { id: 'SL002', tieuDe: 'Slide 2', hinhAnh: '/Public/images/SlideShow/img2.png' }},
+    { TableName: 'Slider', Item: { id: 'SL003', tieuDe: 'Slide 3', hinhAnh: '/Public/images/SlideShow/img3.jpg' }}
   ];
 
   for (const data of sampleData) {

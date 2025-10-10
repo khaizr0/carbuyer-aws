@@ -9,6 +9,7 @@ const newsRoutes = require('./routes/tinTucRoute');
 const booking = require('./routes/DatLichKHRoute');
 const bookingRoutes = require('./routes/Booking');
 const reviewRoutes = require('./routes/reviewRoute');
+const sliderRoutes = require('./routes/sliderRoute');
 const myUserRoute = require('./routes/MyUserRoute');
 const userRoute = require('./routes/UserRoute');
 const otherRoutes = require('./routes/OtherRoute');
@@ -42,6 +43,7 @@ app.use('/news', newsRoutes);
 app.use('/booking', booking);
 app.use('/lichHen', bookingRoutes);
 app.use('/review', reviewRoutes);
+app.use('/slider', sliderRoutes);
 
 // 404 errors
 app.use((req, res) => {

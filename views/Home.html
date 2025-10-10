@@ -22,38 +22,23 @@
 </head>
 <body>
     <!-- Slideshow container -->
-    <div class="slideshow-container">
-        <div class="mySlides fade">
-            <img src="/Public/images/SlideShow/img5.png" style="width: 100%;" alt="Slide 1">
-        </div>
-        <div class="mySlides fade">
-            <img src="/Public/images/SlideShow/img2.png" style="width: 100%;" alt="Slide 2">
-        </div>
-        <div class="mySlides fade">
-            <img src="/Public/images/SlideShow/img3.jpg" style="width: 100%;" alt="Slide 3">
-        </div>
-        <div class="mySlides fade">
-            <img src="/Public/images/SlideShow/img4.webp" style="width: 100%;" alt="Slide 4">
-        </div>
-        <div class="mySlides fade">
-            <img src="/Public/images/SlideShow/img1.jpg" style="width: 100%;" alt="Slide 5">
-        </div>
-        
-        <!-- Navigation Buttons -->
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
-    </div>
-
-    <!-- Slideshow Dots -->
-    <div style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
-        <span class="dot" onclick="currentSlide(4)"></span>
-        <span class="dot" onclick="currentSlide(5)"></span>
-    </div>
-
-    <!-- Slideshow Script -->
+    <div class="slideshow-container" id="slideshow-container"></div>
+    <div style="text-align:center" id="slideshow-dots"></div>
+    <script>
+        fetch('/slider')
+            .then(response => response.json())
+            .then(sliders => {
+                const container = document.getElementById('slideshow-container');
+                const dots = document.getElementById('slideshow-dots');
+                container.innerHTML = sliders.map((s, i) => `
+                    <div class="mySlides fade">
+                        <img src="${s.hinhAnh}" style="width: 100%;" alt="${s.tieuDe || 'Slide ' + (i+1)}">
+                    </div>
+                `).join('') + '<a class="prev" onclick="plusSlides(-1)">&#10094;</a><a class="next" onclick="plusSlides(1)">&#10095;</a>';
+                dots.innerHTML = sliders.map((s, i) => `<span class="dot" onclick="currentSlide(${i+1})"></span>`).join('');
+            })
+            .catch(error => console.error('Error loading sliders:', error));
+    </script>
     <script src="/Public/JS/slideshow.js"></script>
 
     <!-- Recent Product Container -->
