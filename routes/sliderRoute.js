@@ -4,6 +4,11 @@ const sliderController = require('../controllers/SliderController');
 const multer = require('multer');
 const path = require('path');
 
+const checkAuth = (req, res, next) => {
+  if (!req.session.userId) return res.redirect('/login');
+  next();
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'Public/images/SlideShow/'),
   filename: (req, file, cb) => cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname))
@@ -16,7 +21,7 @@ router.post('/create', upload.single('uploadImage'), sliderController.createSlid
 router.put('/:id', upload.single('uploadImage'), sliderController.updateSlider);
 router.delete('/:id', sliderController.deleteSlider);
 
-router.get('/employee/slider', (req, res) => {
+router.get('/employee/slider', checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '../views/employee/slider.html'));
 });
 

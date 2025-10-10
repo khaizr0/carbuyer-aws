@@ -114,7 +114,12 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.get('/employee/tin-tuc', (req, res) => {
+const checkAuth = (req, res, next) => {
+  if (!req.session.userId) return res.redirect('/login');
+  next();
+};
+
+router.get('/employee/tin-tuc', checkAuth, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'employee/tin-tuc.html'));
   });
 
