@@ -121,6 +121,25 @@
             </div>
         </div>
     </div>
+    <script>
+        fetch('/review')
+            .then(response => response.json())
+            .then(reviews => {
+                const slider = document.getElementById('slider');
+                if (reviews.length === 0) {
+                    slider.innerHTML = '<div style="text-align: center; padding: 40px; color: #888; width: 100%;"><h3>Hiện tại chưa có đánh giá nào</h3></div>';
+                } else {
+                    slider.innerHTML = reviews.map(r => `
+                        <div class="review">
+                            <img src="${r.hinhAnh || '/Public/images/pro5-picture.jpg'}" alt="${r.tenKH}">
+                            <h3>${r.tenKH}</h3>
+                            <p>"${r.noiDung}"</p>
+                        </div>
+                    `).join('');
+                }
+            })
+            .catch(error => console.error('Error loading reviews:', error));
+    </script>
     <script src="/Public/JS/reviewSlider.js"></script>
 
     <!-- News Container -->

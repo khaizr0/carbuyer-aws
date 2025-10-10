@@ -54,6 +54,12 @@ const tables = [
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
     ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'DanhGia',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
   }
 ];
 
@@ -127,7 +133,9 @@ async function createTables() {
     { TableName: 'User', Item: { id: 'U001', hoTen: 'Nguyen Van B', email: 'nguyenvanb@example.com', ngaySinh: '1990-05-10', gioiTinh: 'Nam', cccd: '123456789', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_nguyenvanb.png', PhanLoai: 0 }},
     { TableName: 'User', Item: { id: 'U002', hoTen: 'Le Thi C', email: 'caophankhai123@gmail.com', ngaySinh: '1992-08-15', gioiTinh: 'Nu', cccd: '987654321', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_lethic.png', PhanLoai: 1 }},
     { TableName: 'XeOto', Item: { id: 'XE001', tenSP: 'Toyota Camry', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH001', namSanXuat: 2023, kieuDang: 'Sedan', GiaNiemYet: 1000000000, soChoNgoi: 5, soKm: 0, mauXe: 'Đen', loaiCanSo: 'automatic', hinhAnh: 'toyota_camry.jpg', chiTietSP: 'Xe nhập khẩu, đời mới 2023.', trangThai: 'Mới', datLich: 1, ngayTao: 0 }},
-    { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH002', namSanXuat: 2023, kieuDang: 'SUV', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, mauXe: 'Trắng', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: 0 }}
+    { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH002', namSanXuat: 2023, kieuDang: 'SUV', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, mauXe: 'Trắng', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: 0 }},
+    { TableName: 'DanhGia', Item: { id: 'DG001', tenKH: 'Anh Nam', noiDung: 'Tư vấn nhiệt tình, thân thiện', hinhAnh: '/Public/images/pro5-picture.jpg' }},
+    { TableName: 'DanhGia', Item: { id: 'DG002', tenKH: 'Chị Hằng', noiDung: 'Dịch vụ chu đáo, chuyên nghiệp', hinhAnh: '/Public/images/pro5-picture.jpg' }}
   ];
 
   for (const data of sampleData) {
