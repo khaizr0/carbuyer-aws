@@ -79,10 +79,10 @@ function formatDate(dateString) {
 function updateFeaturedArticle(news) {
     const featuredArticle = document.querySelector('.featured-article');
     featuredArticle.querySelector('img').src = `/Public/images/${news.anhDaiDien}`;
-    featuredArticle.querySelector('h3').textContent = formatDate(news.ngayDang); // Sử dụng hàm formatDate
+    featuredArticle.querySelector('h3').textContent = formatDate(news.ngayDang);
     featuredArticle.querySelector('h2').textContent = news.tenTT;
     featuredArticle.querySelector('p').innerHTML = news.chiTietBaiViet; 
-    featuredArticle.querySelector('.read-more').href = `/news/detail/${news._id}`;
+    featuredArticle.querySelector('.read-more').href = `/news/detail/${news.id}`;
 }
 
 function createArticleElement(news) {
@@ -93,10 +93,10 @@ function createArticleElement(news) {
     articleDiv.innerHTML = `
         <img src="/Public/images/${news.anhDaiDien}" alt="${news.tenTT}">
         <div class="article-content">
-            <h3>${formatDate(news.ngayDang)}</h3> <!-- Sử dụng hàm formatDate -->
+            <h3>${formatDate(news.ngayDang)}</h3>
             <h4>${news.tenTT}</h4>
             <p>${news.chiTietBaiViet}</p>
-            <a href="/news/detail/${news._id}">Đọc thêm</a>
+            <a href="/news/detail/${news.id}">Đọc thêm</a>
         </div>
     `;
 

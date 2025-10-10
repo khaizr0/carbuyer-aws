@@ -99,8 +99,8 @@ const resetPasswordPage = async (req, res) => {
       return res.status(400).send('Email hoặc token không được cung cấp');
     }
 
-    const db = getDB();
-    const user = await db.collection('User').findOne({ email });
+    const { getUserByEmail } = require('../models/User');
+    const user = await getUserByEmail(email);
 
     if (!user) {
       return res.status(400).send('Email không hợp lệ');
@@ -144,8 +144,10 @@ const resetPassword = async (req, res) => {
   }
 
   try {
-    const db = getDB();
-    const user = await db.collection('User').findOne({ email });
+    const { getUserByEmail } = require('../models/User');
+    const { PutCommand } = require('@aws-sdk/lib-dynamodb');
+    const docClient = getDB();
+    const user = await getUserByEmail(email);
 
     if (!user) {
       return res.status(400).send('Email không hợp lệ');
@@ -163,10 +165,8 @@ const resetPassword = async (req, res) => {
     const hashedPassword = hashPassword(password);
 
     // Cập nhật mật khẩu mới vào cơ sở dữ liệu
-    await db.collection('User').updateOne(
-      { email },
-      { $set: { matKhau: hashedPassword } }
-    );
+    user.matKhau = hashedPassword;
+    await docClient.send(new PutCommand({ TableName: 'User', Item: user }));
 
     res.send('Mật khẩu đã được cập nhật thành công, vui lòng đăng nhập lại');
   } catch (error) {

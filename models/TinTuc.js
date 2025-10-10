@@ -1,134 +1,68 @@
+const { ScanCommand, GetCommand, PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
-// CREATE: Add a new news article
+
 const addNews = async (newsData) => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        console.log(newsData);
-        
-
-        const result = await collection.insertOne(newsData);
-
-        const insertedNews = { ...newsData, _id: result.insertedId }; 
-        return insertedNews; 
-
-    } catch (error) {
-        console.error('Error adding news:', error);
-        throw new Error('Error adding news');
-    }
+  const docClient = getDB();
+  await docClient.send(new PutCommand({ TableName: 'TinTuc', Item: newsData }));
+  return newsData;
 };
 
-
-// READ: Get a news article by ID
 const getNewsById = async (id) => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        const news = await collection.findOne({ _id: new ObjectId(id) });
-        if (!news) throw new Error('News not found');
-        return news;
-    } catch (error) {
-        console.error('Error fetching news:', error);
-        throw new Error('Error fetching news');
-    }
+  const docClient = getDB();
+  const result = await docClient.send(new GetCommand({ TableName: 'TinTuc', Key: { id } }));
+  if (!result.Item) throw new Error('News not found');
+  return result.Item;
 };
 
-// READ: Get all news articles
 const getAllNews = async () => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        const newsList = await collection.find({}).toArray();
-        return newsList;
-    } catch (error) {
-        console.error('Error fetching all news:', error);
-        throw new Error('Error fetching news list');
-    }
+  const docClient = getDB();
+  const result = await docClient.send(new ScanCommand({ TableName: 'TinTuc' }));
+  return result.Items || [];
 };
 
-// UPDATE: Update an existing news article by ID
 const updateNewsById = async (id, updatedData) => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        console.log(id);
-        const result = await collection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: updatedData }
-        );
-        if (result.matchedCount === 0) throw new Error('News not found');
-        const updatedNews = await collection.findOne({ _id: new ObjectId(id) });
-        return updatedNews;
-    } catch (error) {
-        console.error('Error updating news:', error);
-        throw new Error('Error updating news');
-    }
+  const docClient = getDB();
+  const result = await docClient.send(new GetCommand({ TableName: 'TinTuc', Key: { id } }));
+  if (!result.Item) throw new Error('News not found');
+  const updatedNews = { ...result.Item, ...updatedData };
+  await docClient.send(new PutCommand({ TableName: 'TinTuc', Item: updatedNews }));
+  return updatedNews;
 };
 
-// DELETE: Delete a news article by ID
 const deleteNewsById = async (id) => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc'); // Ensure this is the correct collection name
-        const result = await collection.deleteOne({ _id: new ObjectId(id) });
-        if (result.deletedCount === 0) throw new Error('News not found');
-        return { message: 'News deleted successfully' };
-    } catch (error) {
-        console.error('Error deleting news:', error);
-        throw new Error('Error deleting news');
-    }
+  const docClient = getDB();
+  await docClient.send(new DeleteCommand({ TableName: 'TinTuc', Key: { id } }));
+  return { message: 'News deleted successfully' };
 };
 
 const getLatestNewsId = async () => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        
-        const latestNews = await collection.find().sort({ _id: -1 }).limit(1).toArray();
-        
-        if (latestNews.length === 0) {
-            return 'TT001'; 
-        }
-
-        const latestId = latestNews[0].id;
-        const latestIdNumber = latestId.slice(2); 
-        
-        const newId = `TT${String(parseInt(latestIdNumber) + 1).padStart(3, '0')}`;
-
-        return newId; 
-    } catch (error) {
-        console.error('Error fetching latest news ID:', error);
-        throw new Error('Error fetching latest news ID');
-    }
+  const docClient = getDB();
+  const result = await docClient.send(new ScanCommand({ TableName: 'TinTuc' }));
+  const newsList = result.Items || [];
+  
+  if (newsList.length === 0) return 'TT001';
+  
+  const latestId = newsList.map(n => n.id).sort().reverse()[0];
+  const latestIdNumber = latestId.slice(2);
+  return `TT${String(parseInt(latestIdNumber) + 1).padStart(3, '0')}`;
 };
 
-//home.html:
 const showNewsOnHome = async () => {
-    try {
-        const db = await getDB();
-        const collection = db.collection('TinTuc');
-        
-        const newsList = await collection
-            .find({ trangThai: 1 }) 
-            .sort({ ngayDang: -1 }) 
-            .limit(3)
-            .toArray();
-        
-        return newsList;
-    } catch (error) {
-        console.error('Error fetching news for home:', error);
-        throw new Error('Error fetching news for home');
-    }
+  const docClient = getDB();
+  const result = await docClient.send(new ScanCommand({
+    TableName: 'TinTuc',
+    FilterExpression: 'trangThai = :status',
+    ExpressionAttributeValues: { ':status': 1 }
+  }));
+  return (result.Items || []).sort((a, b) => new Date(b.ngayDang) - new Date(a.ngayDang)).slice(0, 3);
 };
-
 
 module.exports = {
-    addNews,
-    getLatestNewsId,
-    getNewsById,
-    getAllNews,
-    updateNewsById,
-    deleteNewsById,
-    showNewsOnHome
+  addNews,
+  getLatestNewsId,
+  getNewsById,
+  getAllNews,
+  updateNewsById,
+  deleteNewsById,
+  showNewsOnHome
 };

@@ -328,9 +328,12 @@ const updateProduct = async (req, res) => {
           updatedData.images = newImages.length > 0 ? newImages : product.images; // Giữ ảnh cũ nếu không upload ảnh mới
 
           // Cập nhật vào database
-          const db = getDB();
-          const collectionName = productType === 'XE' ? 'XeOto' : 'PhuKien';
-          await db.collection(collectionName).updateOne({ id: productId }, { $set: updatedData });
+          const { PutCommand } = require('@aws-sdk/lib-dynamodb');
+          const docClient = getDB();
+          const tableName = productType === 'XE' ? 'XeOto' : 'PhuKien';
+          const { product: existingProduct } = await findProductById(productId);
+          const finalData = { ...existingProduct, ...updatedData };
+          await docClient.send(new PutCommand({ TableName: tableName, Item: finalData }));
 
           return res.status(200).json({ message: 'Cập nhật sản phẩm thành công.' });
       });

@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 
 class BookingController {
-    // Đưa phương thức getTrangThaiText ra ngoài như một hàm độc lập
     static getTrangThaiText(trangThai) {
         switch(trangThai) {
             case 0: return 'Đã đặt';
@@ -26,7 +25,7 @@ class BookingController {
     
                 const bookingRows = bookings.map(booking => `
                     <tr>
-                        <td><input type="checkbox" class="row-checkbox" data-id="${booking._id}"></td>
+                        <td><input type="checkbox" class="row-checkbox" data-id="${booking.id}"></td>
                         <td>${booking.tenSP}</td>
                         <td>${booking.idSP}</td>
                         <td>${booking.hoTenKH}</td>
@@ -37,17 +36,17 @@ class BookingController {
                         <td>${BookingController.getTrangThaiText(booking.trangThai)}</td>
                         <td>
                             <form action="/lichHen/done" method="POST" style="display:inline;">
-                                <input type="hidden" name="id" value="${booking._id}">
+                                <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-success" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                     <i class="fas fa-check"></i>
                                 </button>
                             </form>
-                            <button class="btn btn-warning change-time-btn" data-id="${booking._id}" data-date="${booking.date}"
+                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${booking.date}"
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
                             <form action="/lichHen/delete" method="POST" style="display:inline;">
-                                <input type="hidden" name="id" value="${booking._id}">
+                                <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
@@ -81,7 +80,7 @@ class BookingController {
     
                 const bookingRows = bookings.map(booking => `
                     <tr>
-                        <td><input type="checkbox" class="row-checkbox" data-id="${booking._id}"></td>
+                        <td><input type="checkbox" class="row-checkbox" data-id="${booking.id}"></td>
                         <td>${booking.tenSP}</td>
                         <td>${booking.idSP}</td>
                         <td>${booking.hoTenKH}</td>
@@ -92,17 +91,17 @@ class BookingController {
                         <td>${BookingController.getTrangThaiText(booking.trangThai)}</td>
                         <td>
                             <form action="/lichHen/done" method="POST" style="display:inline;">
-                                <input type="hidden" name="id" value="${booking._id}">
+                                <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-success" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                     <i class="fas fa-check"></i>
                                 </button>
                             </form>
-                            <button class="btn btn-warning change-time-btn" data-id="${booking._id}" data-date="${booking.date}"
+                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${booking.date}"
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
                             <form action="/lichHen/delete" method="POST" style="display:inline;">
-                                <input type="hidden" name="id" value="${booking._id}">
+                                <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>

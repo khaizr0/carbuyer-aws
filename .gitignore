@@ -33,3 +33,6 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# DynamoDB Local
+shared-local-instance.db

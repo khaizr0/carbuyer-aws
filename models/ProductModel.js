@@ -1,240 +1,166 @@
+const { ScanCommand, PutCommand, GetCommand, DeleteCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 const { getDB } = require('../config/db');
 const fs = require('fs');
 const path = require('path');
 
-// Hàm thêm xe ô tô vào cơ sở dữ liệu
 const addCarProduct = async (carData) => {
-  try {
-    const db = getDB();
-    const carCollection = db.collection('XeOto');
-
-    const newCarData = {
-      id: `XE${Date.now()}`,
-      tenSP: carData.tenSP,
-      nguyenLieuXe: carData.nguyenLieuXe,
-      iDthuongHieu: carData.iDthuongHieu,
-      namSanXuat: carData.namSanXuat,
-      kieuDang: carData.kieuDang,
-      GiaNiemYet: Number(carData.GiaNiemYet),
-      soChoNgoi: carData.soChoNgoi,
-      soKm: Number(carData.soKm || 0),
-      mauXe: carData.mauXe,
-      loaiCanSo: carData.loaiCanSo,
-      hinhAnh: carData.hinhAnh || '',
-      chiTietSP: carData.chiTietSP || '',
-      trangThai: carData.trangThai,
-      datLich: Number(carData.datLich) || 0,
-      ngayTao: new Date(),
-    };
-
-    const result = await carCollection.insertOne(newCarData);
-    console.log('Sản phẩm đã được thêm thành công:', newCarData);
-    return newCarData;
-  } catch (error) {
-    console.error('Lỗi khi thêm sản phẩm:', error);
-    throw new Error('Đã có lỗi xảy ra khi thêm sản phẩm');
-  }
+  const docClient = getDB();
+  const newCarData = {
+    id: `XE${Date.now()}`,
+    tenSP: carData.tenSP,
+    nguyenLieuXe: carData.nguyenLieuXe,
+    iDthuongHieu: carData.iDthuongHieu,
+    namSanXuat: carData.namSanXuat,
+    kieuDang: carData.kieuDang,
+    GiaNiemYet: Number(carData.GiaNiemYet),
+    soChoNgoi: carData.soChoNgoi,
+    soKm: Number(carData.soKm || 0),
+    mauXe: carData.mauXe,
+    loaiCanSo: carData.loaiCanSo,
+    hinhAnh: carData.hinhAnh || '',
+    chiTietSP: carData.chiTietSP || '',
+    trangThai: carData.trangThai,
+    datLich: Number(carData.datLich) || 0,
+    ngayTao: new Date().toISOString()
+  };
+  await docClient.send(new PutCommand({ TableName: 'XeOto', Item: newCarData }));
+  return newCarData;
 };
 
-//Phụ Kiện
 const addAccessoryProduct = async (accessoryData) => {
-  try {
-    const db = getDB();
-    const accessoryCollection = db.collection('PhuKien');
-
-    const newAccessoryData = {
-      id: `PK${Date.now()}`,
-      tenSP: accessoryData.tenSP,
-      iDthuongHieu: accessoryData.iDthuongHieu,
-      idLoai: accessoryData.idLoai,
-      GiaNiemYet: Number(accessoryData.GiaNiemYet),
-      chiTietSP: accessoryData.chiTietSP,
-      hinhAnh: accessoryData.hinhAnh || '',
-      trangThai: accessoryData.trangThai,
-      datLich: Number(accessoryData.datLich) || 0,
-      ngayTao: new Date(),
-    };
-
-    const result = await accessoryCollection.insertOne(newAccessoryData);
-    console.log('Phụ kiện đã được thêm thành công:', newAccessoryData);
-    return newAccessoryData;
-  } catch (error) {
-    console.error('Lỗi khi thêm phụ kiện:', error);
-    throw new Error('Đã có lỗi xảy ra khi thêm phụ kiện');
-  }
+  const docClient = getDB();
+  const newAccessoryData = {
+    id: `PK${Date.now()}`,
+    tenSP: accessoryData.tenSP,
+    iDthuongHieu: accessoryData.iDthuongHieu,
+    idLoai: accessoryData.idLoai,
+    GiaNiemYet: Number(accessoryData.GiaNiemYet),
+    chiTietSP: accessoryData.chiTietSP,
+    hinhAnh: accessoryData.hinhAnh || '',
+    trangThai: accessoryData.trangThai,
+    datLich: Number(accessoryData.datLich) || 0,
+    ngayTao: new Date().toISOString()
+  };
+  await docClient.send(new PutCommand({ TableName: 'PhuKien', Item: newAccessoryData }));
+  return newAccessoryData;
 };
 
-// Hàm lấy các sản phẩm gần đây
 const getRecentProducts = async () => {
-  const db = getDB();
-  const productsCollection = db.collection('XeOto');
-  return await productsCollection
-    .find({ trangThai: { $ne: 'Hide' } })
-    .sort({ namSanXuat: -1 })
-    .limit(6)
-    .toArray();
+  const docClient = getDB();
+  const result = await docClient.send(new ScanCommand({
+    TableName: 'XeOto',
+    FilterExpression: 'trangThai <> :hide',
+    ExpressionAttributeValues: { ':hide': 'Hide' }
+  }));
+  return (result.Items || []).sort((a, b) => b.namSanXuat - a.namSanXuat).slice(0, 6);
 };
 
-// Hàm lấy tất cả các sản phẩm
 const getAllProducts = async () => {
-  const db = getDB();
-  const carsCollection = db.collection('XeOto');
-  const accessoriesCollection = db.collection('PhuKien');
-  const brandsCollection = db.collection('ThuongHieu');
+  const docClient = getDB();
+  const [cars, accessories, brands] = await Promise.all([
+    docClient.send(new ScanCommand({ TableName: 'XeOto' })),
+    docClient.send(new ScanCommand({ TableName: 'PhuKien' })),
+    docClient.send(new ScanCommand({ TableName: 'ThuongHieu' }))
+  ]);
 
-  const cars = await carsCollection.find({}).toArray();
-  const accessories = await accessoriesCollection.find({}).toArray();
-  const brands = await brandsCollection.find({}).toArray();
-
-  // Map brands để dễ tra cứu
-  const brandMap = brands.reduce((acc, brand) => {
+  const brandMap = (brands.Items || []).reduce((acc, brand) => {
     acc[brand.id] = brand.TenTH;
     return acc;
   }, {});
 
-  // Hàm phụ để định dạng hình ảnh
   const mapImages = (imageString) => {
     if (!imageString) return [];
-    return imageString.split(' || ').map(image => image.trim()).map(image => `/Public/images/Database/Products/${image}`);
+    return imageString.split(' || ').map(image => `/Public/images/Database/Products/${image.trim()}`);
   };
 
-  // Format dữ liệu ô tô
-  const formattedCars = cars.map(car => ({
+  const formattedCars = (cars.Items || []).map(car => ({
     id: car.id,
     name: car.tenSP,
     brand: brandMap[car.iDthuongHieu] || 'Unknown',
     price: car.GiaNiemYet,
     type: 'Ô tô',
     status: car.trangThai,
-    images: mapImages(car.hinhAnh), // Sử dụng hàm mapImages để xử lý hình ảnh
+    images: mapImages(car.hinhAnh)
   }));
 
-  // Format dữ liệu phụ kiện
-  const formattedAccessories = accessories.map(acc => ({
+  const formattedAccessories = (accessories.Items || []).map(acc => ({
     id: acc.id,
     name: acc.tenSP,
     brand: brandMap[acc.iDthuongHieu] || 'Unknown',
     price: acc.GiaNiemYet,
     type: 'Phụ kiện',
     status: acc.trangThai,
-    images: mapImages(acc.hinhAnh), // Sử dụng hàm mapImages để xử lý hình ảnh
+    images: mapImages(acc.hinhAnh)
   }));
 
-  // Gộp và sắp xếp tất cả sản phẩm
   return [...formattedCars, ...formattedAccessories];
 };
 
-
-// Hàm xóa sản phẩm theo ID
 const deleteProductById = async (id) => {
-  const db = getDB();
-  const carCollection = db.collection('XeOto');
-  const accessoryCollection = db.collection('PhuKien');
+  const docClient = getDB();
+  const tableName = id.startsWith('XE') ? 'XeOto' : 'PhuKien';
+  
+  const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id } }));
+  const product = result.Item;
 
-  // Tìm sản phẩm để lấy thông tin hình ảnh trước khi xóa
-  let product = await carCollection.findOne({ id });
-  if (!product) {
-    product = await accessoryCollection.findOne({ id });
-  }
-
-  if (product && product.hinhAnh) {
-    // Xóa các file ảnh
-    const imageNames = product.hinhAnh.split(' || ');
-    imageNames.forEach(imageName => {
+  if (product?.hinhAnh) {
+    product.hinhAnh.split(' || ').forEach(imageName => {
       const imagePath = path.join('Public/images/Database/Products/', imageName);
-      
-      // Kiểm tra và xóa file
       if (fs.existsSync(imagePath)) {
-        try {
-          fs.unlinkSync(imagePath);
-          console.log(`Đã xóa file ảnh: ${imageName}`);
-        } catch (error) {
-          console.error(`Lỗi xóa file ảnh ${imageName}:`, error);
-        }
+        fs.unlinkSync(imagePath);
       }
     });
   }
 
-  // Xóa sản phẩm trong các collection
-  const carResult = await carCollection.deleteOne({ id });
-  if (carResult.deletedCount > 0) {
-    return 'Xóa ô tô thành công!';
-  }
-
-  const accessoryResult = await accessoryCollection.deleteOne({ id });
-  if (accessoryResult.deletedCount > 0) {
-    return 'Xóa phụ kiện thành công!';
-  }
-
-  throw new Error('Sản phẩm không tồn tại.');
+  await docClient.send(new DeleteCommand({ TableName: tableName, Key: { id } }));
+  return `Xóa ${tableName === 'XeOto' ? 'ô tô' : 'phụ kiện'} thành công!`;
 };
 
 const findProductById = async (productId) => {
-  try {
-      const db = getDB();
-
-      const carProduct = await db.collection('XeOto').findOne({ id: productId });
-      const accessoryProduct = await db.collection('PhuKien').findOne({ id: productId });
-
-      if (carProduct) {
-          return { product: carProduct, productType: 'XE' };
-      } else if (accessoryProduct) {
-          return { product: accessoryProduct, productType: 'PK' };
-      }
-
-      return { product: null, productType: null };
-  } catch (error) {
-      console.error('Lỗi khi tìm sản phẩm theo ID:', error);
-      throw new Error('Đã có lỗi xảy ra khi tìm sản phẩm');
-  }
+  const docClient = getDB();
+  const tableName = productId.startsWith('XE') ? 'XeOto' : 'PhuKien';
+  const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id: productId } }));
+  return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
 };
 
 const getProductById = async (id) => {
-  const db = getDB();
-  const carCollection = db.collection('XeOto');
-  const accessoryCollection = db.collection('PhuKien');
+  const docClient = getDB();
+  const tableName = id.startsWith('XE') ? 'XeOto' : 'PhuKien';
+  const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id } }));
+  const product = result.Item;
 
-  // Tìm sản phẩm ô tô theo ID
-  const car = await carCollection.findOne({ id });
-  if (car) {
-    // Split the hinhAnh field into an array of images
-    const images = car.hinhAnh ? car.hinhAnh.split(' || ') : [];
+  if (!product) throw new Error('Sản phẩm không tồn tại.');
 
+  const images = product.hinhAnh ? product.hinhAnh.split(' || ').map(img => `/Public/images/Database/Products/${img}`) : [];
+
+  if (tableName === 'XeOto') {
     return {
-      id: car.id,
-      name: car.tenSP,
-      brand: car.iDthuongHieu,
-      price: car.GiaNiemYet,
-      year: car.namSanXuat,
+      id: product.id,
+      name: product.tenSP,
+      brand: product.iDthuongHieu,
+      price: product.GiaNiemYet,
+      year: product.namSanXuat,
       type: 'Ô tô',
-      mileage: car.soKm,
-      fuelType: car.nguyenLieuXe,
-      color: car.mauXe,
-      transmission: car.loaiCanSo,
-      details: car.chiTietSP,
-      status: car.trangThai === 1 ? 'Đang đăng' : 'Đã ẩn',
-      booked: car.datLich === 1 ? true : false,
-      images: images.map(image => `/Public/images/Database/Products/${image}`), // Add images field
+      mileage: product.soKm,
+      fuelType: product.nguyenLieuXe,
+      color: product.mauXe,
+      transmission: product.loaiCanSo,
+      details: product.chiTietSP,
+      status: product.trangThai === 1 ? 'Đang đăng' : 'Đã ẩn',
+      booked: product.datLich === 1,
+      images
     };
   }
 
-  // Tìm sản phẩm phụ kiện theo ID
-  const accessory = await accessoryCollection.findOne({ id });
-  if (accessory) {
-    const accessoryImages = accessory.hinhAnh ? accessory.hinhAnh.split(' || ') : [];
-    return {
-      id: accessory.id,
-      name: accessory.tenSP,
-      brand: accessory.IDthuongHieu,
-      price: accessory.GiaNiemYet,
-      type: 'Phụ kiện',
-      status: accessory.trangThai === 1 ? 'Đang đăng' : 'Đã ẩn',
-      images: accessoryImages.map(image => `/Public/images/Database/Products/${image}`), // Handle accessory images if any
-    };
-  }
- console.log(accessory);
-  // Nếu không tìm thấy sản phẩm
-  throw new Error('Sản phẩm không tồn tại.');
+  return {
+    id: product.id,
+    name: product.tenSP,
+    brand: product.iDthuongHieu,
+    price: product.GiaNiemYet,
+    type: 'Phụ kiện',
+    status: product.trangThai === 1 ? 'Đang đăng' : 'Đã ẩn',
+    images
+  };
 };
 
 module.exports = { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById };

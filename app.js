@@ -22,7 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
-app.use('/config', express.static(path.join(__dirname, 'config')));
+
+// Config route
+app.get('/config/config.js', (req, res) => {
+  res.type('application/javascript');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.send(`const mapConfig = { url: "${process.env.GOOGLE_MAPS_EMBED_URL}" };`);
+});
 
 // Routes
 app.use('/', authRoutes);

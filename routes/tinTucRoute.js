@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { addNews, getNewsById, getAllNews, updateNewsById, deleteNewsById, getLatestNewsId, showNewsOnHome } = require('../models/TinTuc');  // Import functions from TinTuc.js
+const { addNews, getNewsById, getAllNews, updateNewsById, deleteNewsById, getLatestNewsId, showNewsOnHome } = require('../models/TinTuc');
 const newsController = require('../controllers/newsController');
-const multer = require('multer');  // Import multer for file handling
+const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 // CREATE: Add a new news article
 
 // Set up multer for file storage
@@ -21,24 +22,21 @@ const upload = multer({ storage: storage });  // Create multer instance
 router.post('/create', upload.single('anhDaiDien'), async (req, res) => {
     try {
         const { tenTT, chiTietBaiViet, trangThai } = req.body;
-        const anhDaiDien = req.file ? req.file.filename : null;  // Get the uploaded image filename
-        const ngayDang = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
-
-        // Convert trangThai to integer
+        const anhDaiDien = req.file ? req.file.filename : null;
+        const ngayDang = new Date().toISOString().split('T')[0];
         const trangThaiInt = parseInt(trangThai, 10);
 
-        // Check if the conversion to integer was successful
         if (isNaN(trangThaiInt)) {
             return res.status(400).json({ message: 'Invalid trangThai value. It must be an integer.' });
         }
-        const newId = await getLatestNewsId();  // Fetch the latest news to get the current ID
-
+        
+        const newId = await getLatestNewsId();
         const newNews = { id: newId, tenTT, anhDaiDien, chiTietBaiViet, ngayDang, trangThai: trangThaiInt };
-
-        const result = await addNews(newNews);  // Call addNews function from TinTuc.js
+        const result = await addNews(newNews);
+        
         res.status(201).json({ message: 'News created successfully!', news: result });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating news', error });
+        res.status(500).json({ message: 'Error creating news', error: error.message });
     }
 });
 
@@ -48,27 +46,31 @@ router.post('/create', upload.single('anhDaiDien'), async (req, res) => {
 router.put('/:id', upload.single('anhDaiDien'), async (req, res) => {
     try {
         const { tenTT, chiTietBaiViet, trangThai } = req.body;
-        const anhDaiDien = req.file ? req.file.filename : null;  // Get the uploaded image filename (if any)
-        const ngayDang = new Date();  // Get the current date and time
+        const ngayDang = new Date().toISOString().split('T')[0];
         
-        // Prepare the data to be updated
+        // Xóa ảnh cũ nếu có ảnh mới
+        if (req.file) {
+            const oldNews = await getNewsById(req.params.id);
+            if (oldNews.anhDaiDien) {
+                const oldImagePath = path.join('Public/images/', oldNews.anhDaiDien);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
+            }
+        }
+        
         const updatedNewsData = {
-            tenTT,
-            anhDaiDien,
-            chiTietBaiViet,
-            ngayDang,
-            trangThai
+            ...(tenTT && { tenTT }),
+            ...(req.file && { anhDaiDien: req.file.filename }),
+            ...(chiTietBaiViet && { chiTietBaiViet }),
+            ...(trangThai !== undefined && { trangThai: parseInt(trangThai, 10) }),
+            ngayDang
         };
 
-        // Call the updateNewsById function to update the news article
         const updatedNews = await updateNewsById(req.params.id, updatedNewsData);
-        
-        if (!updatedNews) {
-            return res.status(404).json({ message: 'News not found' });
-        }
         res.status(200).json({ message: 'News updated successfully!', news: updatedNews });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating news', error });
+        res.status(500).json({ message: 'Error updating news', error: error.message });
     }
 });
 
@@ -76,37 +78,39 @@ router.put('/:id', upload.single('anhDaiDien'), async (req, res) => {
 // READ ALL: Fetch all news articles
 router.get('/', async (req, res) => {
     try {
-        const news = await getAllNews();  // Call getAllNews function from TinTuc.js
+        const news = await getAllNews();
         res.status(200).json(news);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching news', error });
+        res.status(500).json({ message: 'Error fetching news', error: error.message });
     }
 });
 
 // READ SINGLE: Fetch a specific news article by ID
 router.get('/:id', async (req, res) => {
     try {
-        const news = await getNewsById(req.params.id);  // Call getNewsById function from TinTuc.js
-        if (!news) {
-            return res.status(404).json({ message: 'News not found' });
-        }
+        const news = await getNewsById(req.params.id);
         res.status(200).json(news);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching news', error });
+        res.status(404).json({ message: 'News not found', error: error.message });
     }
 });
 
 // DELETE: Delete a specific news article by ID
 router.delete('/:id', async (req, res) => {
     try {
-        console.log(req.params.id);
-        const result = await deleteNewsById(req.params.id);  // Call deleteNewsById function from TinTuc.js
-        if (!result) {
-            return res.status(404).json({ message: 'News not found' });
+        // Xóa ảnh trước khi xóa tin tức
+        const news = await getNewsById(req.params.id);
+        if (news.anhDaiDien) {
+            const imagePath = path.join('Public/images/', news.anhDaiDien);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
         }
+        
+        await deleteNewsById(req.params.id);
         res.status(200).json({ message: 'News deleted successfully!' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting news', error });
+        res.status(500).json({ message: 'Error deleting news', error: error.message });
     }
 });
 
@@ -123,7 +127,7 @@ router.get('/api/showNewsOnHome', async (req, res) => {
         const news = await showNewsOnHome();
         res.status(200).json(news);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching news for home', error });
+        res.status(500).json({ message: 'Error fetching news for home', error: error.message });
     }
 });
 

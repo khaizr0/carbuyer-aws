@@ -1,0 +1,145 @@
+require('dotenv').config();
+const { CreateTableCommand } = require('@aws-sdk/client-dynamodb');
+const { PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { client, docClient } = require('./config/dynamodb');
+
+const tables = [
+  {
+    TableName: 'User',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [
+      { AttributeName: 'id', AttributeType: 'S' },
+      { AttributeName: 'email', AttributeType: 'S' }
+    ],
+    GlobalSecondaryIndexes: [{
+      IndexName: 'EmailIndex',
+      KeySchema: [{ AttributeName: 'email', KeyType: 'HASH' }],
+      Projection: { ProjectionType: 'ALL' },
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+    }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'XeOto',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'PhuKien',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'ThuongHieu',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'LoaiPhuKien',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'TinTuc',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  },
+  {
+    TableName: 'DatLichKH',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+  }
+];
+
+async function createTables() {
+  for (const table of tables) {
+    try {
+      await client.send(new CreateTableCommand(table));
+      console.log(`Đã tạo table: ${table.TableName}`);
+    } catch (error) {
+      if (error.name === 'ResourceInUseException') {
+        console.log(`Table ${table.TableName} đã tồn tại`);
+      } else {
+        console.error(`Lỗi tạo table ${table.TableName}:`, error);
+      }
+    }
+  }
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  const sampleData = [
+    { TableName: 'DatLichKH', Item: { id: 'DL001', hoTenKH: 'Nguyen Van A', time: '10:30', date: '2024-10-21', soDT: '0909123456', idXe: 'XE1733646898449', idPhuKien: null, trangThai: 0 }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK999', tenLoai: 'Khác' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK001', tenLoai: 'Camera' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK002', tenLoai: 'Cảm biến' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK003', tenLoai: 'Loa Bluetooth' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK004', tenLoai: 'Gương cầu lồi' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK005', tenLoai: 'Sạc điện thoại' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK006', tenLoai: 'Máy bơm lốp' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK007', tenLoai: 'Bọc ghế' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK008', tenLoai: 'Thảm lót sàn' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK009', tenLoai: 'Tẩu sạc đa năng' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK010', tenLoai: 'Hệ thống định vị GPS' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK011', tenLoai: 'Đèn LED' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK012', tenLoai: 'Kính chắn nắng' }},
+    { TableName: 'LoaiPhuKien', Item: { id: 'LPK013', tenLoai: 'Túi khí bổ sung' }},
+    { TableName: 'PhuKien', Item: { id: 'PK1732901518686', tenSP: 'Camera hành trình', iDthuongHieu: 'TH001', idLoai: 'LPK001', GiaNiemYet: 312312, chiTietSP: 'Camera hành trình full HD.', hinhAnh: 'camera_hanh_trinh.jpg', trangThai: 'Mới', datLich: 0, ngayTao: 0 }},
+    { TableName: 'PhuKien', Item: { id: 'PK002', tenSP: 'Cảm biến áp suất lốp', iDthuongHieu: 'TH002', idLoai: 'LPK002', GiaNiemYet: 1500000, chiTietSP: 'Cảm biến chính xác, tích hợp hiển thị màn hình.', hinhAnh: 'cam_bien_ap_suat_lop.jpg', trangThai: 'Mới', datLich: 0, ngayTao: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THKHAC0', TenTH: 'Khác', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE001', TenTH: 'Toyota', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE002', TenTH: 'Honda', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE003', TenTH: 'Ford', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE004', TenTH: 'Hyundai', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE005', TenTH: 'Kia', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE006', TenTH: 'Mazda', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE007', TenTH: 'Chevrolet', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE008', TenTH: 'BMW', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE009', TenTH: 'Mercedes-Benz', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE010', TenTH: 'Audi', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE011', TenTH: 'Nissan', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE012', TenTH: 'Mitsubishi', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE013', TenTH: 'Lexus', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE014', TenTH: 'Volkswagen', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THXE015', TenTH: 'Subaru', idPhanLoaiTH: 0 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK001', TenTH: 'Bosch', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK002', TenTH: 'Pioneer', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK003', TenTH: 'Bridgestone', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK004', TenTH: 'Michelin', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK005', TenTH: 'Philips', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK006', TenTH: 'Hankook', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK007', TenTH: 'Kenwood', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK008', TenTH: 'Sony', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK009', TenTH: 'Thule', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK010', TenTH: 'Yokohama', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK011', TenTH: 'Mobil 1', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK012', TenTH: 'Castrol', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK013', TenTH: 'Denso', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK014', TenTH: 'NGK', idPhanLoaiTH: 1 }},
+    { TableName: 'ThuongHieu', Item: { id: 'THPK015', TenTH: 'Goodyear', idPhanLoaiTH: 1 }},
+    { TableName: 'TinTuc', Item: { id: 'TT001', tenTT: 'Toyota ra mắt Camry mới', anhDaiDien: 'camry_news.png', chiTietBaiViet: 'Toyota chính thức ra mắt dòng Camry 2023...', ngayDang: '2024-10-16', trangThai: 1 }},
+    { TableName: 'TinTuc', Item: { id: 'TT002', tenTT: 'Honda Civic 2024 có gì mới?', anhDaiDien: 'civic_news.png', chiTietBaiViet: 'Honda đã cập nhật dòng Civic mới với nhiều tính năng nổi bật...', ngayDang: '2024-11-01', trangThai: 1 }},
+    { TableName: 'User', Item: { id: 'U001', hoTen: 'Nguyen Van B', email: 'nguyenvanb@example.com', ngaySinh: '1990-05-10', gioiTinh: 'Nam', cccd: '123456789', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_nguyenvanb.png', PhanLoai: 0 }},
+    { TableName: 'User', Item: { id: 'U002', hoTen: 'Le Thi C', email: 'caophankhai123@gmail.com', ngaySinh: '1992-08-15', gioiTinh: 'Nu', cccd: '987654321', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_lethic.png', PhanLoai: 1 }},
+    { TableName: 'XeOto', Item: { id: 'XE001', tenSP: 'Toyota Camry', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH001', namSanXuat: 2023, kieuDang: 'Sedan', GiaNiemYet: 1000000000, soChoNgoi: 5, soKm: 0, mauXe: 'Đen', loaiCanSo: 'automatic', hinhAnh: 'toyota_camry.jpg', chiTietSP: 'Xe nhập khẩu, đời mới 2023.', trangThai: 'Mới', datLich: 1, ngayTao: 0 }},
+    { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', nguyenLieuXe: 'Xăng', iDthuongHieu: 'TH002', namSanXuat: 2023, kieuDang: 'SUV', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, mauXe: 'Trắng', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: 0 }}
+  ];
+
+  for (const data of sampleData) {
+    try {
+      await docClient.send(new PutCommand(data));
+      console.log(`Đã thêm: ${data.Item.id}`);
+    } catch (error) {
+      console.error(`Lỗi thêm ${data.Item.id}:`, error.message);
+    }
+  }
+
+  console.log('Hoàn thành!');
+}
+
+createTables();

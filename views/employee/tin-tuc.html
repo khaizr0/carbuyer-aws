@@ -197,15 +197,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         tableBody.innerHTML = newsData.map(news => `
             <tr>
-                <td><input type="checkbox" class="row-checkbox" data-id="${news._id}"></td>
+                <td><input type="checkbox" class="row-checkbox" data-id="${news.id}"></td>
                 <td>${news.tenTT}</td>
                 <td>${news.chiTietBaiViet.substring(0, 100)}...</td>
                 <td>${new Date(news.ngayDang).toLocaleDateString()}</td>
                 <td>
-                    <button class="btn btn-trans edit-news" data-id="${news._id}">
+                    <button class="btn btn-trans edit-news" data-id="${news.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-trans delete-news" data-id="${news._id}">
+                    <button class="btn btn-trans delete-news" data-id="${news.id}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -270,7 +270,7 @@ document.addEventListener("click", async (event) => {
             editQuill.root.innerHTML = news.chiTietBaiViet; // Gán nội dung vào Quill editor
 
             // Add ID to the form data for updating
-            document.getElementById('editNewsId').value = news._id;
+            document.getElementById('editNewsId').value = news.id;
 
             // Show the modal
             new bootstrap.Modal(document.getElementById("editTinTucModal")).show();
