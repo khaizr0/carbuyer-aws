@@ -105,49 +105,8 @@
 
     <div class="bancothequantam">
         <br>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="related-products"
             style="display: flex; flex-direction: row; flex-wrap: wrap;">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <img src="https://bmw-mienbac.vn/wp-content/uploads/2021/06/anh-xe-320i-sport-line-600x401.jpg" alt=""
-                    class="image-lienquan">
-                <h3 class="name-lienquan">BMW 320i Sport Line 2024</h3>
-                <h4 class="price-lienquan">1.600.000.000 đ</h4>
-                <div class="box-detail-lienquan">
-                    <p class="product-detail-lienquan">
-                        <i class="fa-solid fa-calendar-days"></i> 2024
-                    </p>
-                    <p class="product-detail-lienquan">
-                        <i class="fa-solid fa-road"></i> 20.000 km
-                    </p>
-                    <p class="product-detail-lienquan">
-                        <i class="fa-solid fa-gas-pump"></i> Xăng
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <img src="https://bmw-mienbac.vn/wp-content/uploads/2021/06/anh-xe-320i-sport-line-600x401.jpg" alt=""
-                    class="image-lienquan">
-                <h3 class="name-lienquan">BMW 320i Sport Line 2024</h3>
-                <h4 class="price-lienquan">1.600.000.000 đ</h4>
-                <div class="box-detail-lienquan">
-                    <p class="product-detail-lienquan"><i class="ri-calendar-event-line"></i> 2024</p>
-                    <p class="product-detail-lienquan"><i class="ri-road-map-line"></i>20.000 km</p>
-                    <p class="product-detail-lienquan"><i class="ri-gas-station-line"></i> Xăng</p>
-                </div>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <img src="https://bmw-mienbac.vn/wp-content/uploads/2021/06/anh-xe-320i-sport-line-600x401.jpg" alt=""
-                    class="image-lienquan">
-                <h3 class="name-lienquan">BMW 320i Sport Line 2024</h3>
-                <h4 class="price-lienquan">1.600.000.000 đ</h4>
-                <div class="box-detail-lienquan">
-                    <p class="product-detail-lienquan"><i class="ri-calendar-event-line"></i> 2024</p>
-                    <p class="product-detail-lienquan"><i class="ri-road-map-line"></i>20.000 km</p>
-                    <p class="product-detail-lienquan"><i class="ri-gas-station-line"></i> Xăng</p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -278,14 +237,34 @@
             return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
         }
 
-        window.onload = () => {
-            // Get the product ID from the URL query parameter (e.g., ?id=XE001)
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id'); // Extract 'id' parameter from the URL
+        function fetchRelatedProducts(productId) {
+            fetch(`/product/related/${productId}`)
+                .then(response => response.json())
+                .then(products => {
+                    const container = document.getElementById('related-products');
+                    container.innerHTML = products.map(p => `
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" onclick="window.location.href='/chitietxe?id=${p.id}'" style="cursor: pointer;">
+                            <img src="${p.image}" alt="${p.name}" class="image-lienquan">
+                            <h3 class="name-lienquan">${p.name}</h3>
+                            <h4 class="price-lienquan">${p.price.toLocaleString('vi-VN')} đ</h4>
+                            <div class="box-detail-lienquan">
+                                <p class="product-detail-lienquan"><i class="fa-solid fa-calendar-days"></i> ${p.year}</p>
+                                <p class="product-detail-lienquan"><i class="fa-solid fa-road"></i> ${p.mileage.toLocaleString('vi-VN')} km</p>
+                                <p class="product-detail-lienquan"><i class="fa-solid fa-gas-pump"></i> ${p.fuelType}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => console.error('Error fetching related products:', error));
+        }
 
-            // Check if productId exists in the URL
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
             if (productId) {
-                fetchProductDetails(productId);  // Call the function to fetch product details
+                fetchProductDetails(productId);
+                fetchRelatedProducts(productId);
             } else {
                 console.error("Product ID not found in the URL.");
             }

@@ -159,25 +159,29 @@
                 
                 gridContainer.innerHTML = '';
                 
-                products.forEach(product => {
-                    const productCard = `
-                        <div class="card" onclick="window.location.href='/chitietxe?id=${product.id}'">
-                            <img 
-                                src="${product.imageUrl}" 
-                                alt="Car" 
-                                onerror="this.src='/Public/images/placeholder.png'"
-                            >
-                            <div class="card-content">
-                                <p class="card-title">${product.name}</p>
-                                <p class="card-price">${product.price}</p>
-                                <p class="card-details">
-                                    📅 ${product.year} / 🚗 ${product.mileage} / ⛽ ${product.fuelType}
-                                </p>
+                if (products.length === 0) {
+                    gridContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #888; width: 100%;"><h3>Hiện tại chưa có sản phẩm nào</h3></div>';
+                } else {
+                    products.forEach(product => {
+                        const productCard = `
+                            <div class="card" onclick="window.location.href='/chitietxe?id=${product.id}'">
+                                <img 
+                                    src="${product.imageUrl}" 
+                                    alt="Car" 
+                                    onerror="this.src='/Public/images/placeholder.png'"
+                                >
+                                <div class="card-content">
+                                    <p class="card-title">${product.name}</p>
+                                    <p class="card-price">${product.price}</p>
+                                    <p class="card-details">
+                                        📅 ${product.year} / 🚗 ${product.mileage} / ⛽ ${product.fuelType}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                    gridContainer.innerHTML += productCard;
-                });
+                        `;
+                        gridContainer.innerHTML += productCard;
+                    });
+                }
             })
             .catch(error => console.error('Error fetching products:', error));
     </script>

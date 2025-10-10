@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { getDB } = require('../config/db');
-const { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById } = require('../models/ProductModel');
+const { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById, getRelatedProducts } = require('../models/ProductModel');
 
 const IDSP = "";
 
@@ -40,17 +40,14 @@ const createCarProduct = (req, res) => {
     try {
       const carData = req.body;
       
-      // Xử lý danh sách hình ảnh
       if (req.files && req.files.length > 0) {
         carData.hinhAnh = req.files.map(file => file.filename).join(' || ');
       } else {
         carData.hinhAnh = '';
       }
 
-      // Xử lý checkbox đặt lịch
       carData.datLich = carData.dangkilaithu === 'on' ? 1 : 0;
 
-      // Kiểm tra các trường bắt buộc
       const missingFields = [];
       if (!carData.tenSP) missingFields.push('Tên sản phẩm');
       if (!carData.iDthuongHieu) missingFields.push('Thương hiệu');
@@ -64,7 +61,6 @@ const createCarProduct = (req, res) => {
         });
       }
 
-      // Thêm sản phẩm vào database
       const newProduct = await addCarProduct(carData);
 
       return res.status(200).json({ 
@@ -87,14 +83,12 @@ const createAccessoryProduct = (req, res) => {
     try {
       const accessoryData = req.body;
 
-      // Xử lý danh sách hình ảnh
       if (req.files && req.files.length > 0) {
         accessoryData.hinhAnh = req.files.map(file => file.filename).join(' || ');
       } else {
         accessoryData.hinhAnh = '';
       }
 
-      // Kiểm tra các trường bắt buộc
       const missingFields = [];
       if (!accessoryData.tenSP) missingFields.push('Tên sản phẩm');
       if (!accessoryData.iDthuongHieu) missingFields.push('Thương hiệu');
@@ -107,7 +101,6 @@ const createAccessoryProduct = (req, res) => {
         });
       }
 
-      // Thêm phụ kiện vào database
       const newAccessory = await addAccessoryProduct(accessoryData);
 
       return res.status(200).json({ 
@@ -204,10 +197,8 @@ const getEditProductPageController = async (req, res) => {
           'utf8'
       );
 
-      // Debug nội dung HTML (nếu cần thiết, lưu ý: không in nội dung lớn vào log)
       console.log('Đã đọc xong file editProduct.html.');
 
-      // Tạo script để điền dữ liệu
       const scriptFillData = `
       <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -274,27 +265,22 @@ const updateProduct = async (req, res) => {
   console.log('ID:', productId); 
 
   try {
-      // Tìm sản phẩm hiện tại
       const { product, productType } = await findProductById(productId);
 
       if (!product) {
           return res.status(404).json({ message: 'Sản phẩm không tồn tại.' });
       }
 
-      // Xử lý upload hình ảnh mới (nếu có)
       upload(req, res, async (err) => {
           if (err) {
               console.error('Lỗi upload file:', err);
               return res.status(400).json({ message: err.message });
           }
 
-          // Danh sách file mới
           const newImages = req.files.map(file => file.filename);
           console.log('Hình ảnh mới:', newImages);
 
-          // Kiểm tra thay đổi hình ảnh
           if (newImages.length > 0 && product.images) {
-              // Xóa ảnh cũ trong thư mục
               product.images.forEach(image => {
                   const filePath = path.join(__dirname, '../Public/images/Database/Products/', image);
                   if (fs.existsSync(filePath)) {
@@ -304,7 +290,6 @@ const updateProduct = async (req, res) => {
               });
           }
 
-          // Chuẩn hóa dữ liệu nếu là sản phẩm Phụ Kiện
           let updatedData = { ...req.body };
 
           if (productType === 'PK') {
@@ -315,7 +300,6 @@ const updateProduct = async (req, res) => {
               updatedData.chiTietSP = updatedData.chiTietSPPK;
               updatedData.trangThai = updatedData.trangThaiPK;
 
-              // Xóa các key không cần thiết
               delete updatedData.tenSPPK;
               delete updatedData.iDthuongHieuPK;
               delete updatedData.idLoaiPK;
@@ -324,10 +308,8 @@ const updateProduct = async (req, res) => {
               delete updatedData.trangThaiPK;
           }
 
-          // Thêm ảnh mới vào dữ liệu cập nhật
-          updatedData.images = newImages.length > 0 ? newImages : product.images; // Giữ ảnh cũ nếu không upload ảnh mới
+          updatedData.images = newImages.length > 0 ? newImages : product.images;
 
-          // Cập nhật vào database
           const { PutCommand } = require('@aws-sdk/lib-dynamodb');
           const docClient = getDB();
           const tableName = productType === 'XE' ? 'XeOto' : 'PhuKien';
@@ -357,6 +339,30 @@ const getProductByIdController = async (req, res) => {
   }
 };
 
+const getRelatedProductsController = async (req, res) => {
+  try {
+    const { GetCommand } = require('@aws-sdk/lib-dynamodb');
+    const docClient = getDB();
+    
+    const result = await docClient.send(new GetCommand({ TableName: 'XeOto', Key: { id: req.params.id } }));
+    
+    if (!result.Item) return res.json([]);
+    
+    const related = await getRelatedProducts(result.Item.kieuDang, req.params.id);
+    res.json(related.map(p => ({
+      id: p.id,
+      name: p.tenSP,
+      price: p.GiaNiemYet,
+      year: p.namSanXuat,
+      mileage: p.soKm,
+      fuelType: p.nguyenLieuXe,
+      image: p.hinhAnh ? `/Public/images/Database/Products/${p.hinhAnh.split(' || ')[0]}` : ''
+    })));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = { createCarProduct, getRecentProductsController, getAllProductsController, 
   deleteProductByIdController, createAccessoryProduct, getEditProductPageController,
-   updateProduct, getProductByIdController };
+   updateProduct, getProductByIdController, getRelatedProductsController };

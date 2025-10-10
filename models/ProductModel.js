@@ -123,6 +123,32 @@ const findProductById = async (productId) => {
   return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
 };
 
+const getRelatedProducts = async (kieuDang, currentId) => {
+  const docClient = getDB();
+  let result = await docClient.send(new ScanCommand({
+    TableName: 'XeOto',
+    FilterExpression: 'kieuDang = :kieuDang AND id <> :currentId AND trangThai <> :hide',
+    ExpressionAttributeValues: {
+      ':kieuDang': kieuDang,
+      ':currentId': currentId,
+      ':hide': 'Hide'
+    }
+  }));
+  
+  if (!result.Items || result.Items.length === 0) {
+    result = await docClient.send(new ScanCommand({
+      TableName: 'XeOto',
+      FilterExpression: 'id <> :currentId AND trangThai <> :hide',
+      ExpressionAttributeValues: {
+        ':currentId': currentId,
+        ':hide': 'Hide'
+      }
+    }));
+  }
+  
+  return (result.Items || []).slice(0, 3);
+};
+
 const getProductById = async (id) => {
   const docClient = getDB();
   const tableName = id.startsWith('XE') ? 'XeOto' : 'PhuKien';
@@ -163,4 +189,4 @@ const getProductById = async (id) => {
   };
 };
 
-module.exports = { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById };
+module.exports = { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById, getRelatedProducts };
