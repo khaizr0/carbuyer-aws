@@ -24,16 +24,16 @@
 
     <main class="container py-5">
         <ul class="nav nav-tabs mb-3">
-            <li class="nav-item"><a class="nav-link" href="/employee/dashboard">Sản phẩm</a></li>
-            <li class="nav-item"><a class="nav-link" href="/news/employee/tin-tuc">Tin tức</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/lichHen">Lịch hẹn</a></li>
-            <li class="nav-item"><a class="nav-link" href="/review/employee/danh-gia">Đánh giá</a></li>
-            <li class="nav-item"><a class="nav-link" href="/slider/employee/slider">Slider</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/san-pham">Sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/tin-tuc">Tin tức</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/employee/lich-hen">Lịch hẹn</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
         </ul>
         <h1 class="mb-4">Danh sách Lịch Hẹn</h1>
         <div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <form class="input-group" action="/lichHen/search" method="GET">
+                <form class="input-group" action="/employee/booking/search" method="GET">
                     <input class="form-control" type="search" name="sanPham" placeholder="Tên sản phẩm" aria-label="Search">
                     <input class="form-control" type="search" name="idSanPham" placeholder="ID sản phẩm" aria-label="Search">
                     <input class="form-control" type="search" name="tenKhachHang" placeholder="Tên Khách Hàng" aria-label="Search">
@@ -83,7 +83,7 @@
                             <td>Đăng kí lái thử</td>
                             <td>Đã đặt</td>
                             <td>
-                                <form action="/lichHen/done" method="POST" style="display:inline;">
+                                <form action="/employee/booking/done" method="POST" style="display:inline;">
                                     <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
                                 </form>
                                 <button class="btn btn-warning change-time-btn" data-id="1" 
@@ -91,7 +91,7 @@
                                     data-bs-toggle="modal" data-bs-target="#changeTimeModal">
                                     <i class="fas fa-clock"></i>
                                 </button>
-                                <form action="/lichHen/delete" method="POST" style="display:inline;">
+                                <form action="/employee/booking/delete" method="POST" style="display:inline;">
                                     <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
@@ -111,7 +111,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="/lichHen/change-time" method="POST">
+                        <form action="/employee/booking/change-time" method="POST">
                             <input type="hidden" id="appointmentId" name="id" value="">
                             <div class="mb-3">
                                 <label for="newDate" class="form-label">Ngày Mới</label>
@@ -175,7 +175,7 @@
             });
 
              // Xử lý xác nhận cho nút hoàn thành
-            const doneButtons = document.querySelectorAll('form[action="/lichHen/done"] button');
+            const doneButtons = document.querySelectorAll('form[action="/employee/booking/done"] button');
             doneButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     const confirmed = confirm("Bạn có chắc chắn muốn đánh dấu lịch hẹn này là hoàn thành?");
@@ -186,7 +186,7 @@
             });
 
             // Xử lý xác nhận cho nút xóa
-            const deleteButtons = document.querySelectorAll('form[action="/lichHen/delete"] button');
+            const deleteButtons = document.querySelectorAll('form[action="/employee/booking/delete"] button');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     const confirmed = confirm("Bạn có chắc chắn muốn xóa lịch hẹn này?");
@@ -197,7 +197,7 @@
             });
 
             // Xử lý xác nhận cho nút đổi giờ
-            const changeTimeForms = document.querySelectorAll('form[action="/lichHen/change-time"]');
+            const changeTimeForms = document.querySelectorAll('form[action="/employee/booking/change-time"]');
             changeTimeForms.forEach(form => {
                 form.addEventListener('submit', function(event) {
                     const confirmed = confirm("Bạn có chắc chắn muốn thay đổi giờ và ngày lịch hẹn này?");

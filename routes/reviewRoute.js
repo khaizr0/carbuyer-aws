@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 
 const checkAuth = (req, res, next) => {
-  if (!req.session.userId) return res.redirect('/login');
+  if (!req.session.userId) return res.redirect('/employee/login');
   next();
 };
 
@@ -21,8 +21,6 @@ router.post('/create', reviewController.createReview);
 router.put('/:id', upload.single('uploadImage'), reviewController.updateReview);
 router.delete('/:id', reviewController.deleteReview);
 
-router.get('/employee/danh-gia', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/employee/danh-gia.html'));
-});
+
 
 module.exports = router;

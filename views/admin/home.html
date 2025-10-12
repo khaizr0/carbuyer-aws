@@ -59,7 +59,6 @@
 
         #editEmployeeForm {
             display: none;
-            background-color: rgba(0, 0, 0, 0.5);
             position: fixed;
             top: 50%;
             left: 50%;
@@ -68,6 +67,17 @@
             border-radius: 8px;
             background-color: white;
             z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 600px;
+            max-width: 90%;
+        }
+        
+        #addEmployeeForm {
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 600px;
+            max-width: 90%;
         }
     </style>
 </head>
@@ -137,7 +147,10 @@
     <!-- The Form for Adding New Employee -->
     <div id="overlay"></div>
     <div id="addEmployeeForm">
-        <h5>Thêm Nhân Viên Mới</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Thêm Nhân Viên Mới</h5>
+            <button type="button" class="btn-close" id="closeFormX"></button>
+        </div>
         <form id="createEmployeeForm">
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -190,7 +203,10 @@
 
     <!-- The Form for Editing Employee -->
     <div id="editEmployeeForm">
-        <h5>Cập nhập thông tin nhân viên</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Cập nhật thông tin nhân viên</h5>
+            <button type="button" class="btn-close" id="closeEditFormX"></button>
+        </div>
         <form id="updateEmployeeForm">
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -266,6 +282,18 @@
         // Đóng form khi nhấn vào overlay (phần nền mờ)
         overlay.addEventListener('click', () => {
             addEmployeeForm.style.display = 'none';
+            editEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Đóng form khi nhấn nút X
+        document.getElementById('closeFormX').addEventListener('click', () => {
+            addEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        document.getElementById('closeEditFormX').addEventListener('click', () => {
+            editEmployeeForm.style.display = 'none';
             overlay.style.display = 'none';
         });
 

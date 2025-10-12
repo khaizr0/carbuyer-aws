@@ -41,7 +41,7 @@ app.use('/employee', employeeRoutes);
 app.use('/product', productRoutes);
 app.use('/news', newsRoutes);
 app.use('/booking', booking);
-app.use('/lichHen', bookingRoutes);
+app.use('/employee/booking', bookingRoutes);
 app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
 

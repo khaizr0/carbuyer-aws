@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 
 const checkAuth = (req, res, next) => {
-  if (!req.session.userId) return res.redirect('/login');
+  if (!req.session.userId) return res.redirect('/employee/login');
   next();
 };
 
@@ -21,8 +21,6 @@ router.post('/create', upload.single('uploadImage'), sliderController.createSlid
 router.put('/:id', upload.single('uploadImage'), sliderController.updateSlider);
 router.delete('/:id', sliderController.deleteSlider);
 
-router.get('/employee/slider', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/employee/slider.html'));
-});
+
 
 module.exports = router;

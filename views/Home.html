@@ -36,10 +36,13 @@
                     </div>
                 `).join('') + '<a class="prev" onclick="plusSlides(-1)">&#10094;</a><a class="next" onclick="plusSlides(1)">&#10095;</a>';
                 dots.innerHTML = sliders.map((s, i) => `<span class="dot" onclick="currentSlide(${i+1})"></span>`).join('');
+                
+                const script = document.createElement('script');
+                script.src = '/Public/JS/slideshow.js';
+                document.body.appendChild(script);
             })
             .catch(error => console.error('Error loading sliders:', error));
     </script>
-    <script src="/Public/JS/slideshow.js"></script>
 
     <!-- Recent Product Container -->
     <div class="product-recent-container">

@@ -115,13 +115,11 @@ router.delete('/:id', async (req, res) => {
 });
 
 const checkAuth = (req, res, next) => {
-  if (!req.session.userId) return res.redirect('/login');
+  if (!req.session.userId) return res.redirect('/employee/login');
   next();
 };
 
-router.get('/employee/tin-tuc', checkAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'employee/tin-tuc.html'));
-  });
+
 
 router.get('/tintuc', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'news.html'));

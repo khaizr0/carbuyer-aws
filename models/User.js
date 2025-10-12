@@ -73,15 +73,23 @@ const getCollection = () => {
     },
     async find(query) {
       const docClient = getDB();
+      let filterExpression = [];
+      let expressionAttributeValues = {};
+      
+      if (query.hoTen) {
+        filterExpression.push('contains(hoTen, :hoTen)');
+        expressionAttributeValues[':hoTen'] = query.hoTen.$regex?.source || query.hoTen;
+      }
+      if (query.PhanLoai !== undefined) {
+        filterExpression.push('PhanLoai = :phanLoai');
+        expressionAttributeValues[':phanLoai'] = query.PhanLoai;
+      }
+      
       const command = new ScanCommand({
         TableName: 'User',
-        ...(query.hoTen && {
-          FilterExpression: 'contains(hoTen, :hoTen)',
-          ExpressionAttributeValues: { ':hoTen': query.hoTen.$regex?.source || query.hoTen }
-        }),
-        ...(query.PhanLoai !== undefined && {
-          FilterExpression: 'PhanLoai = :phanLoai',
-          ExpressionAttributeValues: { ':phanLoai': query.PhanLoai }
+        ...(filterExpression.length > 0 && {
+          FilterExpression: filterExpression.join(' AND '),
+          ExpressionAttributeValues: expressionAttributeValues
         })
       });
       const result = await docClient.send(command);
