@@ -1,10 +1,10 @@
 const adminAuth = (req, res, next) => {
   if (req.session.userRole === 0) {
-    next(); // Continue to admin page if user is admin
+    next(); // Only admin can access admin pages
   } else if (req.session.userRole === 1) {
-    res.redirect('/employee/dashboard'); // Redirect to employee page if user is an employee
+    res.redirect('/employee/dashboard'); // Redirect employee to their dashboard
   } else {
-    res.redirect('/login'); // Redirect to login page if not logged in
+    res.redirect('/login'); // Redirect to login if not logged in
   }
 };
 

@@ -1,11 +1,9 @@
 const path = require('path');
 const express = require('express');
 const router = express.Router();
+const employeeAuth = require('../middlewares/employeeAuth');
 
-const checkAuth = (req, res, next) => {
-  if (!req.session.userId) return res.redirect('/employee/login');
-  next();
-};
+const checkAuth = employeeAuth;
 
 router.get('/san-pham', checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'san-pham.html'));
@@ -60,7 +58,9 @@ router.get('/khac', checkAuth, (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  if (req.session.userId) return res.redirect('/employee/san-pham');
+  if (req.session.userRole === 0 || req.session.userRole === 1) {
+    return res.redirect('/employee/san-pham');
+  }
   res.redirect('/employee/login');
 });
 

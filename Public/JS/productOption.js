@@ -122,18 +122,45 @@ function filterProducts() {
 
 function sortProducts() {
     const sortValue = document.getElementById('sort').value;
-    let sorted = [...allProducts];
     
+    // Get currently displayed products (after filters)
+    const brandFilter = document.querySelector('#brand-filter');
+    const categoryFilter = document.querySelector('#category-filter');
+    const styleFilter = document.querySelector('#style-filter');
+    const colorFilter = document.querySelector('#color-filter');
+    const fuelFilter = document.querySelector('#fuel-filter');
+    
+    const checkedBrands = brandFilter ? Array.from(brandFilter.querySelectorAll('input:checked')).map(cb => cb.value) : [];
+    const checkedCategories = categoryFilter ? Array.from(categoryFilter.querySelectorAll('input:checked')).map(cb => cb.value) : [];
+    const checkedStyles = styleFilter ? Array.from(styleFilter.querySelectorAll('input:checked')).map(cb => cb.value) : [];
+    const checkedColors = colorFilter ? Array.from(colorFilter.querySelectorAll('input:checked')).map(cb => cb.value) : [];
+    const checkedFuels = fuelFilter ? Array.from(fuelFilter.querySelectorAll('input:checked')).map(cb => cb.value) : [];
+    const minPrice = parseFloat(document.getElementById('minPrice')?.value || 0);
+    const maxPrice = parseFloat(document.getElementById('maxPrice')?.value || Infinity);
+    
+    let filtered = [...allProducts];
+    if (checkedBrands.length > 0) filtered = filtered.filter(p => checkedBrands.includes(p.brandId));
+    if (checkedCategories.length > 0) filtered = filtered.filter(p => checkedCategories.includes(p.categoryId));
+    if (checkedStyles.length > 0) filtered = filtered.filter(p => checkedStyles.includes(p.style));
+    if (checkedColors.length > 0) filtered = filtered.filter(p => checkedColors.includes(p.color));
+    if (checkedFuels.length > 0) filtered = filtered.filter(p => checkedFuels.includes(p.fuelType));
+    filtered = filtered.filter(p => {
+        const price = parseFloat(p.price.replace(/[^\d]/g, ''));
+        return price >= minPrice && price <= maxPrice;
+    });
+    
+    // Sort filtered products
     switch(sortValue) {
-        case 'az': sorted.sort((a, b) => a.name.localeCompare(b.name)); break;
-        case 'za': sorted.sort((a, b) => b.name.localeCompare(a.name)); break;
-        case 'priceAsc': sorted.sort((a, b) => parseFloat(a.price.replace(/[^\d]/g, '')) - parseFloat(b.price.replace(/[^\d]/g, ''))); break;
-        case 'priceDesc': sorted.sort((a, b) => parseFloat(b.price.replace(/[^\d]/g, '')) - parseFloat(a.price.replace(/[^\d]/g, ''))); break;
-        case 'oldest': sorted.sort((a, b) => a.createdAt - b.createdAt); break;
-        case 'newest': sorted.sort((a, b) => b.createdAt - a.createdAt); break;
+        case 'az': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+        case 'za': filtered.sort((a, b) => b.name.localeCompare(a.name)); break;
+        case 'priceAsc': filtered.sort((a, b) => parseFloat(a.price.replace(/[^\d]/g, '')) - parseFloat(b.price.replace(/[^\d]/g, ''))); break;
+        case 'priceDesc': filtered.sort((a, b) => parseFloat(b.price.replace(/[^\d]/g, '')) - parseFloat(a.price.replace(/[^\d]/g, ''))); break;
+        case 'oldest': filtered.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)); break;
+        case 'newest': filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); break;
     }
     
-    displayProducts(sorted);
+    currentPage = 1;
+    displayProducts(filtered);
 }
 
 function displayProducts(products = allProducts) {
