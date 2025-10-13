@@ -363,6 +363,79 @@ const getRelatedProductsController = async (req, res) => {
   }
 };
 
+const searchProductsController = async (req, res) => {
+  try {
+    const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
+    const docClient = getDB();
+    const { type, brand, minPrice, maxPrice, year, color, style, keyword } = req.query;
+
+    const tableName = type === 'accessory' ? 'PhuKien' : 'XeOto';
+    const result = await docClient.send(new ScanCommand({ TableName: tableName }));
+    let products = result.Items || [];
+
+    if (keyword) {
+      products = products.filter(p => p.tenSP?.toLowerCase().includes(keyword.toLowerCase()));
+    }
+    if (brand) {
+      products = products.filter(p => p.iDthuongHieu === brand);
+    }
+    if (minPrice) {
+      products = products.filter(p => p.GiaNiemYet >= parseInt(minPrice));
+    }
+    if (maxPrice) {
+      products = products.filter(p => p.GiaNiemYet <= parseInt(maxPrice));
+    }
+    if (year) {
+      products = products.filter(p => p.namSanXuat === parseInt(year));
+    }
+    if (color) {
+      products = products.filter(p => p.mauXe?.toLowerCase() === color.toLowerCase());
+    }
+    if (style) {
+      products = products.filter(p => p.kieuDang?.toLowerCase() === style.toLowerCase());
+    }
+
+    const formatted = products.map(p => ({
+      id: p.id,
+      name: p.tenSP,
+      price: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.GiaNiemYet),
+      year: p.namSanXuat,
+      mileage: p.soKm ? p.soKm.toLocaleString('vi-VN') + ' km' : 'N/A',
+      fuelType: p.nguyenLieuXe || 'N/A',
+      imageUrl: p.hinhAnh ? `/Public/images/Database/Products/${p.hinhAnh.split(' || ')[0]}` : '',
+      brandId: p.iDthuongHieu,
+      type: p.kieuDang,
+      color: p.mauXe,
+      status: p.trangThai
+    }));
+
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getBrandsController = async (req, res) => {
+  try {
+    const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
+    const docClient = getDB();
+    const { type } = req.query;
+    
+    const result = await docClient.send(new ScanCommand({ TableName: 'ThuongHieu' }));
+    let brands = result.Items || [];
+    
+    if (type === 'car') {
+      brands = brands.filter(b => b.idPhanLoaiTH === 0);
+    } else if (type === 'accessory') {
+      brands = brands.filter(b => b.idPhanLoaiTH === 1);
+    }
+    
+    res.json(brands.map(b => ({ id: b.id, name: b.TenTH })));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = { createCarProduct, getRecentProductsController, getAllProductsController, 
   deleteProductByIdController, createAccessoryProduct, getEditProductPageController,
-   updateProduct, getProductByIdController, getRelatedProductsController };
+   updateProduct, getProductByIdController, getRelatedProductsController, searchProductsController, getBrandsController };

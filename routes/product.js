@@ -12,5 +12,7 @@ router.get('/edit/:id', getEditProductPageController);
 router.post('/update/:id', updateProduct);
 router.get('/products/:id', getProductByIdController);
 router.get('/related/:id', getRelatedProductsController);
+router.get('/search', require('../controllers/ProductController').searchProductsController);
+router.get('/brands', require('../controllers/ProductController').getBrandsController);
 
 module.exports = router;

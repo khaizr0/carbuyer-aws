@@ -13,6 +13,7 @@ const sliderRoutes = require('./routes/sliderRoute');
 const myUserRoute = require('./routes/MyUserRoute');
 const userRoute = require('./routes/UserRoute');
 const otherRoutes = require('./routes/OtherRoute');
+const categoryRoutes = require('./routes/category');
 const path = require('path');
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/booking', booking);
 app.use('/employee/booking', bookingRoutes);
 app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
+app.use('/category', categoryRoutes);
 
 // 404 errors
 app.use((req, res) => {

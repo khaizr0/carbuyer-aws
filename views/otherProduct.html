@@ -14,8 +14,8 @@
     <script src="/Public/JS/header.js" defer></script>
 
     <link rel="stylesheet" href="/Public/css/productOption.css">
-    <script src="/Public/JS/productOption.js"></script>
     <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+    <script src="/Public/JS/search.js" defer></script>
 </head>
 
 <body>
@@ -147,69 +147,7 @@
                 </select>
             </div>
 
-            <div class="products-grid">
-                <!-- Show cars -->
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="/Public/images/BMW.webp" alt="Car Image">
-                    <h3>BMW 320i Sport Line 2024</h3>
-                    <p class="price">1.600.000.000</p>
-                    <div class="car-info">
-                        <span><i class="fas fa-calendar-alt"></i> 2024</span>
-                        <span><i class="fas fa-tachometer-alt"></i> 20.000 km</span>
-                        <span><i class="fas fa-gas-pump"></i> Xăng</span>
-                    </div>
-                </div>
-            </div>
+            <div class="products-grid"></div>
 
             <!-- Nút điều hướng -->
             <div class="pagination">
@@ -220,52 +158,6 @@
         </section>
     </div>
     <script src="/Public/JS/productOption.js"></script>
-    <script>
-        // Function to fetch and display "phụ kiện" (accessories) from the API or server
-        async function fetchAccessories() {
-            try {
-                const response = await fetch('/product'); // Adjust the API endpoint as needed
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-               
-                const products = await response.json(); // Get all products
-       
-                // Filter products to only include accessories
-                const accessories = products.filter(product => product.type === "Phụ kiện");
-    
-                // Select the container to display accessories
-                const container = document.querySelector('.products-grid');
-                container.innerHTML = ''; // Clear previous content
-    
-                // Dynamically create and insert accessory cards
-                accessories.forEach(accessory => {
-                    const accessoryCard = document.createElement('div');
-                    accessoryCard.classList.add('product-card'); // Match the car card style
-                    console.log(accessory);
-                    accessoryCard.innerHTML = `
-                        <img src="${accessory.images[0] || '/images/default-accessory.png'}" alt="${accessory.name}">
-                        <h3>${accessory.name}</h3>
-                        <p class="price">${accessory.price.toLocaleString()} VNĐ</p>
-                        <div class="car-info">
-                            <span><i class="fas fa-info-circle"></i> ${accessory.description || 'No description available'}</span>
-                        </div>
-                    `;
-                    // Add click event to navigate to the product detail page
-                    accessoryCard.addEventListener('click', () => {
-                        window.location.href = `/chitietphukien?id=${accessory.id}`;
-                    });
-
-                    container.appendChild(accessoryCard);
-                });
-            } catch (error) {
-                console.error('Error fetching accessories:', error);
-            }
-        }
-    
-        // Call the function to fetch and display accessories
-        fetchAccessories();
-    </script>
     
     <br><br>
     <!-- Footer -->

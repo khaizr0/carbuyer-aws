@@ -12,7 +12,7 @@
     
     <link rel="stylesheet" href="/Public/css/productOption.css">
     <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
-    <script src="/Public/JS/productOption.js"></script>
+    <script src="/Public/JS/search.js" defer></script>
 </head>
 <body>
     <div class="header-text">
@@ -149,49 +149,6 @@
             </div>
         </section>
     </div>
-    <script>
-        // Fetch products from the API and display them
-        async function fetchProducts() {
-            try {
-                const response = await fetch('/product/recent-products');
-                const products = await response.json();
-    
-                const productsGrid = document.querySelector('.products-grid');
-                productsGrid.innerHTML = ''; // Clear any existing products
-    
-                // Loop through the products and create HTML for each product
-                products.forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.classList.add('product-card');
-                    
-                    // Add product image, name, and details
-                    productCard.innerHTML = `
-                        <img src="${product.imageUrl}" alt="Car Image">
-                        <h3>${product.name}</h3>
-                        <p class="price">${product.price}</p>
-                        <div class="car-info">
-                            <span><i class="fas fa-calendar-alt"></i> ${product.year}</span>
-                            <span><i class="fas fa-tachometer-alt"></i> ${product.mileage}</span>
-                            <span><i class="fas fa-gas-pump"></i> ${product.fuelType}</span>
-                        </div>
-                    `;
-                    
-                    // Add click event to navigate to the product detail page
-                    productCard.addEventListener('click', () => {
-                        window.location.href = `/chitietxe?id=${product.id}`;
-                    });
-    
-                    // Append product card to grid
-                    productsGrid.appendChild(productCard);
-                });
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            }
-        }
-    
-        // Fetch products when the page loads
-        window.onload = fetchProducts;
-    </script>
     
     <script src="/Public/JS/productOption.js"></script>
 

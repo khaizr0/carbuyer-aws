@@ -27,6 +27,14 @@ router.get('/slider', checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'slider.html'));
 });
 
+router.get('/loai-phu-kien', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'loai-phu-kien.html'));
+});
+
+router.get('/thuong-hieu', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'thuong-hieu.html'));
+});
+
 router.get('/dashboard', checkAuth, (req, res) => {
   res.redirect('/employee/san-pham');
 });

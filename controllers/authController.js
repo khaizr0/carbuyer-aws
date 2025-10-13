@@ -93,8 +93,6 @@ const resetPasswordPage = async (req, res) => {
   console.log('Token:', token);  
 
   try {
-
-
     if (!email || !token) {
       return res.status(400).send('Email hoặc token không được cung cấp');
     }

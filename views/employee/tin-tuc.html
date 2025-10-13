@@ -30,6 +30,8 @@
             <li class="nav-item"><a class="nav-link" href="/employee/lich-hen">Lịch hẹn</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/thuong-hieu">Thương hiệu</a></li>
         </ul>
         <h1>Danh sách Tin Tức</h1>
         <div class="container-fluid d-flex justify-content-between table-options">
@@ -58,40 +60,18 @@
                         <th>Chức Năng</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Demo data -->
-                    <tr>
-                        <td><input type="checkbox" class="row-checkbox" data-id="1"></td>
-                        <td>Tin tức 1</td>
-                        <td>Nội dung xem trước 1</td>
-                        <td>2024-10-20</td>
-                        <td>
-                            <button class="btn btn-trans"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-trans"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" class="row-checkbox" data-id="2"></td>
-                        <td>Tin tức 2</td>
-                        <td>Nội dung xem trước 2</td>
-                        <td>2024-10-21</td>
-                        <td>
-                            <button class="btn btn-trans edit-news"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-trans delete-news"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <!-- More demo data as needed -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
-<!-- Modal for Creating News -->
-<div class="modal fade" id="createTinTucModal" tabindex="-1" aria-labelledby="createTinTucModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> <!-- Make the modal larger -->
+
+<!-- Modal Create -->
+<div class="modal fade" id="createTinTucModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createTinTucModalLabel">Thêm Tin Tức Mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Thêm Tin Tức Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="createNewsForm" method="POST" enctype="multipart/form-data">
@@ -101,28 +81,24 @@
                             <input type="text" class="form-control" id="tenTT" name="tenTT" required>
                         </div>
                         <div class="col-md-3">
-                            <label for="trangThai" class="form-label">Trạng Thái Bài Đăng</label>
+                            <label for="trangThai" class="form-label">Trạng Thái</label>
                             <select class="form-select" id="trangThai" name="trangThai" required>
                                 <option value="1">Hiện</option>
                                 <option value="0">Ẩn</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="anhDaiDien" class="form-label">Hình Ảnh Tiêu Đề</label>
+                            <label for="anhDaiDien" class="form-label">Hình Ảnh</label>
                             <input type="file" class="form-control" id="anhDaiDien" name="anhDaiDien" required>
                         </div>
                     </div>
-
                     <div class="mb-3 mt-4">
-                        <label for="chiTietBaiViet" class="form-label">Nội Dung</label>
+                        <label class="form-label">Nội Dung</label>
                         <div id="editor" style="height: 200px;"></div>
                         <input type="hidden" name="chiTietBaiViet" id="chiTietBaiViet" required>
                     </div>
-
-                    <div class="modal-footer d-flex justify-content-start px-0">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Thêm
-                        </button>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm</button>
                     </div>
                 </form>
             </div>
@@ -130,207 +106,51 @@
     </div>
 </div>
 
-<!-- Modal for Editing News -->
-<div class="modal fade" id="editTinTucModal" tabindex="-1" aria-labelledby="editTinTucModalLabel" aria-hidden="true">
+<!-- Modal Edit -->
+<div class="modal fade" id="editTinTucModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editTinTucModalLabel">Chỉnh Sửa Tin Tức</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Chỉnh Sửa Tin Tức</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="editNewsForm" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="id" id="editNewsId"> <!-- Hidden input to store the news ID -->
+                    <input type="hidden" name="id" id="editNewsId">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="editTenTT" class="form-label">Tiêu Đề</label>
                             <input type="text" class="form-control" id="editTenTT" name="tenTT" required>
                         </div>
                         <div class="col-md-3">
-                            <label for="editTrangThai" class="form-label">Trạng Thái Bài Đăng</label>
+                            <label for="editTrangThai" class="form-label">Trạng Thái</label>
                             <select class="form-select" id="editTrangThai" name="trangThai" required>
                                 <option value="1">Hiện</option>
                                 <option value="0">Ẩn</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="editAnhDaiDien" class="form-label">Hình Ảnh Tiêu Đề</label>
+                            <label for="editAnhDaiDien" class="form-label">Hình Ảnh</label>
                             <input type="file" class="form-control" id="editAnhDaiDien" name="anhDaiDien">
                         </div>
                     </div>
-
                     <div class="mb-3 mt-4">
-                        <label for="editChiTietBaiViet" class="form-label">Nội Dung</label>
+                        <label class="form-label">Nội Dung</label>
                         <div id="editEditor" style="height: 200px;"></div>
                         <input type="hidden" name="chiTietBaiViet" id="editChiTietBaiViet" required>
                     </div>
-
-                    <div class="modal-footer d-flex justify-content-start px-0">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Cập Nhật
-                        </button>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Cập Nhật</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script>
-// Fetch and display news items on page load
-document.addEventListener("DOMContentLoaded", async () => {
-    const tableBody = document.querySelector("table tbody");
-
-    try {
-        const response = await fetch('/news');  // Fetch all news
-        const newsData = await response.json();
-
-        tableBody.innerHTML = newsData.map(news => `
-            <tr>
-                <td><input type="checkbox" class="row-checkbox" data-id="${news.id}"></td>
-                <td>${news.tenTT}</td>
-                <td>${news.chiTietBaiViet.substring(0, 100)}...</td>
-                <td>${new Date(news.ngayDang).toLocaleDateString()}</td>
-                <td>
-                    <button class="btn btn-trans edit-news" data-id="${news.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-trans delete-news" data-id="${news.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join("");
-    } catch (error) {
-        console.error("Error fetching news:", error);
-    }
-});
-// Khởi tạo Quill editor cho tạo tin tức
-const quill = new Quill('#editor', {
-    theme: 'snow'
-});
-
-// Khởi tạo Quill editor cho chỉnh sửa tin tức
-const editQuill = new Quill('#editEditor', {
-    theme: 'snow'
-});
-// Handle form submission for creating and editing news
-document.getElementById("createNewsForm").addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent default form submission
-    
-    // Lưu nội dung từ Quill vào input ẩn
-    const chiTietBaiVietContent = quill.root.innerHTML;
-    document.getElementById('chiTietBaiViet').value = chiTietBaiVietContent;
-
-    const formData = new FormData(event.target);
-    const url = '/news/create';  // URL for creating a news article
-    const method = 'POST';  // POST for creating
-    
-    try {
-        const response = await fetch(url, {
-            method: method,
-            body: formData
-        });
-        
-        if (response.ok) {
-            alert("Thêm tin tức mới thành công!");
-            location.reload(); // Reload to show the updated list
-            new bootstrap.Modal(document.getElementById("createTinTucModal")).hide(); // Close modal
-        } else {
-            alert("Thêm tin tức thất bại.");
-        }
-    } catch (error) {
-        console.error("Error submitting form:", error);
-        alert("Có lỗi xảy ra khi gửi yêu cầu.");
-    }
-});
-
-// Edit news item - pre-fill the form for editing
-document.addEventListener("click", async (event) => {
-    if (event.target.closest(".edit-news")) {
-        const id = event.target.closest(".edit-news").dataset.id;
-
-        try {
-            const response = await fetch(`/news/${id}`);  // Fetch the specific news item
-            const news = await response.json();
-
-            // Populate the modal fields with the current news data
-            document.getElementById('editTenTT').value = news.tenTT;
-            document.getElementById('editTrangThai').value = news.trangThai ? "1" : "0";
-            editQuill.root.innerHTML = news.chiTietBaiViet; // Gán nội dung vào Quill editor
-
-            // Add ID to the form data for updating
-            document.getElementById('editNewsId').value = news.id;
-
-            // Show the modal
-            new bootstrap.Modal(document.getElementById("editTinTucModal")).show();
-        } catch (error) {
-            console.error("Error fetching news:", error);
-        }
-    }
-});
-
-// Handle form submission for editing news
-document.getElementById("editNewsForm").addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent default form submission
-    
-    // Lưu nội dung từ Quill vào input ẩn
-    const chiTietBaiVietContent = editQuill.root.innerHTML;
-    document.getElementById('editChiTietBaiViet').value = chiTietBaiVietContent;
-
-    const formData = new FormData(event.target);
-    const id = formData.get('id');
-    const url = `/news/${id}`; // URL for editing a news article
-    const method = 'PUT';  // PUT for editing
-    
-    try {
-        const response = await fetch(url, {
-            method: method,
-            body: formData
-        });
-        
-        if (response.ok) {
-            alert("Cập nhật tin tức thành công!");
-            location.reload(); // Reload to show the updated list
-            new bootstrap.Modal(document.getElementById("editTinTucModal")).hide(); // Close modal
-        } else {
-            alert("Cập nhật tin tức thất bại.");
-        }
-    } catch (error) {
-        console.error("Error submitting form:", error);
-        alert("Có lỗi xảy ra khi gửi yêu cầu.");
-    }
-});
-
-
-// Delete news item functionality
-document.addEventListener("click", async (event) => {
-    if (event.target.closest(".delete-news")) {
-        const id = event.target.closest(".delete-news").dataset.id;
-
-        if (confirm("Bạn có chắc chắn muốn xóa?")) {
-            try {
-                const response = await fetch(`/news/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (response.ok) {
-                    alert("Xóa tin tức thành công!");
-                    location.reload(); // Reload to remove the deleted item
-                } else {
-                    alert("Xóa tin tức thất bại.");
-                }
-            } catch (error) {
-                console.error("Error deleting news:", error);
-                alert("Có lỗi xảy ra khi xóa tin tức.");
-            }
-        }
-    }
-});
-
-    </script>
-    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Public/JS/employee-news.js"></script>
+    <script src="/Public/JS/employee-search.js"></script>
 </body>
 
 </html>

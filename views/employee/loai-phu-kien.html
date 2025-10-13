@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách Sản Phẩm</title>
+    <title>Quản lý Loại Phụ Kiện</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="/Public/css/employee.css">
     <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
 </head>
-
 <body>
     <header class="d-flex justify-content-between align-items-center text-white p-3">
         <div class="d-flex align-items-center">
@@ -24,19 +22,19 @@
 
     <div class="p-5">
         <ul class="nav nav-tabs mb-3">
-            <li class="nav-item"><a class="nav-link active" href="/employee/san-pham">Sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/san-pham">Sản phẩm</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/tin-tuc">Tin tức</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/lich-hen">Lịch hẹn</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
-            <li class="nav-item"><a class="nav-link" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/thuong-hieu">Thương hiệu</a></li>
         </ul>
-        <h1>Danh sách Sản Phẩm</h1>
+        <h1>Quản lý Loại Phụ Kiện</h1>
         <div class="container-fluid d-flex justify-content-between table-options">
             <div>
                 <form class="input-group">
-                    <input class="form-control" type="search" placeholder="Tìm kiếm sản phẩm" aria-label="Search">
+                    <input class="form-control" type="search" placeholder="Tìm kiếm loại phụ kiện" aria-label="Search">
                     <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -44,7 +42,6 @@
                 <button type="button" class="btn btn-trans" data-bs-toggle="modal" data-bs-target="#createModal">
                     <i class="fas fa-plus"></i>
                 </button>
-                <button class="btn btn-trans" id="deleteSelected"><i class="fas fa-trash"></i></button>
             </div>
         </div>
 
@@ -52,24 +49,58 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th><i class="fa-solid fa-rectangle-list"></i></th>
-                        <th>Tên</th>
-                        <th>Hãng</th>
-                        <th>Giá niêm yết</th>
-                        <th>Loại sản phẩm</th>
-                        <th>Trạng thái</th>
-                        <th>Chức năng</th>
+                        <th>ID</th>
+                        <th>Tên Loại</th>
+                        <th>Chức Năng</th>
                     </tr>
                 </thead>
-                <tbody id="carList">
-                   
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
-    <!-- Modal content remains the same -->
+
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Loại Phụ Kiện</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Loại</label>
+                        <input type="text" class="form-control" name="tenLoai" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa Loại Phụ Kiện</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" name="id">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Loại</label>
+                        <input type="text" class="form-control" name="tenLoai" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Cập Nhật</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/Public/JS/api/loadProduct.js"></script>
-    <script src="/Public/JS/employee-search.js"></script>
+    <script src="/Public/JS/loai-phu-kien.js"></script>
 </body>
 </html>
