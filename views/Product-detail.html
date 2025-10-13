@@ -190,10 +190,11 @@
                         // Các phần code hiển thị chi tiết như trước
                         document.getElementById('product-name').textContent = data.name || 'No Name Available';
                         document.getElementById('product-price').textContent = formatCurrency(data.price) || 'Price Not Available';
-                        document.getElementById('year-text').textContent = data.year || 'No Year Available';
-                        document.getElementById('mileage-text').textContent = data.mileage ? `${data.mileage} km` : 'Mileage Not Available';
-                        document.getElementById('fuel-text').textContent = data.fuelType || 'Fuel Type Not Available';
-                        document.getElementById('transmission-text').textContent = data.transmission || 'Transmission Type Not Available';
+                        document.getElementById('year-text').textContent = data.year || 'N/A';
+                        document.getElementById('mileage-text').textContent = data.mileage !== undefined && data.mileage !== null ? `${data.mileage.toLocaleString('vi-VN')} km` : '0 km';
+                        document.getElementById('fuel-text').textContent = data.fuelType || 'N/A';
+                        document.getElementById('seats-text').textContent = data.seats ? `${data.seats} chỗ` : 'N/A';
+                        document.getElementById('transmission-text').textContent = data.transmission || 'N/A';
         
                         // Hiển thị hình ảnh
                         const imageContainer = document.getElementById('product-images');

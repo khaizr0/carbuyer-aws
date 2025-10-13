@@ -35,8 +35,28 @@ router.get('/thuong-hieu', checkAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'thuong-hieu.html'));
 });
 
+router.get('/kieu-dang', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'kieu-dang.html'));
+});
+
+router.get('/mau-xe', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'mau-xe.html'));
+});
+
+router.get('/nguyen-lieu', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'nguyen-lieu.html'));
+});
+
+router.get('/categories', checkAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'categories.html'));
+});
+
 router.get('/dashboard', checkAuth, (req, res) => {
   res.redirect('/employee/san-pham');
+});
+
+router.get('/khac', checkAuth, (req, res) => {
+  res.redirect('/employee/categories');
 });
 
 router.get('/', (req, res) => {

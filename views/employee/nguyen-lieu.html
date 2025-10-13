@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Thương Hiệu</title>
+    <title>Quản lý Nguyên Liệu Xe</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="/Public/css/employee.css">
@@ -31,18 +31,18 @@
                 <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Khác</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
-                    <li><a class="dropdown-item active" href="/employee/thuong-hieu">Thương hiệu</a></li>
+                    <li><a class="dropdown-item" href="/employee/thuong-hieu">Thương hiệu</a></li>
                     <li><a class="dropdown-item" href="/employee/kieu-dang">Kiểu dáng</a></li>
                     <li><a class="dropdown-item" href="/employee/mau-xe">Màu xe</a></li>
-                    <li><a class="dropdown-item" href="/employee/nguyen-lieu">Nguyên liệu</a></li>
+                    <li><a class="dropdown-item active" href="/employee/nguyen-lieu">Nguyên liệu</a></li>
                 </ul>
             </li>
         </ul>
-        <h1>Quản lý Thương Hiệu</h1>
+        <h1>Quản lý Nguyên Liệu Xe</h1>
         <div class="container-fluid d-flex justify-content-between table-options">
             <div>
                 <form class="input-group">
-                    <input class="form-control" type="search" placeholder="Tìm kiếm thương hiệu" aria-label="Search">
+                    <input class="form-control" type="search" placeholder="Tìm kiếm nguyên liệu" aria-label="Search">
                     <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -58,8 +58,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên Thương Hiệu</th>
-                        <th>Phân Loại</th>
+                        <th>Tên Nguyên Liệu</th>
                         <th>Chức Năng</th>
                     </tr>
                 </thead>
@@ -72,21 +71,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Thêm Thương Hiệu</h5>
+                <h5 class="modal-title">Thêm Nguyên Liệu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="createForm">
                     <div class="mb-3">
-                        <label class="form-label">Tên Thương Hiệu</label>
-                        <input type="text" class="form-control" name="TenTH" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phân Loại</label>
-                        <select class="form-select" name="idPhanLoaiTH" required>
-                            <option value="0">Xe</option>
-                            <option value="1">Phụ kiện</option>
-                        </select>
+                        <label class="form-label">Tên Nguyên Liệu</label>
+                        <input type="text" class="form-control" name="tenNguyenLieu" required>
                     </div>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm</button>
                 </form>
@@ -99,22 +91,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Sửa Thương Hiệu</h5>
+                <h5 class="modal-title">Sửa Nguyên Liệu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" name="id">
                     <div class="mb-3">
-                        <label class="form-label">Tên Thương Hiệu</label>
-                        <input type="text" class="form-control" name="TenTH" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phân Loại</label>
-                        <select class="form-select" name="idPhanLoaiTH" required>
-                            <option value="0">Xe</option>
-                            <option value="1">Phụ kiện</option>
-                        </select>
+                        <label class="form-label">Tên Nguyên Liệu</label>
+                        <input type="text" class="form-control" name="tenNguyenLieu" required>
                     </div>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Cập Nhật</button>
                 </form>
@@ -124,6 +109,6 @@
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/Public/JS/thuong-hieu.js"></script>
+    <script src="/Public/JS/nguyen-lieu.js"></script>
 </body>
 </html>

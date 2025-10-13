@@ -29,8 +29,16 @@
             <li class="nav-item"><a class="nav-link" href="/employee/lich-hen">Lịch hẹn</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
-            <li class="nav-item"><a class="nav-link" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
-            <li class="nav-item"><a class="nav-link" href="/employee/thuong-hieu">Thương hiệu</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Khác</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
+                    <li><a class="dropdown-item" href="/employee/thuong-hieu">Thương hiệu</a></li>
+                    <li><a class="dropdown-item" href="/employee/kieu-dang">Kiểu dáng</a></li>
+                    <li><a class="dropdown-item" href="/employee/mau-xe">Màu xe</a></li>
+                    <li><a class="dropdown-item" href="/employee/nguyen-lieu">Nguyên liệu</a></li>
+                </ul>
+            </li>
         </ul>
         <h1>Danh sách Sản Phẩm</h1>
         <div class="container-fluid d-flex justify-content-between table-options">
@@ -67,7 +75,81 @@
             </table>
         </div>
     </div>
-    <!-- Modal content remains the same -->
+
+<!-- Modal Chọn Loại -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chọn Loại Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#createCarModal">Thêm Xe</button>
+                <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#createAccessoryModal">Thêm Phụ Kiện</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Xe -->
+<div class="modal fade" id="createCarModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Xe Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCarForm" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Tên Xe</label><input type="text" class="form-control" name="tenSP" required></div>
+                        <div class="col-md-6"><label class="form-label">Thương Hiệu</label><select class="form-select" name="iDthuongHieu" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Giá Niêm Yết</label><input type="number" class="form-control" name="GiaNiemYet" required></div>
+                        <div class="col-md-6"><label class="form-label">Năm Sản Xuất</label><input type="number" class="form-control" name="namSanXuat" required></div>
+                        <div class="col-md-6"><label class="form-label">Kiểu Dáng</label><select class="form-select" name="kieuDang" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Số Chỗ Ngồi</label><input type="number" class="form-control" name="soChoNgoi" required></div>
+                        <div class="col-md-6"><label class="form-label">Màu Xe</label><select class="form-select" name="mauXe" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Loại Cần Số</label><select class="form-select" name="loaiCanSo" required><option value="automatic">Tự động</option><option value="manual">Số sàn</option></select></div>
+                        <div class="col-md-6"><label class="form-label">Nhiên Liệu</label><select class="form-select" name="nguyenLieu" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Số Km</label><input type="number" class="form-control" name="soKm" required></div>
+                        <div class="col-md-6"><label class="form-label">Trạng Thái</label><select class="form-select" name="trangThai" required><option value="Mới">Mới</option><option value="Cũ">Đã qua sử dụng</option></select></div>
+                        <div class="col-md-12"><label class="form-label">Chi Tiết</label><textarea class="form-control" name="chiTietSP" rows="3" required></textarea></div>
+                        <div class="col-md-12"><label class="form-label">Hình Ảnh (Tối đa 5)</label><input type="file" class="form-control" id="uploadImage" name="uploadImage" multiple accept="image/*" required></div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Thêm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Phụ Kiện -->
+<div class="modal fade" id="createAccessoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Phụ Kiện Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createAccessoryForm" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Tên Phụ Kiện</label><input type="text" class="form-control" name="tenSP" required></div>
+                        <div class="col-md-6"><label class="form-label">Thương Hiệu</label><select class="form-select" name="iDthuongHieu" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Loại Phụ Kiện</label><select class="form-select" name="idLoai" required></select></div>
+                        <div class="col-md-6"><label class="form-label">Giá Niêm Yết</label><input type="number" class="form-control" name="GiaNiemYet" required></div>
+                        <div class="col-md-6"><label class="form-label">Trạng Thái</label><select class="form-select" name="trangThai" required><option value="Mới">Mới</option><option value="Cũ">Đã qua sử dụng</option></select></div>
+                        <div class="col-md-12"><label class="form-label">Chi Tiết</label><textarea class="form-control" name="chiTietSP" rows="3" required></textarea></div>
+                        <div class="col-md-12"><label class="form-label">Hình Ảnh (Tối đa 5)</label><input type="file" class="form-control" id="uploadImage" name="uploadImage" multiple accept="image/*" required></div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Thêm</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/Public/JS/api/loadProduct.js"></script>
     <script src="/Public/JS/employee-search.js"></script>

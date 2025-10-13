@@ -117,11 +117,17 @@ const createAccessoryProduct = (req, res) => {
 const getRecentProductsController = async (req, res) => {
   try {
     const recentProducts = await getRecentProducts();
+    const docClient = getDB();
+    
+    const fuels = await docClient.send(new (require('@aws-sdk/lib-dynamodb').ScanCommand)({ TableName: 'NguyenLieuXe' }));
+    const fuelMap = (fuels.Items || []).reduce((acc, f) => {
+      acc[f.id] = f.tenNguyenLieu;
+      return acc;
+    }, {});
     
     const formattedProducts = recentProducts.map(product => {
-      const imageFileName = product.hinhAnh.split('||')[0].trim();
-      const imageUrl = `/Public/images/Database/Products/${imageFileName}`;
-      const images = product.hinhAnh ? product.hinhAnh.split(' || ') : [];
+      const imageFileName = product.hinhAnh ? product.hinhAnh.split('||')[0].trim() : '';
+      const imageUrl = imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png';
       return {
         id: product.id,
         name: product.tenSP,
@@ -130,22 +136,12 @@ const getRecentProductsController = async (req, res) => {
           currency: 'VND' 
         }).format(product.GiaNiemYet),
         year: product.namSanXuat,
-        mileage: product.soKm.toLocaleString('vi-VN') + ' km',
-        fuelType: product.nguyenLieuXe,
-        imageUrl: imageUrl,
-        brandId: product.iDthuongHieu,
-        type: product.kieuDang,
-        seats: product.soChoNgoi,
-        color: product.mauXe,
-        transmission: product.loaiCanSo,
-        details: product.chiTietSP,
-        status: product.trangThai,
-        booked: product.datLich,
-        images: images.map(image => `/Public/images/Database/Products/${image}`)
+        mileage: (product.soKm || 0).toLocaleString('vi-VN') + ' km',
+        fuelType: fuelMap[product.idNguyenLieu] || 'N/A',
+        imageUrl: imageUrl
       };
     });
     
-    console.log('Fetched Products:', formattedProducts);
     res.json(formattedProducts);
   } catch (error) {
     console.error('Error fetching recent products:', error);
@@ -201,24 +197,38 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          console.log('Đang khởi tạo dữ liệu cho form.');
+      document.addEventListener('DOMContentLoaded', async function() {
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
-          
-          console.log('Loại sản phẩm:', productType);
-          console.log('Dữ liệu sản phẩm:', product);
 
           if (productType === 'XE') {
+              const [styles, colors, fuels] = await Promise.all([
+                  fetch('/kieu-dang').then(r => r.json()),
+                  fetch('/mau-xe').then(r => r.json()),
+                  fetch('/nguyen-lieu').then(r => r.json())
+              ]);
+              
+              document.getElementById('idKieuDang').innerHTML = styles.map(s => 
+                  \`<option value="\${s.id}">\${s.tenKieuDang}</option>\`
+              ).join('');
+              
+              document.getElementById('idMauXe').innerHTML = colors.map(c => 
+                  \`<option value="\${c.id}">\${c.tenMau}</option>\`
+              ).join('');
+              
+              document.getElementById('idNguyenLieu').innerHTML = fuels.map(f => 
+                  \`<option value="\${f.id}">\${f.tenNguyenLieu}</option>\`
+              ).join('');
+              
               document.getElementById('tenSP').value = product.tenSP;
               document.getElementById('iDthuongHieu').value = product.iDthuongHieu;
               document.getElementById('namSanXuat').value = product.namSanXuat;
               document.getElementById('GiaNiemYet').value = product.GiaNiemYet;
               document.getElementById('soKm').value = product.soKm;
-              document.getElementById('nguyenLieuXe').value = product.nguyenLieuXe;
-              document.getElementById('kieuDang').value = product.kieuDang;
+              document.getElementById('idNguyenLieu').value = product.idNguyenLieu;
+              document.getElementById('idKieuDang').value = product.idKieuDang;
               document.getElementById('soChoNgoi').value = product.soChoNgoi;
-              document.getElementById('mauXe').value = product.mauXe;
+              document.getElementById('idMauXe').value = product.idMauXe;
               document.getElementById('loaiCanSo').value = product.loaiCanSo;
               document.getElementById('chiTietSP').value = product.chiTietSP;
               document.getElementById('trangThai').value = product.trangThai;
@@ -348,14 +358,14 @@ const getRelatedProductsController = async (req, res) => {
     
     if (!result.Item) return res.json([]);
     
-    const related = await getRelatedProducts(result.Item.kieuDang, req.params.id);
+    const related = await getRelatedProducts(result.Item.idKieuDang, req.params.id);
     res.json(related.map(p => ({
       id: p.id,
       name: p.tenSP,
       price: p.GiaNiemYet,
       year: p.namSanXuat,
       mileage: p.soKm,
-      fuelType: p.nguyenLieuXe,
+      fuelType: p.fuelType,
       image: p.hinhAnh ? `/Public/images/Database/Products/${p.hinhAnh.split(' || ')[0]}` : ''
     })));
   } catch (error) {

@@ -1,4 +1,6 @@
 const { addBooking, getBookingById, getAllBookings, deleteBookingById } = require('../models/DatLichKHModel');
+const { docClient } = require('../config/dynamodb');
+const { PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
 const createDatLichController = async (data) => {
   try {
@@ -40,8 +42,34 @@ const getAllDatLichController = async () => {
   }
 };
 
+const updateDatLichController = async (id, data) => {
+  try {
+    await docClient.send(new PutCommand({
+      TableName: 'DatLichKH',
+      Item: { id, ...data }
+    }));
+    return { success: true };
+  } catch (error) {
+    throw new Error('Có lỗi khi cập nhật lịch hẹn.');
+  }
+};
+
+const deleteDatLichController = async (id) => {
+  try {
+    await docClient.send(new DeleteCommand({
+      TableName: 'DatLichKH',
+      Key: { id }
+    }));
+    return { success: true };
+  } catch (error) {
+    throw new Error('Có lỗi khi xóa lịch hẹn.');
+  }
+};
+
 module.exports = {
   createDatLichController,
   getDatLichByIdController,
-  getAllDatLichController
+  getAllDatLichController,
+  updateDatLichController,
+  deleteDatLichController
 };

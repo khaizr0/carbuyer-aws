@@ -8,14 +8,14 @@ const addCarProduct = async (carData) => {
   const newCarData = {
     id: `XE${Date.now()}`,
     tenSP: carData.tenSP,
-    nguyenLieuXe: carData.nguyenLieuXe,
+    idNguyenLieu: carData.nguyenLieu,
     iDthuongHieu: carData.iDthuongHieu,
     namSanXuat: carData.namSanXuat,
-    kieuDang: carData.kieuDang,
+    idKieuDang: carData.kieuDang,
     GiaNiemYet: Number(carData.GiaNiemYet),
     soChoNgoi: carData.soChoNgoi,
     soKm: Number(carData.soKm || 0),
-    mauXe: carData.mauXe,
+    idMauXe: carData.mauXe,
     loaiCanSo: carData.loaiCanSo,
     hinhAnh: carData.hinhAnh || '',
     chiTietSP: carData.chiTietSP || '',
@@ -57,10 +57,13 @@ const getRecentProducts = async () => {
 
 const getAllProducts = async () => {
   const docClient = getDB();
-  const [cars, accessories, brands] = await Promise.all([
+  const [cars, accessories, brands, styles, colors, fuels] = await Promise.all([
     docClient.send(new ScanCommand({ TableName: 'XeOto' })),
     docClient.send(new ScanCommand({ TableName: 'PhuKien' })),
-    docClient.send(new ScanCommand({ TableName: 'ThuongHieu' }))
+    docClient.send(new ScanCommand({ TableName: 'ThuongHieu' })),
+    docClient.send(new ScanCommand({ TableName: 'KieuDang' })),
+    docClient.send(new ScanCommand({ TableName: 'MauXe' })),
+    docClient.send(new ScanCommand({ TableName: 'NguyenLieuXe' }))
   ]);
 
   const brandMap = (brands.Items || []).reduce((acc, brand) => {
@@ -68,30 +71,61 @@ const getAllProducts = async () => {
     return acc;
   }, {});
 
-  const mapImages = (imageString) => {
-    if (!imageString) return [];
-    return imageString.split(' || ').map(image => `/Public/images/Database/Products/${image.trim()}`);
-  };
+  const styleMap = (styles.Items || []).reduce((acc, style) => {
+    acc[style.id] = style.tenKieuDang;
+    return acc;
+  }, {});
 
-  const formattedCars = (cars.Items || []).map(car => ({
-    id: car.id,
-    name: car.tenSP,
-    brand: brandMap[car.iDthuongHieu] || 'Unknown',
-    price: car.GiaNiemYet,
-    type: 'Ô tô',
-    status: car.trangThai,
-    images: mapImages(car.hinhAnh)
-  }));
+  const colorMap = (colors.Items || []).reduce((acc, color) => {
+    acc[color.id] = color.tenMau;
+    return acc;
+  }, {});
 
-  const formattedAccessories = (accessories.Items || []).map(acc => ({
-    id: acc.id,
-    name: acc.tenSP,
-    brand: brandMap[acc.iDthuongHieu] || 'Unknown',
-    price: acc.GiaNiemYet,
-    type: 'Phụ kiện',
-    status: acc.trangThai,
-    images: mapImages(acc.hinhAnh)
-  }));
+  const fuelMap = (fuels.Items || []).reduce((acc, fuel) => {
+    acc[fuel.id] = fuel.tenNguyenLieu;
+    return acc;
+  }, {});
+
+  const formattedCars = (cars.Items || []).map(car => {
+    const imageFileName = car.hinhAnh ? car.hinhAnh.split('||')[0].trim() : '';
+    const price = Number(car.GiaNiemYet) || 0;
+    return {
+      id: car.id,
+      name: car.tenSP,
+      brand: brandMap[car.iDthuongHieu] || 'Unknown',
+      price: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price),
+      year: car.namSanXuat,
+      mileage: car.soKm ? car.soKm.toLocaleString('vi-VN') + ' km' : '0 km',
+      fuelType: fuelMap[car.idNguyenLieu] || 'N/A',
+      imageUrl: imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
+      brandId: car.iDthuongHieu,
+      type: 'Xe',
+      style: styleMap[car.idKieuDang] || car.idKieuDang,
+      styleId: car.idKieuDang,
+      color: colorMap[car.idMauXe] || car.idMauXe,
+      colorId: car.idMauXe,
+      fuelId: car.idNguyenLieu,
+      status: car.trangThai,
+      createdAt: new Date(car.ngayTao || 0).getTime()
+    };
+  });
+
+  const formattedAccessories = (accessories.Items || []).map(acc => {
+    const imageFileName = acc.hinhAnh ? acc.hinhAnh.split('||')[0].trim() : '';
+    const price = Number(acc.GiaNiemYet) || 0;
+    return {
+      id: acc.id,
+      name: acc.tenSP,
+      brand: brandMap[acc.iDthuongHieu] || 'Unknown',
+      price: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price),
+      imageUrl: imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
+      brandId: acc.iDthuongHieu,
+      categoryId: acc.idLoai,
+      type: 'Phụ kiện',
+      status: acc.trangThai,
+      createdAt: new Date(acc.ngayTao || 0).getTime()
+    };
+  });
 
   return [...formattedCars, ...formattedAccessories];
 };
@@ -127,7 +161,7 @@ const getRelatedProducts = async (kieuDang, currentId) => {
   const docClient = getDB();
   let result = await docClient.send(new ScanCommand({
     TableName: 'XeOto',
-    FilterExpression: 'kieuDang = :kieuDang AND id <> :currentId AND trangThai <> :hide',
+    FilterExpression: 'idKieuDang = :kieuDang AND id <> :currentId AND trangThai <> :hide',
     ExpressionAttributeValues: {
       ':kieuDang': kieuDang,
       ':currentId': currentId,
@@ -146,7 +180,16 @@ const getRelatedProducts = async (kieuDang, currentId) => {
     }));
   }
   
-  return (result.Items || []).slice(0, 3);
+  const fuels = await docClient.send(new ScanCommand({ TableName: 'NguyenLieuXe' }));
+  const fuelMap = (fuels.Items || []).reduce((acc, f) => {
+    acc[f.id] = f.tenNguyenLieu;
+    return acc;
+  }, {});
+  
+  return (result.Items || []).slice(0, 3).map(p => ({
+    ...p,
+    fuelType: fuelMap[p.idNguyenLieu] || 'N/A'
+  }));
 };
 
 const getProductById = async (id) => {
@@ -160,6 +203,11 @@ const getProductById = async (id) => {
   const images = product.hinhAnh ? product.hinhAnh.split(' || ').map(img => `/Public/images/Database/Products/${img}`) : [];
 
   if (tableName === 'XeOto') {
+    const [fuelRes, colorRes] = await Promise.all([
+      product.idNguyenLieu ? docClient.send(new GetCommand({ TableName: 'NguyenLieuXe', Key: { id: product.idNguyenLieu } })) : null,
+      product.idMauXe ? docClient.send(new GetCommand({ TableName: 'MauXe', Key: { id: product.idMauXe } })) : null
+    ]);
+    
     return {
       id: product.id,
       name: product.tenSP,
@@ -168,9 +216,10 @@ const getProductById = async (id) => {
       year: product.namSanXuat,
       type: 'Ô tô',
       mileage: product.soKm,
-      fuelType: product.nguyenLieuXe,
-      color: product.mauXe,
+      fuelType: fuelRes?.Item?.tenNguyenLieu || 'N/A',
+      color: colorRes?.Item?.tenMau || 'N/A',
       transmission: product.loaiCanSo,
+      seats: product.soChoNgoi,
       details: product.chiTietSP,
       status: product.trangThai === 1 ? 'Đang đăng' : 'Đã ẩn',
       booked: product.datLich === 1,

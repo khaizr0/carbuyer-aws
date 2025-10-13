@@ -1,5 +1,62 @@
 document.addEventListener('DOMContentLoaded', function() {
+    loadCategories();
     fetchProducts();
+    
+    async function loadCategories() {
+        try {
+            const [brands, categories, styles, colors, fuels] = await Promise.all([
+                fetch('/category/thuong-hieu').then(r => r.json()),
+                fetch('/category/loai-phu-kien').then(r => r.json()),
+                fetch('/kieu-dang').then(r => r.json()),
+                fetch('/mau-xe').then(r => r.json()),
+                fetch('/nguyen-lieu').then(r => r.json())
+            ]);
+            
+            // Load brands for car
+            const carBrandSelect = document.querySelector('#createCarForm select[name="iDthuongHieu"]');
+            if (carBrandSelect) {
+                carBrandSelect.innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
+                    .map(b => `<option value="${b.id}">${b.TenTH}</option>`).join('');
+            }
+            
+            // Load brands for accessory
+            const accBrandSelect = document.querySelector('#createAccessoryForm select[name="iDthuongHieu"]');
+            if (accBrandSelect) {
+                accBrandSelect.innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)
+                    .map(b => `<option value="${b.id}">${b.TenTH}</option>`).join('');
+            }
+            
+            // Load categories for accessory
+            const categorySelect = document.querySelector('#createAccessoryForm select[name="idLoai"]');
+            if (categorySelect) {
+                categorySelect.innerHTML = categories
+                    .map(c => `<option value="${c.id}">${c.tenLoai}</option>`).join('');
+            }
+            
+            // Load styles for car
+            const styleSelect = document.querySelector('#createCarForm select[name="kieuDang"]');
+            if (styleSelect) {
+                styleSelect.innerHTML = styles
+                    .map(s => `<option value="${s.id}">${s.tenKieuDang}</option>`).join('');
+            }
+            
+            // Load colors for car
+            const colorSelect = document.querySelector('#createCarForm select[name="mauXe"]');
+            if (colorSelect) {
+                colorSelect.innerHTML = colors
+                    .map(c => `<option value="${c.id}">${c.tenMau}</option>`).join('');
+            }
+            
+            // Load fuels for car
+            const fuelSelect = document.querySelector('#createCarForm select[name="nguyenLieu"]');
+            if (fuelSelect) {
+                fuelSelect.innerHTML = fuels
+                    .map(f => `<option value="${f.id}">${f.tenNguyenLieu}</option>`).join('');
+            }
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+    }
     
     async function fetchProducts() {
         try {
@@ -15,17 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td><input type="checkbox" class="row-checkbox" data-id="${product.id}"></td>
                     <td>${product.name}</td>
                     <td>${product.brand}</td>
-                    <td>${new Intl.NumberFormat('vi-VN', { 
-                        style: 'currency', 
-                        currency: 'VND' 
-                    }).format(product.price)}</td>
+                    <td>${product.price}</td>
                     <td>${product.type}</td>
                     <td>${product.status}</td>
                     <td>
-                        <button class="btn btn-trans" onclick="editProduct('${product.id}')">
+                        <button class="btn btn-sm btn-warning" onclick="editProduct('${product.id}')">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-trans" onclick="deleteProduct('${product.id}')">
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product.id}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>

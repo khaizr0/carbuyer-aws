@@ -3,7 +3,9 @@ const router = express.Router();
 const { 
   createDatLichController, 
   getAllDatLichController, 
-  getDatLichByIdController, 
+  getDatLichByIdController,
+  updateDatLichController,
+  deleteDatLichController
 } = require('../controllers/DatLichKHController');
 
 // Route to create a new booking
@@ -34,6 +36,24 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
     res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    await updateDatLichController(req.params.id, req.body);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    await deleteDatLichController(req.params.id);
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

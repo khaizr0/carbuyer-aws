@@ -65,27 +65,53 @@ h1, h2, h3 {
 
 /* Sidebar */
 .sidebar {
-    width: 250px;
-    background-color: #fff;
+    width: 260px;
+    background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
 }
 
 .sidebar h2 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 20px;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
 }
 
 .filter-section {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
 }
 
 .filter-section h3 {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 600;
     margin-bottom: 10px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.filter-content {
+    margin-top: 10px;
 }
 
 .filter-section ul {
@@ -93,11 +119,20 @@ h1, h2, h3 {
 }
 
 .filter-section li {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.filter-section input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
 }
 
 .price-slider {
     width: 100%;
+    cursor: pointer;
 }
 
 /* Product List */

@@ -33,82 +33,58 @@
                     Thương hiệu 
                     <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
                 </h3>
-                <div class="filter-content">
-                    <ul>
-                        <li><input type="checkbox"> VINFAST</li>
-                        <li><input type="checkbox"> MERCEDES-BENZ</li>
-                        <li><input type="checkbox"> BMW</li>
-                        <li><input type="checkbox"> VOLVO</li>
-                        <li><input type="checkbox"> TESLA</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Mức giá -->
-            <div class="filter-section">
-                <h3>
-                    Mức giá 
-                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
-                </h3>
-                <div class="filter-content">
-                    <ul>
-                        <li><input type="checkbox"> Dưới 1 tỷ</li>
-                        <li><input type="checkbox"> Từ 1 tỷ đến 2 tỷ</li>
-                        <li><input type="checkbox"> Trên 2 tỷ</li>
-                    </ul>
+                <div class="filter-content" id="brand-filter">
+                    <ul></ul>
                 </div>
             </div>
 
             <!-- Kiểu dáng -->
             <div class="filter-section">
                 <h3>
-                    Kiểu dáng 
+                    Kiểu dáng
                     <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
                 </h3>
-                <div class="filter-content">
-                    <ul>
-                        <li><input type="checkbox"> Sedan / Hatchback</li>
-                        <li><input type="checkbox"> SUV / CUV / MPV</li>
-                        <li><input type="checkbox"> Coupe / Convertible</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Năm sản xuất -->
-            <div class="filter-section">
-                <h3>
-                    Năm sản xuất 
-                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
-                </h3>
-                <div class="filter-content">
-                    <ul>
-                        <li><input type="checkbox"> 2024</li>
-                        <li><input type="checkbox"> 2023</li>
-                        <li><input type="checkbox"> 2022</li>
-                    </ul>
+                <div class="filter-content" id="style-filter">
+                    <ul></ul>
                 </div>
             </div>
 
             <!-- Màu xe -->
             <div class="filter-section">
                 <h3>
-                    Màu xe 
+                    Màu xe
                     <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
                 </h3>
-                <div class="filter-content">
-                    <ul>
-                        <li><input type="checkbox"> Trắng</li>
-                        <li><input type="checkbox"> Đen</li>
-                        <li><input type="checkbox"> Xám</li>
-                    </ul>
+                <div class="filter-content" id="color-filter">
+                    <ul></ul>
                 </div>
             </div>
 
-            <!-- Mức giá slider -->
+            <!-- Nhiên liệu -->
+            <div class="filter-section">
+                <h3>
+                    Nhiên liệu
+                    <button class="toggle-button" onclick="toggleSection(this)"><i class="fas fa-angle-down"></i></button>
+                </h3>
+                <div class="filter-content" id="fuel-filter">
+                    <ul></ul>
+                </div>
+            </div>
+
+            <!-- Mức giá -->
             <div class="filter-section">
                 <h3>MỨC GIÁ</h3>
-                <input type="range" min="0" max="20000000000" value="10000000000" class="price-slider">
-                <p>0 đ - 20.000.000.000 đ</p>
+                <div class="filter-content" style="display: block;">
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 13px; color: #666;">Giá thấp nhất</label>
+                        <input type="number" id="minPrice" placeholder="0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 13px; color: #666;">Giá cao nhất</label>
+                        <input type="number" id="maxPrice" placeholder="10000000000" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <button onclick="filterProducts()" style="width: 100%; margin-top: 10px; padding: 8px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Lọc</button>
+                </div>
             </div>
         </aside>
         <script>

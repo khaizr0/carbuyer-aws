@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td>${news.chiTietBaiViet.substring(0, 100)}...</td>
                 <td>${new Date(news.ngayDang).toLocaleDateString()}</td>
                 <td>
-                    <button class="btn btn-trans edit-news" data-id="${news.id}"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-trans delete-news" data-id="${news.id}"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-warning edit-news" data-id="${news.id}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger delete-news" data-id="${news.id}"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join("");
@@ -21,15 +21,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Quill editors
-const quill = new Quill('#editor', { theme: 'snow' });
-const editQuill = new Quill('#editEditor', { theme: 'snow' });
+// Summernote editors
+$(document).ready(function() {
+    $('#editor').summernote({
+        height: 200,
+        maxTextLength: 10000000,
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                if (bufferText.length > 10000000) {
+                    e.preventDefault();
+                    alert('Nội dung quá dài! Giới hạn 10 triệu ký tự.');
+                }
+            }
+        }
+    });
+    
+    $('#editEditor').summernote({
+        height: 200,
+        maxTextLength: 10000000,
+        callbacks: {
+            onPaste: function (e) {
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                if (bufferText.length > 10000000) {
+                    e.preventDefault();
+                    alert('Nội dung quá dài! Giới hạn 10 triệu ký tự.');
+                }
+            }
+        }
+    });
+});
 
 // Create news
 document.getElementById("createNewsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    document.getElementById('chiTietBaiViet').value = quill.root.innerHTML;
     const formData = new FormData(event.target);
+    formData.set('chiTietBaiViet', $('#editor').summernote('code'));
     try {
         const response = await fetch('/news/create', { method: 'POST', body: formData });
         if (response.ok) {
@@ -53,7 +80,7 @@ document.addEventListener("click", async (event) => {
             const news = await response.json();
             document.getElementById('editTenTT').value = news.tenTT;
             document.getElementById('editTrangThai').value = news.trangThai ? "1" : "0";
-            editQuill.root.innerHTML = news.chiTietBaiViet;
+            $('#editEditor').summernote('code', news.chiTietBaiViet);
             document.getElementById('editNewsId').value = news.id;
             new bootstrap.Modal(document.getElementById("editTinTucModal")).show();
         } catch (error) {
@@ -65,8 +92,8 @@ document.addEventListener("click", async (event) => {
 // Update news
 document.getElementById("editNewsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    document.getElementById('editChiTietBaiViet').value = editQuill.root.innerHTML;
     const formData = new FormData(event.target);
+    formData.set('chiTietBaiViet', $('#editEditor').summernote('code'));
     const id = formData.get('id');
     try {
         const response = await fetch(`/news/${id}`, { method: 'PUT', body: formData });

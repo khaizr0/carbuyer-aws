@@ -14,6 +14,9 @@ const myUserRoute = require('./routes/MyUserRoute');
 const userRoute = require('./routes/UserRoute');
 const otherRoutes = require('./routes/OtherRoute');
 const categoryRoutes = require('./routes/category');
+const kieuDangRoutes = require('./routes/kieuDang');
+const mauXeRoutes = require('./routes/mauXe');
+const nguyenLieuRoutes = require('./routes/nguyenLieu');
 const path = require('path');
 const app = express();
 
@@ -46,6 +49,9 @@ app.use('/employee/booking', bookingRoutes);
 app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
 app.use('/category', categoryRoutes);
+app.use('/kieu-dang', kieuDangRoutes);
+app.use('/mau-xe', mauXeRoutes);
+app.use('/nguyen-lieu', nguyenLieuRoutes);
 
 // 404 errors
 app.use((req, res) => {

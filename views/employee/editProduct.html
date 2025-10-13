@@ -8,35 +8,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/Public/css/employee.css">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
 </head>
 <body>
     <header class="d-flex justify-content-between align-items-center text-white p-3">
-        <!-- Header giữ nguyên -->
         <div class="d-flex align-items-center">
-            <a href="#">
-                <img src="/Public/images/CarLogo.png" alt="Logo"
-                    style="width: 40px; height: auto; margin-right: 10px;">
-            </a>
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white fw-bold" href="/employee/dashboard">Quản lý sản phẩm</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/news/employee/tin-tuc">Quản lý tin tức</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active text-white" href="/lichhen">Lịch được đặt</a>
-                </li>
-            </ul>
+            <a href="#"><img src="/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
         </div>
         <div class="text-end">
             <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
             <p class="mb-0"><a href="#" class="text-white">Đăng xuất</a></p>
         </div>
     </header>
-    <div class="container mt-5">
-        <button class="btn btn-warning text-dark mb-3 d-flex align-items-center" onclick="window.history.back();" style="font-weight: bold;">
+
+    <div class="p-5">
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item"><a class="nav-link active" href="/employee/san-pham">Sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/tin-tuc">Tin tức</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/lich-hen">Lịch hẹn</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Khác</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
+                    <li><a class="dropdown-item" href="/employee/thuong-hieu">Thương hiệu</a></li>
+                    <li><a class="dropdown-item" href="/employee/kieu-dang">Kiểu dáng</a></li>
+                    <li><a class="dropdown-item" href="/employee/mau-xe">Màu xe</a></li>
+                    <li><a class="dropdown-item" href="/employee/nguyen-lieu">Nguyên liệu</a></li>
+                </ul>
+            </li>
+        </ul>
+        <button class="btn btn-warning text-dark mb-3" onclick="window.history.back();">
             <i class="fas fa-arrow-left me-2"></i> Quay Lại
         </button>
         <h2>Chỉnh Sửa Sản Phẩm</h2>
@@ -111,29 +117,13 @@
 
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="nguyenLieuXe" class="form-label">Nguyên Liệu Xe</label>
-                                <select class="form-select" name="nguyenLieuXe" id="nguyenLieuXe"  >
-                                    <option value="Xăng">Xăng</option>
-                                    <option value="Dầu">Dầu</option>
-                                    <option value="Điện">Điện</option>
+                                <label for="idNguyenLieu" class="form-label">Nguyên Liệu Xe</label>
+                                <select class="form-select" name="idNguyenLieu" id="idNguyenLieu"  >
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="kieuDang" class="form-label">Kiểu Dáng</label>
-                                <select class="form-select" name="kieuDang" id="kieuDang"  >
-                                    <option value="sedan">Sedan</option>
-                                    <option value="suv">SUV</option>
-                                    <option value="coupe">Coupe</option>
-                                    <option value="hatchback">Hatchback</option>
-                                    <option value="wagon">Wagon</option>
-                                    <option value="convertible">Convertible</option>
-                                    <option value="pickup">Pickup</option>
-                                    <option value="van">Van</option>
-                                    <option value="minivan">Minivan</option>
-                                    <option value="crossover">Crossover</option>
-                                    <option value="roadster">Roadster</option>
-                                    <option value="luxury">Luxury</option>
-                                    <option value="sports">Sports</option>
+                                <label for="idKieuDang" class="form-label">Kiểu Dáng</label>
+                                <select class="form-select" name="idKieuDang" id="idKieuDang"  >
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -159,18 +149,8 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="mauXe" class="form-label">Màu Xe</label>
-                                <select class="form-select" name="mauXe" id="mauXe"  >
-                                    <option value="xanh">Xanh</option>
-                                    <option value="do">Đỏ</option>
-                                    <option value="tim">Tím</option>
-                                    <option value="vang">Vàng</option>
-                                    <option value="trang">Trắng</option>
-                                    <option value="den">Đen</option>
-                                    <option value="hong">Hồng</option>
-                                    <option value="cam">Cam</option>
-                                    <option value="nau">Nâu</option>
-                                    <option value="xam">Xám</option>
+                                <label for="idMauXe" class="form-label">Màu Xe</label>
+                                <select class="form-select" name="idMauXe" id="idMauXe"  >
                                 </select>
                             </div>
 
@@ -193,7 +173,7 @@
 
                         <div class="col-md-4">
                             <label for="chiTietSP" class="form-label">Chi Tiết Sản Phẩm</label>
-                            <textarea class="form-control" name="chiTietSP" id="chiTietSP" rows="20"  ></textarea>
+                            <textarea name="chiTietSP" id="chiTietSP"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-start px-0">
@@ -286,7 +266,7 @@
 
                         <div class="col-md-4">
                             <label for="chiTietSPPK" class="form-label">Chi Tiết Sản Phẩm</label>
-                            <textarea class="form-control" id="chiTietSPPK" name="chiTietSPPK" rows="20"  ></textarea>
+                            <textarea id="chiTietSPPK" name="chiTietSPPK"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-start px-0">
@@ -299,10 +279,23 @@
             </div>
         </div>
     </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Khởi tạo Summernote
+        $(document).ready(function() {
+            $('#chiTietSP').summernote({
+                height: 400,
+                maxTextLength: 10000000
+            });
+            $('#chiTietSPPK').summernote({
+                height: 400,
+                maxTextLength: 10000000
+            });
+        });
+
         // Script tự động chuyển tab dựa trên loại sản phẩm
         document.addEventListener('DOMContentLoaded', function () {
             const productType = document.getElementById('productType').value;

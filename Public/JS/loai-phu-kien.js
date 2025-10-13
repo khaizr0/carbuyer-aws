@@ -15,8 +15,8 @@ function renderData(data) {
             <td>${item.id}</td>
             <td>${item.tenLoai}</td>
             <td>
-                <button class="btn btn-trans edit-btn" data-id="${item.id}" data-name="${item.tenLoai}"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-trans delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-sm btn-warning edit-btn" data-id="${item.id}" data-name="${item.tenLoai}"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>
             </td>
         </tr>
     `).join("");
