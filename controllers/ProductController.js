@@ -202,11 +202,15 @@ const getEditProductPageController = async (req, res) => {
           const product = ${JSON.stringify(product)};
 
           if (productType === 'XE') {
-              const [styles, colors, fuels] = await Promise.all([
+              const [brands, styles, colors, fuels] = await Promise.all([
+                  fetch('/category/thuong-hieu').then(r => r.json()),
                   fetch('/kieu-dang').then(r => r.json()),
                   fetch('/mau-xe').then(r => r.json()),
                   fetch('/nguyen-lieu').then(r => r.json())
               ]);
+              
+              document.getElementById('iDthuongHieu').innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
+                  .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
               
               document.getElementById('idKieuDang').innerHTML = styles.map(s => 
                   \`<option value="\${s.id}">\${s.tenKieuDang}</option>\`
@@ -220,25 +224,45 @@ const getEditProductPageController = async (req, res) => {
                   \`<option value="\${f.id}">\${f.tenNguyenLieu}</option>\`
               ).join('');
               
-              document.getElementById('tenSP').value = product.tenSP;
-              document.getElementById('iDthuongHieu').value = product.iDthuongHieu;
-              document.getElementById('namSanXuat').value = product.namSanXuat;
-              document.getElementById('GiaNiemYet').value = product.GiaNiemYet;
-              document.getElementById('soKm').value = product.soKm;
-              document.getElementById('idNguyenLieu').value = product.idNguyenLieu;
-              document.getElementById('idKieuDang').value = product.idKieuDang;
-              document.getElementById('soChoNgoi').value = product.soChoNgoi;
-              document.getElementById('idMauXe').value = product.idMauXe;
-              document.getElementById('loaiCanSo').value = product.loaiCanSo;
-              document.getElementById('chiTietSP').value = product.chiTietSP;
-              document.getElementById('trangThai').value = product.trangThai;
+              document.getElementById('tenSP').value = product.tenSP || '';
+              document.getElementById('namSanXuat').value = product.namSanXuat || '';
+              document.getElementById('GiaNiemYet').value = product.GiaNiemYet || '';
+              document.getElementById('soKm').value = product.soKm || '';
+              document.getElementById('soChoNgoi').value = product.soChoNgoi || '';
+              document.getElementById('loaiCanSo').value = product.loaiCanSo || '';
+              
+              setTimeout(() => {
+                  document.getElementById('iDthuongHieu').value = product.iDthuongHieu || '';
+                  document.getElementById('idNguyenLieu').value = product.idNguyenLieu || '';
+                  document.getElementById('idKieuDang').value = product.idKieuDang || '';
+                  document.getElementById('idMauXe').value = product.idMauXe || '';
+                  document.getElementById('trangThai').value = product.trangThai || '';
+                  document.getElementById('dangkilaithu').checked = product.datLich === 1;
+              }, 200);
+              
+              $('#chiTietSP').summernote('code', product.chiTietSP || '');
           } else if (productType === 'PK') {
-              document.getElementById('tenSPPK').value = product.tenSP;
-              document.getElementById('iDthuongHieuPK').value = product.iDthuongHieu;
-              document.getElementById('idLoaiPK').value = product.idLoai;
-              document.getElementById('GiaNiemYetPK').value = product.GiaNiemYet;
-              document.getElementById('chiTietSPPK').value = product.chiTietSP;
-              document.getElementById('trangThaiPK').value = product.trangThai;
+              const [brands, categories] = await Promise.all([
+                  fetch('/category/thuong-hieu').then(r => r.json()),
+                  fetch('/category/loai-phu-kien').then(r => r.json())
+              ]);
+              
+              document.getElementById('iDthuongHieuPK').innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)
+                  .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
+              
+              document.getElementById('idLoaiPK').innerHTML = categories
+                  .map(c => \`<option value="\${c.id}">\${c.tenLoai}</option>\`).join('');
+              
+              document.getElementById('tenSPPK').value = product.tenSP || '';
+              document.getElementById('GiaNiemYetPK').value = product.GiaNiemYet || '';
+              
+              setTimeout(() => {
+                  document.getElementById('iDthuongHieuPK').value = product.iDthuongHieu || '';
+                  document.getElementById('idLoaiPK').value = product.idLoai || '';
+                  document.getElementById('trangThaiPK').value = product.trangThai || '';
+              }, 200);
+              
+              $('#chiTietSPPK').summernote('code', product.chiTietSP || '');
           }
       });
       </script>

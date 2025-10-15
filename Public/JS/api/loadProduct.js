@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
         createCarForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const formData = new FormData(createCarForm);
             const fileInput = document.getElementById('uploadImage');
 
             // Kiểm tra số lượng file
@@ -139,6 +138,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(`File ${file.name} không phải là file ảnh!`);
                     return;
                 }
+            }
+
+            const formData = new FormData();
+            const formElements = createCarForm.elements;
+            
+            for (let element of formElements) {
+                if (element.name && element.name !== 'uploadImage') {
+                    if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked ? 'on' : 'off');
+                    } else if (element.tagName === 'TEXTAREA') {
+                        formData.append(element.name, $('#' + element.id).summernote('code'));
+                    } else {
+                        formData.append(element.name, element.value);
+                    }
+                }
+            }
+            
+            for (let file of fileInput.files) {
+                formData.append('uploadImage', file);
             }
 
             try {
@@ -168,7 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
         createAccessoryForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const formData = new FormData(createAccessoryForm);
             const fileInput = document.getElementById('uploadImage');
 
             // Kiểm tra số lượng file
@@ -183,6 +200,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(`File ${file.name} không phải là file ảnh!`);
                     return;
                 }
+            }
+
+            const formData = new FormData();
+            const formElements = createAccessoryForm.elements;
+            
+            for (let element of formElements) {
+                if (element.name && element.name !== 'uploadImage') {
+                    if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked ? 'on' : 'off');
+                    } else if (element.tagName === 'TEXTAREA') {
+                        formData.append(element.name, $('#' + element.id).summernote('code'));
+                    } else {
+                        formData.append(element.name, element.value);
+                    }
+                }
+            }
+            
+            for (let file of fileInput.files) {
+                formData.append('uploadImage', file);
             }
 
             try {

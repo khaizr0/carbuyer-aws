@@ -3,6 +3,10 @@ const { CreateTableCommand } = require('@aws-sdk/client-dynamodb');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
 const { client, docClient } = require('./config/dynamodb');
 
+//note:
+// san-pham-oto và phụ-kien: trangThai: 0 = ẩn sản phẩm, 1 = đã qua sử dụng, 2 = Tâm Trang, 3 = Mới
+// role human: 0 là admin, 1 là employee
+
 const tables = [
   {
     TableName: 'User',
@@ -119,8 +123,6 @@ async function createTables() {
     { TableName: 'LoaiPhuKien', Item: { id: 'LPK011', tenLoai: 'Đèn LED' }},
     { TableName: 'LoaiPhuKien', Item: { id: 'LPK012', tenLoai: 'Kính chắn nắng' }},
     { TableName: 'LoaiPhuKien', Item: { id: 'LPK013', tenLoai: 'Túi khí bổ sung' }},
-    { TableName: 'PhuKien', Item: { id: 'PK1732901518686', tenSP: 'Camera hành trình', iDthuongHieu: 'THPK001', idLoai: 'LPK001', GiaNiemYet: 312312, chiTietSP: 'Camera hành trình full HD.', hinhAnh: 'camera_hanh_trinh.jpg', trangThai: 'Mới', datLich: 0, ngayTao: '2024-01-15T00:00:00.000Z' }},
-    { TableName: 'PhuKien', Item: { id: 'PK002', tenSP: 'Cảm biến áp suất lốp', iDthuongHieu: 'THPK002', idLoai: 'LPK002', GiaNiemYet: 1500000, chiTietSP: 'Cảm biến chính xác, tích hợp hiển thị màn hình.', hinhAnh: 'cam_bien_ap_suat_lop.jpg', trangThai: 'Mới', datLich: 0, ngayTao: '2024-01-20T00:00:00.000Z' }},
     { TableName: 'ThuongHieu', Item: { id: 'THKHAC0', TenTH: 'Khác', idPhanLoaiTH: 0 }},
     { TableName: 'ThuongHieu', Item: { id: 'THXE001', TenTH: 'Toyota', idPhanLoaiTH: 0 }},
     { TableName: 'ThuongHieu', Item: { id: 'THXE002', TenTH: 'Honda', idPhanLoaiTH: 0 }},
@@ -156,8 +158,6 @@ async function createTables() {
     { TableName: 'TinTuc', Item: { id: 'TT002', tenTT: 'Honda Civic 2024 có gì mới?', anhDaiDien: 'civic_news.png', chiTietBaiViet: 'Honda đã cập nhật dòng Civic mới với nhiều tính năng nổi bật...', ngayDang: '2024-11-01', trangThai: 1 }},
     { TableName: 'User', Item: { id: 'U001', hoTen: 'Nguyen Van B', email: 'nguyenvanb@example.com', ngaySinh: '1990-05-10', gioiTinh: 'Nam', cccd: '123456789', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_nguyenvanb.png', PhanLoai: 0 }},
     { TableName: 'User', Item: { id: 'U002', hoTen: 'Le Thi C', email: 'caophankhai123@gmail.com', ngaySinh: '1992-08-15', gioiTinh: 'Nu', cccd: '987654321', matKhau: 'e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc', anhNhanVien: 'avatar_lethic.png', PhanLoai: 1 }},
-    { TableName: 'XeOto', Item: { id: 'XE001', tenSP: 'Toyota Camry', idNguyenLieu: 'NL001', iDthuongHieu: 'THXE001', namSanXuat: 2023, idKieuDang: 'KD001', GiaNiemYet: 1000000000, soChoNgoi: 5, soKm: 0, idMauXe: 'MX001', loaiCanSo: 'automatic', hinhAnh: 'toyota_camry.jpg', chiTietSP: 'Xe nhập khẩu, đời mới 2023.', trangThai: 'Mới', datLich: 1, ngayTao: '2024-02-01T00:00:00.000Z' }},
-    { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', idNguyenLieu: 'NL001', iDthuongHieu: 'THXE002', namSanXuat: 2023, idKieuDang: 'KD002', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, idMauXe: 'MX002', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: '2024-02-10T00:00:00.000Z' }},
     { TableName: 'DanhGia', Item: { id: 'DG001', tenKH: 'Anh Nam', noiDung: 'Tư vấn nhiệt tình, thân thiện', hinhAnh: '/Public/images/pro5-picture.jpg' }},
     { TableName: 'DanhGia', Item: { id: 'DG002', tenKH: 'Chị Hằng', noiDung: 'Dịch vụ chu đáo, chuyên nghiệp', hinhAnh: '/Public/images/pro5-picture.jpg' }},
     { TableName: 'Slider', Item: { id: 'SL001', tieuDe: 'Slide 1', hinhAnh: '/Public/images/SlideShow/img5.png' }},
@@ -181,7 +181,13 @@ async function createTables() {
     { TableName: 'NguyenLieuXe', Item: { id: 'NL001', tenNguyenLieu: 'Xăng' }},
     { TableName: 'NguyenLieuXe', Item: { id: 'NL002', tenNguyenLieu: 'Dầu Diesel' }},
     { TableName: 'NguyenLieuXe', Item: { id: 'NL003', tenNguyenLieu: 'Điện' }},
-    { TableName: 'NguyenLieuXe', Item: { id: 'NL004', tenNguyenLieu: 'Hybrid' }}
+    { TableName: 'NguyenLieuXe', Item: { id: 'NL004', tenNguyenLieu: 'Hybrid' }},
+
+    //thêm sản phẩm ở đây
+    { TableName: 'XeOto', Item: { id: 'XE001', tenSP: 'Toyota Camry', idNguyenLieu: 'NL001', iDthuongHieu: 'THXE001', namSanXuat: 2023, idKieuDang: 'KD001', GiaNiemYet: 1000000000, soChoNgoi: 5, soKm: 0, idMauXe: 'MX001', loaiCanSo: 'automatic', hinhAnh: 'toyota_camry.jpg', chiTietSP: 'Xe nhập khẩu, đời mới 2023.', trangThai: 'Mới', datLich: 1, ngayTao: '2024-02-01T00:00:00.000Z' }},
+    { TableName: 'XeOto', Item: { id: 'XE002', tenSP: 'Honda CR-V', idNguyenLieu: 'NL001', iDthuongHieu: 'THXE002', namSanXuat: 2023, idKieuDang: 'KD002', GiaNiemYet: 900000000, soChoNgoi: 7, soKm: 0, idMauXe: 'MX002', loaiCanSo: 'automatic', hinhAnh: 'honda_crv.jpg', chiTietSP: 'Xe gia đình, đời mới 2023.', trangThai: 'Mới', datLich: 0, ngayTao: '2024-02-10T00:00:00.000Z' }},
+    { TableName: 'PhuKien', Item: { id: 'PK1732901518686', tenSP: 'Camera hành trình', iDthuongHieu: 'THPK001', idLoai: 'LPK001', GiaNiemYet: 312312, chiTietSP: 'Camera hành trình full HD.', hinhAnh: 'camera_hanh_trinh.jpg', trangThai: 'Mới', datLich: 0, ngayTao: '2024-01-15T00:00:00.000Z' }},
+    { TableName: 'PhuKien', Item: { id: 'PK002', tenSP: 'Cảm biến áp suất lốp', iDthuongHieu: 'THPK002', idLoai: 'LPK002', GiaNiemYet: 1500000, chiTietSP: 'Cảm biến chính xác, tích hợp hiển thị màn hình.', hinhAnh: 'cam_bien_ap_suat_lop.jpg', trangThai: 'Mới', datLich: 0, ngayTao: '2024-01-20T00:00:00.000Z' }},
   ];
 
   for (const data of sampleData) {
