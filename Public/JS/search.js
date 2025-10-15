@@ -27,11 +27,11 @@ function displayProducts() {
     }
     
     const isAccessoryPage = window.location.pathname.includes('phukien');
-    const detailUrl = isAccessoryPage ? '/chitietphukien' : '/chitietxe';
+    const detailUrl = isAccessoryPage ? '/chitietphukien' : '/chitietsanpham';
     
     grid.innerHTML = allProducts.map(product => `
         <div class="product-card" onclick="window.location.href='${detailUrl}?id=${product.id}'">
-            <img src="${product.imageUrl}" alt="${product.name}" onerror="this.src='/Public/images/placeholder.png'">
+            <img src="${product.imageUrl || '/Public/images/no-image-found.jpg'}" alt="${product.name}" onerror="this.src='/Public/images/no-image-found.jpg'">
             <h3>${product.name}</h3>
             <p class="price">${product.price}</p>
             ${!isAccessoryPage ? `

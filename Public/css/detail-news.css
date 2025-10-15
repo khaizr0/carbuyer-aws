@@ -8,43 +8,48 @@
 
 /* Header Section */
 .news-detail-header {
-    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    background: #2c3e50;
     color: white;
     text-align: center;
-    padding: 20px 0;
+    padding: 30px 20px;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .news-detail-header h1 {
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
 }
 
 .back-btn {
     position: absolute;
     left: 20px;
-    top: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 8px 12px;
-    border-radius: 5px;
-    transition: background 0.3s, transform 0.3s;
+    gap: 6px;
 }
 
 .back-btn::before {
-    content: "\2190"; /* Left arrow */
-    margin-right: 8px;
+    content: "←";
+    font-size: 16px;
 }
 
 .back-btn:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-50%) translateX(-3px);
 }
 
 /* News Content */

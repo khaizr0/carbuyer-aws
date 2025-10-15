@@ -16,7 +16,7 @@ router.get('/phukien', (req, res) => {
     res.sendFile(path.join(viewsPath, 'otherProduct.html'));
 });
 
-router.get('/chitietxe', (req, res) => {
+router.get('/chitietsanpham', (req, res) => {
     res.sendFile(path.join(viewsPath, 'Product-detail.html'));
 });
 

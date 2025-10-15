@@ -28,46 +28,36 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="display: flex;">
 
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <img id="product-images"
-                        src="https://www.bmw-longbien.com.vn/wp-content/uploads/sites/3/2019/06/bmw-long-bien-bmw-320i-2024-anh-bia.jpg"
-                        alt="ảnh" class="img-detail-1">
-                    <div class="image-range">
-                        <img src="https://www.bmw-longbien.com.vn/wp-content/uploads/sites/3/2019/06/bmw-long-bien-bmw-320i-2024-anh-bia.jpg"
-                            class="img-detail-2">
-                        <img src="https://bmw-khuyenmai.com/wp-content/uploads/2022/10/bmw-3-2023-20.jpeg"
-                            class="img-detail-2">
-                        <img src="https://choxe365.com/wp-content/uploads/2022/01/bmw-320i.png" class="img-detail-2">
-                        <img src="https://dailymuabanxe.net/wp-content/uploads/2022/12/z3963399809058_886a40561483a04e42931f37084f4029.jpg"
-                            class="img-detail-2">
-                    </div>
+                    <img id="product-images" src="/Public/images/no-image-found.jpg" alt="ảnh" class="img-detail-1">
+                    <div class="image-range"></div>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="product-1"
                     style="display: flex; flex-direction: column; flex-wrap: wrap;">
                     <div class="box-price">
-                        <h1 class="product-detail-name" id="product-name">BMW 320i Sport Line 2024</h1>
+                        <h1 class="product-detail-name" id="product-name"></h1>
                         <p class="product-detail-p" id="product-price-label">Giá niêm yết:</p>
-                        <h3 class="product-detail-price" id="product-price">1.600.000.000 đ</h3>
+                        <h3 class="product-detail-price" id="product-price"></h3>
                     </div>
                     <div class="box-detail-model">
                         <p class="product-detail-model" id="product-year">
                             <i class="fa-solid fa-calendar"></i> 
-                            <span id="year-text">2024</span>
+                            <span id="year-text"></span>
                         </p>
                         <p class="product-detail-model" id="product-mileage">
                             <i class="fa-solid fa-road"></i> 
-                            <span id="mileage-text">20.000 km</span>
+                            <span id="mileage-text"></span>
                         </p>
                         <p class="product-detail-model" id="product-fuel">
                             <i class="fa-solid fa-gas-pump"></i> 
-                            <span id="fuel-text">Xăng</span>
+                            <span id="fuel-text"></span>
                         </p>
                         <p class="product-detail-model" id="product-seats">
                             <i class="fa-solid fa-chair"></i>
-                            <span id="seats-text">5 chỗ</span>
+                            <span id="seats-text"></span>
                         </p>
                         <p class="product-detail-model" id="product-transmission">
                             <i class="fa-solid fa-gear"></i> 
-                            <span id="transmission-text">Tự động 9 cấp</span>
+                            <span id="transmission-text"></span>
                         </p>
                     </div>
                     <div class="btn-regiter-callnow" id="contact-buttons">
@@ -86,16 +76,13 @@
         </div>
     </div>
     <br>
-    <div class="caikhunggiday"></div>
-
-
-
-    <div class="layout">
-        <div class="box-product-detail">
-            <img src="https://www.bmw-phumyhung.vn/wp-content/uploads/sites/2/2022/09/BMW-THE-X6_POST1.jpg" alt=""
-                class="box-image-detail-panel">
-        </div>
+    <div class="banner-ads" style="max-width: 90%; margin: 0 auto;">
+        <img id="random-banner" src="" alt="Banner" style="width: 100%; height: auto; display: block; border-radius: 8px;">
     </div>
+
+
+
+
 
     <div class="quantam">
         <h1>Bạn có thể quan tâm</h1>
@@ -203,9 +190,10 @@
                         if (data.images && data.images.length > 0) {
                             const imgElement = document.getElementById('product-images');
                             if (imgElement) {
-                                imgElement.src = data.images[0];  
+                                imgElement.src = data.images[0] || '/Public/images/no-image-found.jpg';  
                                 imgElement.alt = 'Product Image';
                                 imgElement.style.width = '670px';
+                                imgElement.onerror = function() { this.src = '/Public/images/no-image-found.jpg'; };
                             }
         
                             // Cập nhật ảnh thumbnail
@@ -214,10 +202,11 @@
                             
                             data.images.forEach((image, index) => {
                                 const thumbnailImg = document.createElement('img');
-                                thumbnailImg.src = image;
+                                thumbnailImg.src = image || '/Public/images/no-image-found.jpg';
                                 thumbnailImg.classList.add('img-detail-2');
+                                thumbnailImg.onerror = function() { this.src = '/Public/images/no-image-found.jpg'; };
                                 thumbnailImg.addEventListener('click', () => {
-                                    document.getElementById('product-images').src = image;
+                                    document.getElementById('product-images').src = image || '/Public/images/no-image-found.jpg';
                                 });
                                 thumbnailContainer.appendChild(thumbnailImg);
                             });
@@ -244,20 +233,30 @@
                 .then(products => {
                     const container = document.getElementById('related-products');
                     container.innerHTML = products.map(p => `
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" onclick="window.location.href='/chitietxe?id=${p.id}'" style="cursor: pointer;">
-                            <img src="${p.image}" alt="${p.name}" class="image-lienquan">
-                            <h3 class="name-lienquan">${p.name}</h3>
-                            <h4 class="price-lienquan">${p.price.toLocaleString('vi-VN')} đ</h4>
-                            <div class="box-detail-lienquan">
-                                <p class="product-detail-lienquan"><i class="fa-solid fa-calendar-days"></i> ${p.year}</p>
-                                <p class="product-detail-lienquan"><i class="fa-solid fa-road"></i> ${p.mileage.toLocaleString('vi-VN')} km</p>
-                                <p class="product-detail-lienquan"><i class="fa-solid fa-gas-pump"></i> ${p.fuelType}</p>
+                        <div onclick="window.location.href='/chitietsanpham?id=${p.id}'" style="cursor: pointer; background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px; margin: 10px; width: calc(33.33% - 20px); box-sizing: border-box;">
+                            <img src="${p.image || '/Public/images/no-image-found.jpg'}" alt="${p.name}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;" onerror="this.src='/Public/images/no-image-found.jpg'">
+                            <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">${p.name}</h3>
+                            <p style="color: red; font-weight: bold; margin-bottom: 10px;">${p.price.toLocaleString('vi-VN')} đ</p>
+                            <div style="display: flex; justify-content: space-around; font-size: 14px;">
+                                <span style="display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-calendar"></i> ${p.year}</span>
+                                <span style="display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-tachometer-alt"></i> ${p.mileage.toLocaleString('vi-VN')} km</span>
+                                <span style="display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-gas-pump"></i> ${p.fuelType}</span>
                             </div>
                         </div>
                     `).join('');
                 })
                 .catch(error => console.error('Error fetching related products:', error));
         }
+
+        fetch('/slider')
+            .then(response => response.json())
+            .then(sliders => {
+                if (sliders.length > 0) {
+                    const randomSlider = sliders[Math.floor(Math.random() * sliders.length)];
+                    document.getElementById('random-banner').src = randomSlider.hinhAnh;
+                }
+            })
+            .catch(error => console.error('Error loading banner:', error));
 
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);

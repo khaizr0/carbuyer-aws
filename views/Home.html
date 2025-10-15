@@ -147,11 +147,11 @@
                 } else {
                     products.forEach(product => {
                         const productCard = `
-                            <div class="card" onclick="window.location.href='/chitietxe?id=${product.id}'">
+                            <div class="card" onclick="window.location.href='/chitietsanpham?id=${product.id}'">
                                 <img 
-                                    src="${product.imageUrl}" 
+                                    src="${product.imageUrl || '/Public/images/no-image-found.jpg'}" 
                                     alt="Car" 
-                                    onerror="this.src='/Public/images/placeholder.png'"
+                                    onerror="this.src='/Public/images/no-image-found.jpg'"
                                 >
                                 <div class="card-content">
                                     <p class="card-title">${product.name}</p>
@@ -181,7 +181,7 @@
                     newsItems.forEach(news => {
                         const newsItem = `
                             <div class="news-item" onclick="window.location.href='/news/detail/${news.id}'">
-                                <img src="/Public/images/${news.anhDaiDien}" alt="${news.tenTT}">
+                                <img src="${news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg'}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
                                 <div class="news-content">
                                     <h3>${news.tenTT}</h3>
                                     <p>${news.chiTietBaiViet.substring(0, 100)}...</p>

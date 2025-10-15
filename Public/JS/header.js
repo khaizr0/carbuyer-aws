@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="search-container" style="position: relative;">
             <input type="text" id="headerSearchBox" class="search-box" placeholder="Tìm kiếm xe ở đây" autocomplete="off">
             <button class="search-button" id="headerSearchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <div id="searchDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 200px; background: white; border: 1px solid #ddd; border-radius: 5px; max-height: 400px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>
+            <div id="searchDropdown" style="display: none; position: absolute; top: 100%; left: 0; width: 500px; background: white; border: 1px solid #ddd; border-radius: 5px; max-height: 400px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>
             <div class="hotline-container">
                     <span class="hotline-title">Hotline</span><br>
                     <a href="tel:0123456789" class="hotline-link">0123456789</a>
@@ -54,10 +54,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div style="display: flex; align-items: center; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee;" 
                      onmouseover="this.style.background='#f5f5f5'" 
                      onmouseout="this.style.background='white'"
-                     onclick="window.location.href='/chitietxe?id=${p.id}'">
-                    <img src="${p.imageUrl}" alt="${p.name}" 
+                     onclick="window.location.href='/chitietsanpham?id=${p.id}'">
+                    <img src="${p.imageUrl || '/Public/images/no-image-found.jpg'}" alt="${p.name}" 
                          style="width: 60px; height: 45px; object-fit: cover; border-radius: 4px; margin-right: 10px;"
-                         onerror="this.src='/Public/images/placeholder.png'">
+                         onerror="this.src='/Public/images/no-image-found.jpg'">
                     <div style="flex: 1;">
                         <div style="font-weight: 500; color: #333;">${p.name}</div>
                         <div style="font-size: 12px; color: #666;">${p.price}</div>

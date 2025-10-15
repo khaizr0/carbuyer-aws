@@ -14,11 +14,8 @@ async function fetchNewsDetail(newsId) {
 
         // Set the image source dynamically
         const newsImage = document.getElementById('news-image');
-        if (news.anhDaiDien) {
-            newsImage.src = `/Public/images/${news.anhDaiDien}`;
-        } else {
-            newsImage.style.display = 'none';
-        }
+        newsImage.src = news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+        newsImage.onerror = function() { this.src = '/Public/images/no-image-found.jpg'; };
     } catch (error) {
         console.error('Lỗi khi lấy chi tiết tin tức:', error);
     }

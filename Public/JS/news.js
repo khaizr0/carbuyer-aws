@@ -78,25 +78,31 @@ function formatDate(dateString) {
 
 function updateFeaturedArticle(news) {
     const featuredArticle = document.querySelector('.featured-article');
-    featuredArticle.querySelector('img').src = `/Public/images/${news.anhDaiDien}`;
-    featuredArticle.querySelector('h3').textContent = formatDate(news.ngayDang);
-    featuredArticle.querySelector('h2').textContent = news.tenTT;
-    featuredArticle.querySelector('p').innerHTML = news.chiTietBaiViet; 
-    featuredArticle.querySelector('.read-more').href = `/news/detail/${news.id}`;
+    featuredArticle.innerHTML = `
+        <img src="${news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg'}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
+        <div class="featured-content">
+            <h3>${formatDate(news.ngayDang)}</h3>
+            <h2>${news.tenTT}</h2>
+            <p>${news.chiTietBaiViet}</p>
+        </div>
+    `;
+    featuredArticle.style.cursor = 'pointer';
+    featuredArticle.onclick = () => window.location.href = `/news/detail/${news.id}`;
 }
 
 function createArticleElement(news) {
     const otherArticlesContainer = document.querySelector('.other-articles');
     const articleDiv = document.createElement('div');
     articleDiv.classList.add('article');
+    articleDiv.style.cursor = 'pointer';
+    articleDiv.onclick = () => window.location.href = `/news/detail/${news.id}`;
 
     articleDiv.innerHTML = `
-        <img src="/Public/images/${news.anhDaiDien}" alt="${news.tenTT}">
+        <img src="${news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg'}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
         <div class="article-content">
             <h3>${formatDate(news.ngayDang)}</h3>
             <h4>${news.tenTT}</h4>
             <p>${news.chiTietBaiViet}</p>
-            <a href="/news/detail/${news.id}">Đọc thêm</a>
         </div>
     `;
 

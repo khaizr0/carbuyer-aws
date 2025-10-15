@@ -170,8 +170,8 @@ function displayProducts(products = allProducts) {
     const paginated = products.slice(start, end);
     
     grid.innerHTML = paginated.map(p => `
-        <div class="product-card" onclick="window.location.href='/chitietxe?id=${p.id}'">
-            <img src="${p.imageUrl}" alt="${p.name}" onerror="this.src='/Public/images/placeholder.png'">
+        <div class="product-card" onclick="window.location.href='/chitietsanpham?id=${p.id}'">
+            <img src="${p.imageUrl || '/Public/images/no-image-found.jpg'}" alt="${p.name}" onerror="this.src='/Public/images/no-image-found.jpg'">
             <h3>${p.name}</h3>
             <p class="price">${p.price}</p>
             ${p.year || p.mileage || p.fuelType ? `
