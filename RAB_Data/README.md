@@ -47,7 +47,7 @@ node restoreData.js backup-2025-10-15T03-13-22-686Z.json
 
 ### Cách 2: Từ thư mục gốc
 ```bash
-npm run restore RAB_Data/backup-2025-10-15T03-13-22-686Z.json
+npm run restore backup-2025-10-15T03-13-22-686Z.json
 ```
 
 ### Chức năng:
@@ -96,7 +96,7 @@ npm run backup
 
 ### Restore khi cần:
 ```bash
-npm run restore RAB_Data/backup-YYYY-MM-DDTHH-MM-SS-MMMZ.json
+npm run restore backup-YYYY-MM-DDTHH-MM-SS-MMMZ.json
 ```
 
 ## 📊 Tables được backup

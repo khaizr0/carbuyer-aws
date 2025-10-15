@@ -44,7 +44,14 @@ async function createTable(tableName) {
 }
 
 async function restoreData(backupFile) {
-    const filePath = path.isAbsolute(backupFile) ? backupFile : path.join(__dirname, backupFile);
+    let filePath;
+    if (path.isAbsolute(backupFile)) {
+        filePath = backupFile;
+    } else if (backupFile.startsWith('RAB_Data/')) {
+        filePath = path.join(process.cwd(), backupFile);
+    } else {
+        filePath = path.join(__dirname, backupFile);
+    }
     
     if (!fs.existsSync(filePath)) {
         console.error(`✗ Backup file not found: ${filePath}`);
