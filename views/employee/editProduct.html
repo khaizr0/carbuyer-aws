@@ -93,8 +93,9 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="uploadImage" class="form-label">Upload Hình Ảnh</label>
-                                <input type="file" class="form-control" name="uploadImage" id="uploadImage" accept="image/*" multiple  >
+                                <label class="form-label">Hình Ảnh Hiện Tại</label>
+                                <div id="currentImages" class="d-flex flex-wrap gap-2 mb-2"></div>
+                                <small class="text-muted">Click vào ảnh để thay thế</small>
                             </div>
                         </div>
 
@@ -191,8 +192,9 @@
                                 <input type="number" class="form-control" id="GiaNiemYetPK" name="GiaNiemYetPK"  >
                             </div>
                             <div>
-                                <label for="uploadImagePK" class="form-label">Upload Hình Ảnh Mới (Ảnh cũ sẽ bị xoá)</label>
-                                <input type="file" class="form-control" name="uploadImagePK" id="uploadImagePK" accept="image/*" multiple  >
+                                <label class="form-label">Hình Ảnh Hiện Tại</label>
+                                <div id="currentImagesPK" class="d-flex flex-wrap gap-2 mb-2"></div>
+                                <small class="text-muted">Click vào ảnh để thay thế</small>
                             </div>
                         </div>
 
@@ -244,6 +246,8 @@
                 maxTextLength: 10000000
             });
         });
+        
+        window.imageChanges = {};
 
         // Script tự động chuyển tab dựa trên loại sản phẩm
         document.addEventListener('DOMContentLoaded', function () {
@@ -270,7 +274,7 @@
             const formElements = this.elements;
             
             for (let element of formElements) {
-                if (element.name && element.name !== 'uploadImage') {
+                if (element.name) {
                     if (element.type === 'checkbox') {
                         formData.append(element.name, element.checked ? 'on' : 'off');
                     } else if (element.tagName === 'TEXTAREA') {
@@ -281,11 +285,9 @@
                 }
             }
             
-            const fileInput = document.getElementById('uploadImage');
-            if (fileInput.files.length > 0) {
-                for (let file of fileInput.files) {
-                    formData.append('uploadImage', file);
-                }
+            for (let index in window.imageChanges) {
+                formData.append('uploadImage', window.imageChanges[index]);
+                formData.append('imageIndex', index);
             }
             
             try {
@@ -312,7 +314,7 @@
             const formElements = this.elements;
             
             for (let element of formElements) {
-                if (element.name && element.name !== 'uploadImagePK') {
+                if (element.name) {
                     if (element.type === 'checkbox') {
                         formData.append(element.name, element.checked ? 'on' : 'off');
                     } else if (element.tagName === 'TEXTAREA') {
@@ -323,11 +325,9 @@
                 }
             }
             
-            const fileInput = document.getElementById('uploadImagePK');
-            if (fileInput.files.length > 0) {
-                for (let file of fileInput.files) {
-                    formData.append('uploadImage', file);
-                }
+            for (let index in window.imageChanges) {
+                formData.append('uploadImage', window.imageChanges[index]);
+                formData.append('imageIndex', index);
             }
             
             try {

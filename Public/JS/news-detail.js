@@ -12,9 +12,8 @@ async function fetchNewsDetail(newsId) {
         document.querySelector('.news-date').innerHTML = `<i class="fa-solid fa-clock"></i> ${formatDate(news.ngayDang)}`;
         document.querySelector('.news-description').innerHTML = news.chiTietBaiViet;
 
-        // Set the image source dynamically
         const newsImage = document.getElementById('news-image');
-        newsImage.src = news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+        newsImage.src = news.anhDaiDien ? `/Public/images/Database/tintuc/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
         newsImage.onerror = function() { this.src = '/Public/images/no-image-found.jpg'; };
     } catch (error) {
         console.error('Lỗi khi lấy chi tiết tin tức:', error);

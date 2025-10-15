@@ -4,18 +4,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const response = await fetch('/news');
         const newsData = await response.json();
-        tableBody.innerHTML = newsData.map(news => `
+        tableBody.innerHTML = newsData.map(news => {
+            const plainText = news.chiTietBaiViet.replace(/<[^>]*>/g, '').substring(0, 100);
+            return `
             <tr>
                 <td><input type="checkbox" class="row-checkbox" data-id="${news.id}"></td>
                 <td>${news.tenTT}</td>
-                <td>${news.chiTietBaiViet.substring(0, 100)}...</td>
-                <td>${new Date(news.ngayDang).toLocaleDateString()}</td>
+                <td>${plainText}...</td>
+                <td>${new Date(news.ngayDang).toLocaleDateString('vi-VN')}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning edit-news" data-id="${news.id}"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-danger delete-news" data-id="${news.id}"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-warning edit-news" data-id="${news.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-news" data-id="${news.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             </tr>
-        `).join("");
+            `;
+        }).join("");
     } catch (error) {
         console.error("Error fetching news:", error);
     }

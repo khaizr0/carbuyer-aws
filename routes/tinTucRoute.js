@@ -10,10 +10,10 @@ const fs = require('fs');
 // Set up multer for file storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'Public/images/');  // Folder where the images will be stored
+        cb(null, 'Public/images/Database/tintuc/');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));  // Rename file with a timestamp to avoid overwriting
+        cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
     }
 });
 
@@ -48,11 +48,10 @@ router.put('/:id', upload.single('anhDaiDien'), async (req, res) => {
         const { tenTT, chiTietBaiViet, trangThai } = req.body;
         const ngayDang = new Date().toISOString().split('T')[0];
         
-        // Xóa ảnh cũ nếu có ảnh mới
         if (req.file) {
             const oldNews = await getNewsById(req.params.id);
             if (oldNews.anhDaiDien) {
-                const oldImagePath = path.join('Public/images/', oldNews.anhDaiDien);
+                const oldImagePath = path.join('Public/images/Database/tintuc/', oldNews.anhDaiDien);
                 if (fs.existsSync(oldImagePath)) {
                     fs.unlinkSync(oldImagePath);
                 }
@@ -98,10 +97,9 @@ router.get('/:id', async (req, res) => {
 // DELETE: Delete a specific news article by ID
 router.delete('/:id', async (req, res) => {
     try {
-        // Xóa ảnh trước khi xóa tin tức
         const news = await getNewsById(req.params.id);
         if (news.anhDaiDien) {
-            const imagePath = path.join('Public/images/', news.anhDaiDien);
+            const imagePath = path.join('Public/images/Database/tintuc/', news.anhDaiDien);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }

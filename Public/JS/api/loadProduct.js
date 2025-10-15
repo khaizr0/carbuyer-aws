@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         createCarForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const fileInput = document.getElementById('uploadImage');
+            const fileInput = createCarForm.querySelector('input[name="uploadImage"]');
 
             // Kiểm tra số lượng file
             if (fileInput.files.length > 5) {
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         createAccessoryForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const fileInput = document.getElementById('uploadImage');
+            const fileInput = createAccessoryForm.querySelector('input[name="uploadImage"]');
 
             // Kiểm tra số lượng file
             if (fileInput.files.length > 5) {

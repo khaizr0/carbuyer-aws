@@ -47,6 +47,7 @@ const createCarProduct = (req, res) => {
       }
 
       carData.datLich = carData.dangkilaithu === 'on' ? 1 : 0;
+      carData.GiaNiemYet = carData.GiaNiemYet ? Number(carData.GiaNiemYet) : 0;
 
       const missingFields = [];
       if (!carData.tenSP) missingFields.push('Tên sản phẩm');
@@ -88,6 +89,8 @@ const createAccessoryProduct = (req, res) => {
       } else {
         accessoryData.hinhAnh = '';
       }
+      
+      accessoryData.GiaNiemYet = accessoryData.GiaNiemYet ? Number(accessoryData.GiaNiemYet) : 0;
 
       const missingFields = [];
       if (!accessoryData.tenSP) missingFields.push('Tên sản phẩm');
@@ -172,28 +175,19 @@ const deleteProductByIdController = async (req, res) => {
 
 const getEditProductPageController = async (req, res) => {
   try {
-      console.log('Bắt đầu xử lý yêu cầu chỉnh sửa sản phẩm.');
-
       const productId = req.params.id;
-      console.log('ID sản phẩm:', productId);
-
       global.IDSP = productId;
 
       const { product, productType } = await findProductById(productId);
-      console.log('Kết quả từ findProductById:', { product, productType });
 
       if (!product) {
-          console.warn('Sản phẩm không tồn tại.');
           return res.status(404).json({ message: 'Sản phẩm không tồn tại.' });
       }
 
-      console.log('Đọc file editProduct.html.');
       const editProductHtml = fs.readFileSync(
           path.join(__dirname, '../views/employee/editProduct.html'),
           'utf8'
       );
-
-      console.log('Đã đọc xong file editProduct.html.');
 
       const scriptFillData = `
       <script>
@@ -241,6 +235,39 @@ const getEditProductPageController = async (req, res) => {
               }, 200);
               
               $('#chiTietSP').summernote('code', product.chiTietSP || '');
+              
+              // Hiển thị ảnh hiện tại
+              const images = product.hinhAnh ? product.hinhAnh.split(' || ') : [];
+              const container = document.getElementById('currentImages');
+              container.innerHTML = '';
+              
+              for (let i = 0; i < 5; i++) {
+                  const div = document.createElement('div');
+                  div.style.cssText = 'width: 100px; height: 100px; position: relative;';
+                  
+                  if (i < images.length) {
+                      div.innerHTML = \`<img src="/Public/images/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                  } else {
+                      div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
+                  }
+                  
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;';
+                  input.onchange = function(e) {
+                      if (e.target.files[0]) {
+                          window.imageChanges[i] = e.target.files[0];
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                              div.querySelector('img, div').outerHTML = \`<img src="\${ev.target.result}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                          };
+                          reader.readAsDataURL(e.target.files[0]);
+                      }
+                  };
+                  div.appendChild(input);
+                  container.appendChild(div);
+              }
           } else if (productType === 'PK') {
               const [brands, categories] = await Promise.all([
                   fetch('/category/thuong-hieu').then(r => r.json()),
@@ -263,12 +290,43 @@ const getEditProductPageController = async (req, res) => {
               }, 200);
               
               $('#chiTietSPPK').summernote('code', product.chiTietSP || '');
+              
+              // Hiển thị ảnh hiện tại
+              const imagesPK = product.hinhAnh ? product.hinhAnh.split(' || ') : [];
+              const containerPK = document.getElementById('currentImagesPK');
+              containerPK.innerHTML = '';
+              
+              for (let i = 0; i < 5; i++) {
+                  const div = document.createElement('div');
+                  div.style.cssText = 'width: 100px; height: 100px; position: relative;';
+                  
+                  if (i < imagesPK.length) {
+                      div.innerHTML = \`<img src="/Public/images/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                  } else {
+                      div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
+                  }
+                  
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;';
+                  input.onchange = function(e) {
+                      if (e.target.files[0]) {
+                          window.imageChanges[i] = e.target.files[0];
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                              div.querySelector('img, div').outerHTML = \`<img src="\${ev.target.result}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                          };
+                          reader.readAsDataURL(e.target.files[0]);
+                      }
+                  };
+                  div.appendChild(input);
+                  containerPK.appendChild(div);
+              }
           }
       });
       </script>
       `;
-
-      console.log('Script điền dữ liệu đã được tạo.');
 
       res.send(`
           <!DOCTYPE html>
@@ -286,8 +344,6 @@ const getEditProductPageController = async (req, res) => {
           </body>
           </html>
       `);
-
-      console.log('Đã gửi response với giao diện chỉnh sửa sản phẩm.');
   } catch (error) {
       console.error('Lỗi khi tải trang chỉnh sửa sản phẩm:', error);
       res.status(500).json({ message: 'Đã có lỗi xảy ra. Vui lòng thử lại sau!' });
@@ -295,8 +351,7 @@ const getEditProductPageController = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const productId = global.IDSP;
-  console.log('ID:', productId); 
+  const productId = global.IDSP; 
 
   try {
       const { product, productType } = await findProductById(productId);
@@ -307,20 +362,22 @@ const updateProduct = async (req, res) => {
 
       upload(req, res, async (err) => {
           if (err) {
-              console.error('Lỗi upload file:', err);
               return res.status(400).json({ message: err.message });
           }
 
-          const newImages = req.files.map(file => file.filename);
-          console.log('Hình ảnh mới:', newImages);
-
-          if (newImages.length > 0 && product.images) {
-              product.images.forEach(image => {
-                  const filePath = path.join(__dirname, '../Public/images/Database/Products/', image);
-                  if (fs.existsSync(filePath)) {
-                      fs.unlinkSync(filePath);
-                      console.log(`Đã xóa ảnh cũ: ${filePath}`);
+          let currentImages = product.hinhAnh ? product.hinhAnh.split(' || ') : [];
+          
+          if (req.files && req.files.length > 0) {
+              const indices = req.body.imageIndex;
+              const indexArray = Array.isArray(indices) ? indices : [indices];
+              
+              req.files.forEach((file, i) => {
+                  const idx = parseInt(indexArray[i]);
+                  if (currentImages[idx]) {
+                      const oldPath = path.join(__dirname, '../Public/images/Database/Products/', currentImages[idx]);
+                      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
                   }
+                  currentImages[idx] = file.filename;
               });
           }
 
@@ -342,19 +399,21 @@ const updateProduct = async (req, res) => {
               delete updatedData.trangThaiPK;
           }
 
-          updatedData.images = newImages.length > 0 ? newImages : product.images;
+          if (req.files && req.files.length > 0) {
+              updatedData.hinhAnh = currentImages.filter(img => img).join(' || ');
+          }
+          
+          updatedData.datLich = updatedData.dangkilaithu === 'on' ? 1 : 0;
 
           const { PutCommand } = require('@aws-sdk/lib-dynamodb');
           const docClient = getDB();
           const tableName = productType === 'XE' ? 'XeOto' : 'PhuKien';
-          const { product: existingProduct } = await findProductById(productId);
-          const finalData = { ...existingProduct, ...updatedData };
+          const finalData = { ...product, ...updatedData };
           await docClient.send(new PutCommand({ TableName: tableName, Item: finalData }));
 
           return res.status(200).json({ message: 'Cập nhật sản phẩm thành công.' });
       });
   } catch (error) {
-      console.error('Lỗi khi cập nhật sản phẩm:', error);
       res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại.' });
   }
 };

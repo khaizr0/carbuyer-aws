@@ -73,17 +73,26 @@ async function fetchNews() {
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return date.toLocaleDateString('en-GB', options).replace(/\//g, '-'); // Định dạng ngày theo kiểu DD-MM-YYYY
+    return date.toLocaleDateString('en-GB', options).replace(/\//g, '-');
+}
+
+function truncateText(text, wordLimit) {
+    if (!text) return '';
+    const words = text.trim().split(/\s+/);
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(' ') + '...';
 }
 
 function updateFeaturedArticle(news) {
     const featuredArticle = document.querySelector('.featured-article');
+    const imgSrc = news.anhDaiDien ? `/Public/images/Database/tintuc/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+    const shortContent = truncateText(news.chiTietBaiViet, 15);
     featuredArticle.innerHTML = `
-        <img src="${news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg'}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
+        <img src="${imgSrc}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
         <div class="featured-content">
             <h3>${formatDate(news.ngayDang)}</h3>
             <h2>${news.tenTT}</h2>
-            <p>${news.chiTietBaiViet}</p>
+            <p>${shortContent}</p>
         </div>
     `;
     featuredArticle.style.cursor = 'pointer';
@@ -97,12 +106,14 @@ function createArticleElement(news) {
     articleDiv.style.cursor = 'pointer';
     articleDiv.onclick = () => window.location.href = `/news/detail/${news.id}`;
 
+    const imgSrc = news.anhDaiDien ? `/Public/images/Database/tintuc/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+    const shortContent = truncateText(news.chiTietBaiViet, 15);
     articleDiv.innerHTML = `
-        <img src="${news.anhDaiDien ? `/Public/images/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg'}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
+        <img src="${imgSrc}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
         <div class="article-content">
             <h3>${formatDate(news.ngayDang)}</h3>
             <h4>${news.tenTT}</h4>
-            <p>${news.chiTietBaiViet}</p>
+            <p>${shortContent}</p>
         </div>
     `;
 

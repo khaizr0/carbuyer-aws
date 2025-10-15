@@ -82,8 +82,8 @@
                             <textarea class="form-control" name="noiDung" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Hình ảnh (URL)</label>
-                            <input type="text" class="form-control" name="hinhAnh">
+                            <label class="form-label">Hình ảnh</label>
+                            <input type="file" class="form-control" name="uploadImage" accept="image/*">
                         </div>
                         <button type="submit" class="btn btn-primary">Thêm</button>
                     </form>
@@ -133,7 +133,7 @@
                 <tr>
                     <td>${r.tenKH}</td>
                     <td>${r.noiDung}</td>
-                    <td><img src="${r.hinhAnh || '/Public/images/pro5-picture.jpg'}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                    <td><img src="${r.hinhAnh ? '/Public/images/Database/danhgia/' + r.hinhAnh : '/Public/images/no-image-found.jpg'}" style="width: 50px; height: 50px; object-fit: cover;"></td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="editReview('${r.id}')"><i class="fas fa-edit"></i></button>
                         <button class="btn btn-sm btn-danger" onclick="deleteReview('${r.id}')"><i class="fas fa-trash"></i></button>
@@ -147,10 +147,10 @@
             const formData = new FormData(e.target);
             await fetch('/review/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(formData))
+                body: formData
             });
             bootstrap.Modal.getInstance(document.getElementById('createReviewModal')).hide();
+            e.target.reset();
             loadReviews();
         });
 

@@ -87,7 +87,7 @@ const getAllProducts = async () => {
   }, {});
 
   const formattedCars = (cars.Items || []).map(car => {
-    const imageFileName = car.hinhAnh ? car.hinhAnh.split('||')[0].trim() : '';
+    const imageFileName = car.hinhAnh ? car.hinhAnh.split(' || ')[0].trim() : '';
     const price = Number(car.GiaNiemYet) || 0;
     return {
       id: car.id,
@@ -111,7 +111,7 @@ const getAllProducts = async () => {
   });
 
   const formattedAccessories = (accessories.Items || []).map(acc => {
-    const imageFileName = acc.hinhAnh ? acc.hinhAnh.split('||')[0].trim() : '';
+    const imageFileName = acc.hinhAnh ? acc.hinhAnh.split(' || ')[0].trim() : '';
     const price = Number(acc.GiaNiemYet) || 0;
     return {
       id: acc.id,

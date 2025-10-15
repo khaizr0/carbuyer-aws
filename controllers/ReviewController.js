@@ -20,7 +20,11 @@ exports.getReviewById = async (req, res) => {
 
 exports.createReview = async (req, res) => {
   try {
-    const review = await addReview(req.body);
+    const data = { ...req.body };
+    if (req.file) {
+      data.hinhAnh = req.file.filename;
+    }
+    const review = await addReview(data);
     res.status(201).json({ message: 'Thêm đánh giá thành công', review });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -30,7 +34,9 @@ exports.createReview = async (req, res) => {
 exports.updateReview = async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.hinhAnh = `/Public/images/${req.file.filename}`;
+    if (req.file) {
+      data.hinhAnh = req.file.filename;
+    }
     const review = await updateReview(req.params.id, data);
     res.status(200).json({ message: 'Cập nhật đánh giá thành công', review });
   } catch (error) {
