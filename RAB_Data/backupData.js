@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const { ListTablesCommand } = require('@aws-sdk/client-dynamodb');
 const { client, docClient } = require('../config/dynamodb');

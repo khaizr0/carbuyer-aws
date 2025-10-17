@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const { CreateTableCommand } = require('@aws-sdk/client-dynamodb');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
 const { client, docClient } = require('../config/dynamodb');
