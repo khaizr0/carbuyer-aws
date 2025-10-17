@@ -93,6 +93,69 @@ pm2 start app.js --name carbuyer-aws
 pm2 startup && pm2 save
 ```
 
+### 6. (Tùy chọn) Setup Nginx - Truy cập không cần port
+
+Nếu muốn truy cập `http://YOUR_IP` thay vì `http://YOUR_IP:3000`:
+
+```bash
+# Cài Nginx
+sudo apt update
+sudo apt install -y nginx
+
+# Tạo config
+sudo nano /etc/nginx/sites-available/carbuyer
+```
+
+Paste vào (thay YOUR_IP):
+```nginx
+server {
+    listen 80;
+    server_name YOUR_IP;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Enable site:
+```bash
+# Tạo symlink
+sudo ln -s /etc/nginx/sites-available/carbuyer /etc/nginx/sites-enabled/
+
+# Xóa default site
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test config
+sudo nginx -t
+
+# Restart Nginx
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+```
+
+Update `.env`:
+```env
+BASE_URL=http://YOUR_IP
+```
+
+Firewall Lightsail:
+- ✅ Mở port 80
+- ❌ Đóng port 3000 (chỉ localhost)
+
+Restart app:
+```bash
+pm2 restart carbuyer-aws
+```
+
 ---
 
 ## AWS Production (S3 + DynamoDB)
@@ -116,20 +179,104 @@ aws dynamodb create-table \
 - HTTPS only
 - Cache: 86400s
 
-### 3. Cấu hình .env
+### 3. Lightsail Instance
+- OS: Ubuntu 22.04
+- RAM: 1GB+ (khuyến nghị 2GB)
+- Firewall: Mở port 22, 80, 443
+
+### 4. Cấu hình .env
 ```bash
 cp .env.aws-production .env
+nano .env
+```
+
+**Cấu hình:**
+```env
+PORT=3000
+BASE_URL=http://YOUR_IP
+AWS_REGION=ap-southeast-1
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+S3_BUCKET=carbuyer-production
+S3_PUBLIC_URL=https://your-cloudfront-id.cloudfront.net
 ```
 
 **Quan trọng:**
-- ❌ Xóa `DYNAMODB_ENDPOINT` (dùng AWS DynamoDB)
-- ❌ Xóa `S3_ENDPOINT` (dùng AWS S3)
+- ❌ Không có `DYNAMODB_ENDPOINT` (dùng AWS DynamoDB)
+- ❌ Không có `S3_ENDPOINT` (dùng AWS S3)
 - ✅ Dùng CloudFront URL cho `S3_PUBLIC_URL`
 
-### 4. Deploy
+### 5. Deploy
 ```bash
+# Clone code từ GitHub
+git clone https://github.com/YOUR_USERNAME/carbuyer-aws.git
+cd carbuyer-aws
+
+# Cài dependencies
 yarn install
-pm2 start app.js --name carbuyer-aws
+
+# Tạo tables và import data
+cd RAB_Data
+node restoreData.js backup-2025-10-15T03-13-22-686Z.json
+cd ..
+
+# Chạy app với PM2
+sudo npm install -g pm2
+pm2 start app.js --name carbuyer
+pm2 startup
+pm2 save
+```
+
+### 6. Setup Nginx (Khuyến nghị)
+
+```bash
+# Cài Nginx
+sudo apt install -y nginx
+
+# Tạo config
+sudo nano /etc/nginx/sites-available/carbuyer
+```
+
+Paste vào (thay YOUR_IP hoặc domain):
+```nginx
+server {
+    listen 80;
+    server_name YOUR_IP;  # Hoặc yourdomain.com nếu có
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Enable:
+```bash
+sudo ln -s /etc/nginx/sites-available/carbuyer /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+```
+
+### 7. (Tùy chọn) SSL với Let's Encrypt
+
+Nếu có domain:
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+```
+
+Update `.env`:
+```env
+BASE_URL=https://yourdomain.com
 ```
 
 ---
