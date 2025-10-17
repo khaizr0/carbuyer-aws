@@ -1,5 +1,5 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const { CreateTableCommand } = require('@aws-sdk/client-dynamodb');
+const { CreateTableCommand, DescribeTableCommand } = require('@aws-sdk/client-dynamodb');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
 const { client, docClient } = require('../config/dynamodb');
 const fs = require('fs');
@@ -33,12 +33,31 @@ async function createTable(tableName) {
     try {
         await client.send(new CreateTableCommand({ TableName: tableName, ...schema }));
         console.log(`  ✓ Created table: ${tableName}`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
         if (error.name === 'ResourceInUseException') {
             console.log(`  ℹ Table ${tableName} already exists`);
         } else {
             console.error(`  ✗ Error creating ${tableName}:`, error.message);
+        }
+    }
+}
+
+async function waitForTables(tableNames) {
+    console.log('\nWaiting for tables to be ready...');
+    for (const tableName of tableNames) {
+        let isReady = false;
+        while (!isReady) {
+            try {
+                const { Table } = await client.send(new DescribeTableCommand({ TableName: tableName }));
+                if (Table.TableStatus === 'ACTIVE') {
+                    console.log(`  ✓ ${tableName} is ready`);
+                    isReady = true;
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            } catch (error) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
         }
     }
 }
@@ -62,12 +81,12 @@ async function restoreData(backupFile) {
     const backup = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     
     console.log('\nCreating tables...');
-    for (const tableName of Object.keys(backup)) {
+    const tableNames = Object.keys(backup);
+    for (const tableName of tableNames) {
         await createTable(tableName);
     }
     
-    console.log('\nWaiting for tables to be ready...');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await waitForTables(tableNames);
     
     for (const [tableName, items] of Object.entries(backup)) {
         console.log(`\nRestoring ${tableName}...`);
