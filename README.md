@@ -1,71 +1,41 @@
 # carbuyer-aws
 
-Website bán xe ô tô và phụ kiện sử dụng Node.js, Express và DynamoDB.
+Website bán xe ô tô và phụ kiện sử dụng Node.js, Express, DynamoDB và S3.
 
 ## Yêu cầu
 
-- Node.js
-- DynamoDB Local (chạy trên localhost:8000)
-- MinIO Server (chạy trên localhost:9000)
+- Node.js 18+
+- Java (cho DynamoDB Local)
+- Docker (cho MinIO)
 
 ## Cài đặt
 
 ```bash
-npm install
+yarn install
 ```
 
-## Khởi động DynamoDB Local
+## Quick Start
 
 ```bash
+# 1. Khởi động DynamoDB Local
 java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
-```
 
-## Khởi động MinIO Server
-
-```bash
-minio server ~/minio-data --console-address ":9001"
-```
-
-Hoặc sử dụng Docker:
-
-```bash
+# 2. Khởi động MinIO (Docker)
 docker run -p 9000:9000 -p 9001:9001 \
   -e "MINIO_ROOT_USER=minioadmin" \
   -e "MINIO_ROOT_PASSWORD=minioadmin" \
   quay.io/minio/minio server /data --console-address ":9001"
+
+# 3. Tạo database
+yarn db
+
+# 4. Chạy app (S3 tự động setup)
+yarn start
 ```
 
-## Tạo tables và dữ liệu mẫu
-
+Development mode:
 ```bash
-npm run db
-```
-
-## Setup S3 Bucket trên MinIO
-
-S3 bucket sẽ được tự động setup khi chạy `npm start` hoặc `yarn start`.
-
-Nếu muốn setup thủ công:
-```bash
-npm run setup-s3
-```
-
-## Chạy ứng dụng
-
-```bash
-npm start
-```
-
-hoặc development mode:
-
-```bash
-npm run dev
-```
-
-## Kiểm tra tables
-
-```bash
-node checkTables.js
+yarn dev
 ```
 
 ## Tài khoản mặc định
@@ -81,11 +51,14 @@ node checkTables.js
 - Secret Key: minioadmin
 - Bucket: carbuyer-aws
 
-## Lưu trữ ảnh
+## Cấu trúc S3
 
-Ứng dụng sử dụng MinIO S3 để lưu trữ ảnh:
-- Sản phẩm: `Database/Products/`
-- Tin tức: `Database/tintuc/`
-- Đánh giá: `Database/danhgia/`
-- Users: `Database/Users/`
-- Slider: `SlideShow/`
+- `Database/Products/` - Ảnh sản phẩm (public)
+- `Database/tintuc/` - Ảnh tin tức (public)
+- `Database/danhgia/` - Ảnh đánh giá (public)
+- `Database/Users/` - Ảnh users (private, admin only)
+- `SlideShow/` - Ảnh slider (public)
+
+## Deployment
+
+Xem [DEPLOYMENT.md](DEPLOYMENT.md) để deploy lên AWS Lightsail hoặc AWS Production.
