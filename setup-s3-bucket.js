@@ -1,19 +1,15 @@
 require('dotenv').config();
-const { CreateBucketCommand, PutBucketPolicyCommand, HeadBucketCommand } = require('@aws-sdk/client-s3');
+const { PutBucketPolicyCommand, HeadBucketCommand } = require('@aws-sdk/client-s3');
 const { s3Client, S3_BUCKET } = require('./config/s3');
 
 const setupBucket = async () => {
   try {
     // Kiểm tra bucket đã tồn tại chưa
-    let bucketExists = false;
     try {
       await s3Client.send(new HeadBucketCommand({ Bucket: S3_BUCKET }));
       console.log(`✓ Bucket "${S3_BUCKET}" đã tồn tại`);
-      bucketExists = true;
     } catch (error) {
-      // Bucket chưa tồn tại, tạo mới
-      await s3Client.send(new CreateBucketCommand({ Bucket: S3_BUCKET }));
-      console.log(`✓ Đã tạo bucket "${S3_BUCKET}"`);
+      throw new Error(`Bucket "${S3_BUCKET}" không tồn tại. Vui lòng tạo bucket trước khi chạy app.`);
     }
 
     // Cấu hình policy - Public cho mọi thứ TRỪ folder Users
