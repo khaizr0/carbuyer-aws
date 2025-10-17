@@ -93,7 +93,7 @@ pm2 startup
 
 ### Production (AWS):
 - S3 Bucket: carbuyer-production
-- CloudFront: https://d3kaxlzyq8f9ut.cloudfront.net
+- CloudFront: https://youridcloudfront.cloudfront.net
 - DynamoDB: ap-southeast-1 region
 - Lightsail: Node.js app server
 
