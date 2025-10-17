@@ -40,6 +40,11 @@ router.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'admin', 'home.html'));
 });
 
+router.get('/admin/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/admin/login');
+});
+
 // Handle POST
 const employeeLogin = async (req, res) => {
   const { userName, password } = req.body;

@@ -1,8 +1,8 @@
 require('dotenv').config();
 const userModel = require('../models/User')
 const { hashPassword } = require('../utils/crypto-helper');
-const fs = require('fs');
-const path = require('path');
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { s3Client, S3_BUCKET } = require('../config/s3');
 
 const generateUserId = async () => {
     const User = await userModel.getCollection();
@@ -39,7 +39,7 @@ const createUser = async (req, res) => {
             id: userID,
             ...req.body,
             matKhau: hashedPassword,
-            anhNhanVien: req.file ? req.file.filename : null,
+            anhNhanVien: req.file ? req.file.key.split('/').pop() : null,
             PhanLoai: phanLoai
         };
         await User.insertOne(newUser)
@@ -53,7 +53,7 @@ const updateUser = async (req, res) => {
     try {
         const userId = req.params.id;
         const matKhau = req.body.matKhau || null;
-        const newImage = req.file ? req.file.filename : null;
+        const newImage = req.file ? req.file.key.split('/').pop() : null;
         const PhanLoai = req.body.PhanLoai
         let hashedPassword;
         const User = await userModel.getCollection();
@@ -64,11 +64,14 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ message: 'User không tồn tại.' });
         }
 
-        if (newImage) {
-            const uploadPath = process.env.UPLOAD_PATH_USERS;
-            const oldImagePath = path.join(uploadPath, user.anhNhanVien);
-            if (user.anhNhanVien && fs.existsSync(oldImagePath)) {
-                fs.unlinkSync(oldImagePath);
+        if (newImage && user.anhNhanVien) {
+            try {
+                await s3Client.send(new DeleteObjectCommand({
+                    Bucket: S3_BUCKET,
+                    Key: `Database/Users/${user.anhNhanVien}`
+                }));
+            } catch (error) {
+                console.log('Lỗi xóa file cũ:', error.message);
             }
         }
         if (matKhau) {
@@ -82,7 +85,6 @@ const updateUser = async (req, res) => {
             ...(matKhau && { matKhau: hashedPassword }),
             PhanLoai: phanLoai
         };
-        console.log( updateFields);
         
         await User.updateOne(
             { id: userId },
@@ -105,9 +107,16 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy người dùng nào' })
         }
 
-        const uploadPath = process.env.UPLOAD_PATH_USERS;
-        const oldImagePath = path.join(uploadPath, existingUser.anhNhanVien);
-        fs.unlinkSync(oldImagePath);
+        if (existingUser.anhNhanVien) {
+            try {
+                await s3Client.send(new DeleteObjectCommand({
+                    Bucket: S3_BUCKET,
+                    Key: `Database/Users/${existingUser.anhNhanVien}`
+                }));
+            } catch (error) {
+                console.log('Lỗi xóa file:', error.message);
+            }
+        }
 
         await User.deleteOne({ id });
         return res.status(200).json({ message: 'Xóa người dùng thành công' });
