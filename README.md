@@ -41,7 +41,7 @@ yarn dev
 ## Tài khoản mặc định
 
 - Admin: nguyenvanb@example.com / hashedpassword123
-- Employee: caophankhai123@gmail.com / hashedpassword123
+- Employee: caophankhai2004@gmail.com / hashedpassword123
 
 ## Cấu hình MinIO
 
