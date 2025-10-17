@@ -1,35 +1,13 @@
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { getDB } = require('../config/db');
 const { addCarProduct, getRecentProducts, getAllProducts, deleteProductById, addAccessoryProduct, findProductById, getProductById, getRelatedProducts } = require('../models/ProductModel');
+const { uploadProducts, getS3Url } = require('../utils/s3-upload');
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { s3Client, S3_BUCKET } = require('../config/s3');
 
 const IDSP = "";
-
-// Cấu hình multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'Public/images/Database/Products/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ 
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Chỉ cho phép upload file ảnh!'), false);
-    }
-  },
-  limits: {
-    files: 5 
-  }
-}).array('uploadImage', 5);
+const upload = uploadProducts.array('uploadImage', 5);
 
 const createCarProduct = (req, res) => {
   upload(req, res, async (err) => {
@@ -41,7 +19,7 @@ const createCarProduct = (req, res) => {
       const carData = req.body;
       
       if (req.files && req.files.length > 0) {
-        carData.hinhAnh = req.files.map(file => file.filename).join(' || ');
+        carData.hinhAnh = req.files.map(file => file.key.split('/').pop()).join(' || ');
       } else {
         carData.hinhAnh = '';
       }
@@ -85,7 +63,7 @@ const createAccessoryProduct = (req, res) => {
       const accessoryData = req.body;
 
       if (req.files && req.files.length > 0) {
-        accessoryData.hinhAnh = req.files.map(file => file.filename).join(' || ');
+        accessoryData.hinhAnh = req.files.map(file => file.key.split('/').pop()).join(' || ');
       } else {
         accessoryData.hinhAnh = '';
       }
@@ -130,7 +108,7 @@ const getRecentProductsController = async (req, res) => {
     
     const formattedProducts = recentProducts.map(product => {
       const imageFileName = product.hinhAnh ? product.hinhAnh.split('||')[0].trim() : '';
-      const imageUrl = imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png';
+      const imageUrl = imageFileName ? getS3Url(`Database/Products/${imageFileName}`) : '/Public/images/placeholder.png';
       return {
         id: product.id,
         name: product.tenSP,
@@ -246,7 +224,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < images.length) {
-                      div.innerHTML = \`<img src="/Public/images/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
@@ -301,7 +279,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < imagesPK.length) {
-                      div.innerHTML = \`<img src="/Public/images/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
@@ -371,14 +349,17 @@ const updateProduct = async (req, res) => {
               const indices = req.body.imageIndex;
               const indexArray = Array.isArray(indices) ? indices : [indices];
               
-              req.files.forEach((file, i) => {
+              for (let i = 0; i < req.files.length; i++) {
+                  const file = req.files[i];
                   const idx = parseInt(indexArray[i]);
                   if (currentImages[idx]) {
-                      const oldPath = path.join(__dirname, '../Public/images/Database/Products/', currentImages[idx]);
-                      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+                      await s3Client.send(new DeleteObjectCommand({
+                          Bucket: S3_BUCKET,
+                          Key: `Database/Products/${currentImages[idx]}`
+                      }));
                   }
-                  currentImages[idx] = file.filename;
-              });
+                  currentImages[idx] = file.key.split('/').pop();
+              }
           }
 
           let updatedData = { ...req.body };
@@ -449,7 +430,7 @@ const getRelatedProductsController = async (req, res) => {
       year: p.namSanXuat,
       mileage: p.soKm,
       fuelType: p.fuelType,
-      image: p.hinhAnh ? `/Public/images/Database/Products/${p.hinhAnh.split(' || ')[0]}` : ''
+      image: p.hinhAnh ? getS3Url(`Database/Products/${p.hinhAnh.split(' || ')[0]}`) : ''
     })));
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -495,7 +476,7 @@ const searchProductsController = async (req, res) => {
       year: p.namSanXuat,
       mileage: p.soKm ? p.soKm.toLocaleString('vi-VN') + ' km' : 'N/A',
       fuelType: p.nguyenLieuXe || 'N/A',
-      imageUrl: p.hinhAnh ? `/Public/images/Database/Products/${p.hinhAnh.split(' || ')[0]}` : '',
+      imageUrl: p.hinhAnh ? getS3Url(`Database/Products/${p.hinhAnh.split(' || ')[0]}`) : '',
       brandId: p.iDthuongHieu,
       type: p.kieuDang,
       color: p.mauXe,

@@ -353,7 +353,7 @@
             formData.append('anhNhanVien', anhNhanVien);
 
             try {
-                const response = await fetch('http://localhost:3000/api/my/user', {
+                const response = await fetch(`${BASE_URL}/api/my/user`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -512,7 +512,7 @@
             if (anhNhanVien) { formData.append('anhNhanVien', anhNhanVien); }
             
             try {
-                const response = await fetch(`http://localhost:3000/api/my/user/${userEditId}`, {
+                const response = await fetch(`${BASE_URL}/api/my/user/${userEditId}`, {
                     method: 'PUT',
                     body: formData,
                 });

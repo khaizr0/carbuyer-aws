@@ -16,7 +16,7 @@
         </div>
         <div class="text-end">
             <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
-            <p class="mb-0"><a href="#" class="text-white">Đăng xuất</a></p>
+            <p class="mb-0"><a href="/employee/logout" class="text-white">Đăng xuất</a></p>
         </div>
     </header>
 
@@ -133,7 +133,7 @@
                 <tr>
                     <td>${r.tenKH}</td>
                     <td>${r.noiDung}</td>
-                    <td><img src="${r.hinhAnh ? '/Public/images/Database/danhgia/' + r.hinhAnh : '/Public/images/no-image-found.jpg'}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                    <td><img src="${r.hinhAnhUrl || '/Public/images/no-image-found.jpg'}" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='/Public/images/no-image-found.jpg'"></td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="editReview('${r.id}')"><i class="fas fa-edit"></i></button>
                         <button class="btn btn-sm btn-danger" onclick="deleteReview('${r.id}')"><i class="fas fa-trash"></i></button>

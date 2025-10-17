@@ -8,12 +8,15 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "backup": "node RAB_Data/backupData.js",
-    "restore": "node RAB_Data/restoreData.js"
+    "restore": "node RAB_Data/restoreData.js",
+    "setup-s3": "node setup-s3-bucket.js",
+    "setup-s3-policies": "node setup-s3-policies.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.709.0",
+    "@aws-sdk/client-s3": "^3.709.0",
     "@aws-sdk/lib-dynamodb": "^3.709.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
@@ -27,6 +30,7 @@
     "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.0-rc.4",
+    "multer-s3": "^3.0.1",
     "nodemailer": "^6.9.16",
     "sha256": "^0.2.0",
     "uuid": "^11.0.5",

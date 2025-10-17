@@ -97,7 +97,7 @@ const getAllProducts = async () => {
       year: car.namSanXuat,
       mileage: car.soKm ? car.soKm.toLocaleString('vi-VN') + ' km' : '0 km',
       fuelType: fuelMap[car.idNguyenLieu] || 'N/A',
-      imageUrl: imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
+      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
       brandId: car.iDthuongHieu,
       type: 'Xe',
       style: styleMap[car.idKieuDang] || car.idKieuDang,
@@ -118,7 +118,7 @@ const getAllProducts = async () => {
       name: acc.tenSP,
       brand: brandMap[acc.iDthuongHieu] || 'Unknown',
       price: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price),
-      imageUrl: imageFileName ? `/Public/images/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
+      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
       brandId: acc.iDthuongHieu,
       categoryId: acc.idLoai,
       type: 'Phụ kiện',
@@ -200,7 +200,7 @@ const getProductById = async (id) => {
 
   if (!product) throw new Error('Sản phẩm không tồn tại.');
 
-  const images = product.hinhAnh ? product.hinhAnh.split(' || ').map(img => `/Public/images/Database/Products/${img}`) : [];
+  const images = product.hinhAnh ? product.hinhAnh.split(' || ').map(img => `${process.env.S3_PUBLIC_URL}/Database/Products/${img}`) : [];
 
   if (tableName === 'XeOto') {
     const [fuelRes, colorRes] = await Promise.all([

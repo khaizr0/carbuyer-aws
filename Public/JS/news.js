@@ -85,7 +85,7 @@ function truncateText(text, wordLimit) {
 
 function updateFeaturedArticle(news) {
     const featuredArticle = document.querySelector('.featured-article');
-    const imgSrc = news.anhDaiDien ? `/Public/images/Database/tintuc/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+    const imgSrc = news.anhDaiDienUrl || '/Public/images/no-image-found.jpg';
     const shortContent = truncateText(news.chiTietBaiViet, 15);
     featuredArticle.innerHTML = `
         <img src="${imgSrc}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">
@@ -106,7 +106,7 @@ function createArticleElement(news) {
     articleDiv.style.cursor = 'pointer';
     articleDiv.onclick = () => window.location.href = `/news/detail/${news.id}`;
 
-    const imgSrc = news.anhDaiDien ? `/Public/images/Database/tintuc/${news.anhDaiDien}` : '/Public/images/no-image-found.jpg';
+    const imgSrc = news.anhDaiDienUrl || '/Public/images/no-image-found.jpg';
     const shortContent = truncateText(news.chiTietBaiViet, 15);
     articleDiv.innerHTML = `
         <img src="${imgSrc}" alt="${news.tenTT}" onerror="this.src='/Public/images/no-image-found.jpg'">

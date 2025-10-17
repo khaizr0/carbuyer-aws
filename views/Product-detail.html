@@ -116,14 +116,23 @@
                 </div>
                 <div class="form-row">
                     <div class="form-column">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-column">
                         <label for="date">Ngày đặt:</label>
                         <input type="date" id="date" name="date" required>
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-column">
                         <label for="time">Thời gian đặt:</label>
                         <input type="time" id="time" name="time" required>
                     </div>
+                    <div class="form-column">
+                    </div>
                 </div>
+
                 <br>
                 <br><br>
                 <button type="submit" class="submit-btn pull-right">Đăng ký</button>
@@ -168,7 +177,7 @@
         
         // Chỉnh sửa hàm fetchProductDetails để thêm hiển thị chi tiết
         function fetchProductDetails(productId) {
-            fetch(`http://localhost:3000/product/products/${productId}`)
+            fetch(`${BASE_URL}/product/products/${productId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -330,10 +339,12 @@
             const time = document.getElementById('time').value || null;
         
             // Prepare data to send to the server
+            const email = document.getElementById('email').value || null;
             const formData = {
                 idXe: productId,
                 hoTenKH: name,
                 soDT: phone,
+                email: email,
                 ngayTao: date, //  yyyy-mm-dd
                 time: time
             };

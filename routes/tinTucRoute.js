@@ -2,27 +2,15 @@ const express = require('express');
 const router = express.Router();
 const { addNews, getNewsById, getAllNews, updateNewsById, deleteNewsById, getLatestNewsId, showNewsOnHome } = require('../models/TinTuc');
 const newsController = require('../controllers/newsController');
-const multer = require('multer');
+const { uploadNews } = require('../utils/s3-upload');
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { s3Client, S3_BUCKET } = require('../config/s3');
 const path = require('path');
-const fs = require('fs');
-// CREATE: Add a new news article
 
-// Set up multer for file storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'Public/images/Database/tintuc/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });  // Create multer instance
-// CREATE: Add a new news article (with file upload)
-router.post('/create', upload.single('anhDaiDien'), async (req, res) => {
+router.post('/create', uploadNews.single('anhDaiDien'), async (req, res) => {
     try {
         const { tenTT, chiTietBaiViet, trangThai } = req.body;
-        const anhDaiDien = req.file ? req.file.filename : null;
+        const anhDaiDien = req.file ? req.file.key.split('/').pop() : null;
         const ngayDang = new Date().toISOString().split('T')[0];
         const trangThaiInt = parseInt(trangThai, 10);
 
@@ -42,8 +30,7 @@ router.post('/create', upload.single('anhDaiDien'), async (req, res) => {
 
 
 
-// UPDATE: Update a specific news article by ID (with file upload)
-router.put('/:id', upload.single('anhDaiDien'), async (req, res) => {
+router.put('/:id', uploadNews.single('anhDaiDien'), async (req, res) => {
     try {
         const { tenTT, chiTietBaiViet, trangThai } = req.body;
         const ngayDang = new Date().toISOString().split('T')[0];
@@ -51,16 +38,16 @@ router.put('/:id', upload.single('anhDaiDien'), async (req, res) => {
         if (req.file) {
             const oldNews = await getNewsById(req.params.id);
             if (oldNews.anhDaiDien) {
-                const oldImagePath = path.join('Public/images/Database/tintuc/', oldNews.anhDaiDien);
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
-                }
+                await s3Client.send(new DeleteObjectCommand({
+                    Bucket: S3_BUCKET,
+                    Key: `Database/tintuc/${oldNews.anhDaiDien}`
+                }));
             }
         }
         
         const updatedNewsData = {
             ...(tenTT && { tenTT }),
-            ...(req.file && { anhDaiDien: req.file.filename }),
+            ...(req.file && { anhDaiDien: req.file.key.split('/').pop() }),
             ...(chiTietBaiViet && { chiTietBaiViet }),
             ...(trangThai !== undefined && { trangThai: parseInt(trangThai, 10) }),
             ngayDang
@@ -94,15 +81,14 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// DELETE: Delete a specific news article by ID
 router.delete('/:id', async (req, res) => {
     try {
         const news = await getNewsById(req.params.id);
         if (news.anhDaiDien) {
-            const imagePath = path.join('Public/images/Database/tintuc/', news.anhDaiDien);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-            }
+            await s3Client.send(new DeleteObjectCommand({
+                Bucket: S3_BUCKET,
+                Key: `Database/tintuc/${news.anhDaiDien}`
+            }));
         }
         
         await deleteNewsById(req.params.id);

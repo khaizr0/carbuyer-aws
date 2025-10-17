@@ -30,6 +30,7 @@ class BookingController {
                         <td>${booking.idSP}</td>
                         <td>${booking.hoTenKH}</td>
                         <td>${booking.soDT}</td>
+                        <td>${booking.email || 'N/A'}</td>
                         <td>${booking.date}</td>
                         <td>${booking.time}</td>
                         <td>${booking.loaiDichVu}</td>
@@ -85,6 +86,7 @@ class BookingController {
                         <td>${booking.idSP}</td>
                         <td>${booking.hoTenKH}</td>
                         <td>${booking.soDT}</td>
+                        <td>${booking.email || 'N/A'}</td>
                         <td>${booking.date}</td>
                         <td>${booking.time}</td>
                         <td>${booking.loaiDichVu}</td>

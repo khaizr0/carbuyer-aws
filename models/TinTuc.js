@@ -1,5 +1,6 @@
 const { ScanCommand, GetCommand, PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const { getDB } = require('../config/db');
+const { getS3Url } = require('../utils/s3-upload');
 
 const addNews = async (newsData) => {
   const docClient = getDB();
@@ -11,13 +12,21 @@ const getNewsById = async (id) => {
   const docClient = getDB();
   const result = await docClient.send(new GetCommand({ TableName: 'TinTuc', Key: { id } }));
   if (!result.Item) throw new Error('News not found');
-  return result.Item;
+  const news = result.Item;
+  if (news.anhDaiDien) {
+    news.anhDaiDienUrl = getS3Url(`Database/tintuc/${news.anhDaiDien}`);
+  }
+  return news;
 };
 
 const getAllNews = async () => {
   const docClient = getDB();
   const result = await docClient.send(new ScanCommand({ TableName: 'TinTuc' }));
-  return result.Items || [];
+  const newsList = result.Items || [];
+  return newsList.map(news => ({
+    ...news,
+    anhDaiDienUrl: news.anhDaiDien ? getS3Url(`Database/tintuc/${news.anhDaiDien}`) : null
+  }));
 };
 
 const updateNewsById = async (id, updatedData) => {
@@ -54,7 +63,11 @@ const showNewsOnHome = async () => {
     FilterExpression: 'trangThai = :status',
     ExpressionAttributeValues: { ':status': 1 }
   }));
-  return (result.Items || []).sort((a, b) => new Date(b.ngayDang) - new Date(a.ngayDang)).slice(0, 3);
+  const newsList = (result.Items || []).sort((a, b) => new Date(b.ngayDang) - new Date(a.ngayDang)).slice(0, 3);
+  return newsList.map(news => ({
+    ...news,
+    anhDaiDienUrl: news.anhDaiDien ? getS3Url(`Database/tintuc/${news.anhDaiDien}`) : null
+  }));
 };
 
 module.exports = {

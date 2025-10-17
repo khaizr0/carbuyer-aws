@@ -64,4 +64,9 @@ router.get('/', (req, res) => {
   res.redirect('/employee/login');
 });
 
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/employee/login');
+});
+
 module.exports = router;

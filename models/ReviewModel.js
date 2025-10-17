@@ -1,17 +1,26 @@
 const { ScanCommand, GetCommand, PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const { getDB } = require('../config/db');
+const { getS3Url } = require('../utils/s3-upload');
 
 const getAllReviews = async () => {
   const docClient = getDB();
   const result = await docClient.send(new ScanCommand({ TableName: 'DanhGia' }));
-  return result.Items || [];
+  const reviews = result.Items || [];
+  return reviews.map(review => ({
+    ...review,
+    hinhAnhUrl: review.hinhAnh ? getS3Url(`Database/danhgia/${review.hinhAnh}`) : null
+  }));
 };
 
 const getReviewById = async (id) => {
   const docClient = getDB();
   const result = await docClient.send(new GetCommand({ TableName: 'DanhGia', Key: { id } }));
   if (!result.Item) throw new Error('Không tìm thấy đánh giá');
-  return result.Item;
+  const review = result.Item;
+  if (review.hinhAnh) {
+    review.hinhAnhUrl = getS3Url(`Database/danhgia/${review.hinhAnh}`);
+  }
+  return review;
 };
 
 const addReview = async (reviewData) => {

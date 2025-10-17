@@ -18,7 +18,7 @@
         </div>
         <div class="text-end">
             <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
-            <p class="mb-0"><a href="#" class="text-white">Đăng xuất</a></p>
+            <p class="mb-0"><a href="/employee/logout" class="text-white">Đăng xuất</a></p>
         </div>
     </header>
 
@@ -64,6 +64,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Tên Khách Hàng</th>
+                        <th>Email</th>
                         <th>Ngày</th>
                         <th>Giờ</th>
                         <th>Trạng Thái</th>
@@ -164,6 +165,7 @@
                 return '<tr style="cursor: pointer;" onclick="showDetail(\'' + b.id + '\')">' +
                     '<td>' + b.id + '</td>' +
                     '<td>' + b.hoTenKH + '</td>' +
+                    '<td>' + (b.email || 'N/A') + '</td>' +
                     '<td>' + formatDate(b.date) + '</td>' +
                     '<td>' + b.time + '</td>' +
                     '<td>' + (statusMap[b.trangThai] || 'N/A') + '</td>' +
@@ -183,6 +185,7 @@
                 '<p><strong>ID:</strong> ' + booking.id + '</p>' +
                 '<p><strong>Họ Tên:</strong> ' + booking.hoTenKH + '</p>' +
                 '<p><strong>SĐT:</strong> ' + booking.soDT + '</p>' +
+                '<p><strong>Email:</strong> ' + (booking.email || 'N/A') + '</p>' +
                 '<p><strong>Ngày:</strong> ' + formatDate(booking.date) + '</p>' +
                 '<p><strong>Giờ:</strong> ' + booking.time + '</p>' +
                 '<p><strong>ID Xe:</strong> ' + (booking.idXe || 'N/A') + '</p>' +

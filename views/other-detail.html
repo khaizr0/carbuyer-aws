@@ -184,7 +184,7 @@
         });
 
         function fetchProductDetails(productId) {
-            fetch(`http://localhost:3000/product/products/${productId}`)
+            fetch(`${BASE_URL}/product/products/${productId}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data); // Log toàn bộ dữ liệu để debug
