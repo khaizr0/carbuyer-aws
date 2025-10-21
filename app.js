@@ -66,17 +66,11 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'views', 'error', '404.html'));
 });
 
-const PORT = process.env.PORT;
-
 // Auto setup S3 bucket khi start app
-setupBucket().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}).catch(error => {
+setupBucket().catch(error => {
   console.error('Lỗi setup S3:', error.message);
   console.log('App vẫn chạy nhưng S3 có thể chưa sẵn sàng');
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
 });
+
+// Export app để server.js sử dụng
+module.exports = app;
