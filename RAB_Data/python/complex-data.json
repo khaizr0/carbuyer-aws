@@ -103,5 +103,29 @@
         "4"
       ]
     }
+  ],
+  "User": [
+    {
+      "matKhau": "e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc",
+      "ngaySinh": "1992-08-28",
+      "anhNhanVien": "anhNhanVien-1760497769947-591643342.jpeg",
+      "id": "U002",
+      "hoTen": "Le Thi C",
+      "gioiTinh": "Nam",
+      "email": "caophankhai2004@gmail.com",
+      "PhanLoai": 1,
+      "cccd": "987654321"
+    },
+    {
+      "matKhau": "e6a6b5bed8bad4efeba3ab7b2d010514:d9c6265fcb454ac38f9ad9b1dde43a95b1325502213dad05b0ab2c4311a768eef27b6876be11853eb2c9cc07ba099c3df54259490722c8c966eaa1e5ce21dffc",
+      "ngaySinh": "1990-05-10",
+      "anhNhanVien": "avatar_nguyenvanb.png",
+      "id": "U001",
+      "hoTen": "Nguyen Van B",
+      "gioiTinh": "Nam",
+      "email": "nguyenvanb@example.com",
+      "PhanLoai": 0,
+      "cccd": "123456789"
+    }
   ]
 }
