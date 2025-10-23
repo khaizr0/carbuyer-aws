@@ -49,4 +49,12 @@ if data.get('XeOto'):
         dynamodb.put_item(TableName='XeOto', Item=dynamodb_item)
     print(f"✓ Imported {len(data['XeOto'])} items to XeOto")
 
+# Import User
+print("Importing User...")
+if data.get('User'):
+    for item in data['User']:
+        dynamodb_item = convert_to_dynamodb_item(item)
+        dynamodb.put_item(TableName='User', Item=dynamodb_item)
+    print(f"✓ Imported {len(data['User'])} items to User")
+
 print("\nImport completed!")
