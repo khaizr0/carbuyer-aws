@@ -5,10 +5,11 @@ const fs = require('fs');
 const app = require('./app');
 
 const PORT = process.env.PORT || 3000;
+const SSL_DOMAIN = process.env.SSL_DOMAIN || 'carbuyer.com';
 
 // SSL certificate paths (Let's Encrypt default location)
-const sslKeyPath = '/etc/letsencrypt/live/carbuyer.com/privkey.pem';
-const sslCertPath = '/etc/letsencrypt/live/carbuyer.com/fullchain.pem';
+const sslKeyPath = `/etc/letsencrypt/live/${SSL_DOMAIN}/privkey.pem`;
+const sslCertPath = `/etc/letsencrypt/live/${SSL_DOMAIN}/fullchain.pem`;
 
 // Check if SSL certificates exist
 const hasSSL = fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath);
