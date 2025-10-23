@@ -37,6 +37,10 @@ router.get('/reset-password', resetPassword);
 // session
 router.get('/admin', (req, res) => {
   if (!req.session.userId) return res.redirect('/admin/login');
+  if (req.session.userRole !== 0) {
+    req.session.destroy();
+    return res.redirect('/admin/login');
+  }
   res.sendFile(path.join(__dirname, '..', 'views', 'admin', 'home.html'));
 });
 
