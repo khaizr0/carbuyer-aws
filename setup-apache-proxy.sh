@@ -2,6 +2,15 @@
 
 echo "Setting up Apache reverse proxy for Node.js app..."
 
+# Disable các VirtualHost mặc định của Bitnami
+echo "Disabling default Bitnami vhosts..."
+cd /opt/bitnami/apache/conf/vhosts/
+for f in *.conf; do
+    if [ "$f" != "nodejs-app.conf" ]; then
+        sudo mv "$f" "$f.disabled" 2>/dev/null || true
+    fi
+done
+
 # Xóa file cũ nếu tồn tại
 if [ -f /opt/bitnami/apache/conf/vhosts/nodejs-app.conf ]; then
     echo "Removing old config..."
