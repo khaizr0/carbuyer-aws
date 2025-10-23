@@ -14,8 +14,8 @@ sudo tee /opt/bitnami/apache/conf/vhosts/nodejs-app.conf > /dev/null <<'EOF'
     ServerName 3.1.255.150
     
     SSLEngine on
-    SSLCertificateFile "/opt/bitnami/apache/conf/bitnami/certs/server.crt"
-    SSLCertificateKeyFile "/opt/bitnami/apache/conf/bitnami/certs/server.key"
+    SSLCertificateFile "/opt/bitnami/apache/conf/bitnami/certs/tls.crt"
+    SSLCertificateKeyFile "/opt/bitnami/apache/conf/bitnami/certs/tls.key"
     
     ProxyPreserveHost On
     ProxyPass / http://localhost:3000/
