@@ -2,6 +2,10 @@
 
 echo "Setting up Apache reverse proxy for Node.js app..."
 
+# Tự động lấy IP của server
+SERVER_IP=$(curl -s http://checkip.amazonaws.com)
+echo "Detected server IP: $SERVER_IP"
+
 # Disable các VirtualHost mặc định của Bitnami
 echo "Disabling default Bitnami vhosts..."
 cd /opt/bitnami/apache/conf/vhosts/
@@ -18,9 +22,9 @@ if [ -f /opt/bitnami/apache/conf/vhosts/nodejs-app.conf ]; then
 fi
 
 # Tạo file config mới
-sudo tee /opt/bitnami/apache/conf/vhosts/nodejs-app.conf > /dev/null <<'EOF'
+sudo tee /opt/bitnami/apache/conf/vhosts/nodejs-app.conf > /dev/null <<EOF
 <VirtualHost *:443>
-    ServerName 3.1.255.150
+    ServerName $SERVER_IP
     
     SSLEngine on
     SSLCertificateFile "/opt/bitnami/apache/conf/bitnami/certs/tls.crt"
@@ -32,8 +36,8 @@ sudo tee /opt/bitnami/apache/conf/vhosts/nodejs-app.conf > /dev/null <<'EOF'
 </VirtualHost>
 
 <VirtualHost *:80>
-    ServerName 3.1.255.150
-    Redirect permanent / https://3.1.255.150/
+    ServerName $SERVER_IP
+    Redirect permanent / https://$SERVER_IP/
 </VirtualHost>
 EOF
 
