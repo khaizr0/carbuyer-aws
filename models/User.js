@@ -3,10 +3,9 @@ const { getDB } = require('../config/db');
 
 const getUserByEmail = async (email) => {
   const docClient = getDB();
-  const command = new QueryCommand({
+  const command = new ScanCommand({
     TableName: 'User',
-    IndexName: 'EmailIndex',
-    KeyConditionExpression: 'email = :email',
+    FilterExpression: 'email = :email',
     ExpressionAttributeValues: { ':email': email }
   });
   const result = await docClient.send(command);
