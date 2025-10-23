@@ -49,4 +49,4 @@ sudo /opt/bitnami/apache/bin/apachectl configtest
 echo "Restarting Apache..."
 sudo /opt/bitnami/ctlscript.sh restart apache
 
-echo "Done! Access https://3.1.255.150"
+echo "Done!"
