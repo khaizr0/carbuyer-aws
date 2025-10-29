@@ -1,0 +1,70 @@
+.table-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.table-options {
+    background: #193A37;
+    padding: 10px;
+}
+
+.table-options .btn-search {
+    background: #2E6762;
+    border-radius: 0;
+    color: #fff;
+}
+
+.table-options .btn-trans {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+}
+
+header {
+    background: #1D453E;
+    padding: 0 50px;
+}
+
+header .nav-link,
+header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+header .nav-link:hover,
+header a:hover {
+    color: #ddd;
+}
+
+.form-control[type="search"] {
+    border-radius: 0;
+}
+
+.pagination .page-item .page-link {
+    border: 1px solid #C4CDD5;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.pagination .page-item .page-link.text-dark {
+    color: black;
+}
+
+.pagination .page-item .page-link.text-secondary {
+    color: gray;
+}
+
+.pagination .page-item .page-link.text-muted {
+    color: lightgray;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    color: black;
+}

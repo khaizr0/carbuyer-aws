@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh Sửa Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/Public/css/employee.css">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+</head>
+<body>
+    <header class="d-flex justify-content-between align-items-center text-white p-3">
+        <div class="d-flex align-items-center">
+            <a href="#"><img src="/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
+        </div>
+        <div class="text-end">
+            <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
+            <p class="mb-0"><a href="/employee/logout" class="text-white">Đăng xuất</a></p>
+        </div>
+    </header>
+
+    <div class="p-5">
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item"><a class="nav-link active" href="/employee/san-pham">Sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/tin-tuc">Tin tức</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/lich-hen">Lịch hẹn</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/danh-gia">Đánh giá</a></li>
+            <li class="nav-item"><a class="nav-link" href="/employee/slider">Slider</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Khác</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/employee/loai-phu-kien">Loại phụ kiện</a></li>
+                    <li><a class="dropdown-item" href="/employee/thuong-hieu">Thương hiệu</a></li>
+                    <li><a class="dropdown-item" href="/employee/kieu-dang">Kiểu dáng</a></li>
+                    <li><a class="dropdown-item" href="/employee/mau-xe">Màu xe</a></li>
+                    <li><a class="dropdown-item" href="/employee/nguyen-lieu">Nguyên liệu</a></li>
+                </ul>
+            </li>
+        </ul>
+        <button class="btn btn-warning text-dark mb-3" onclick="window.history.back();">
+            <i class="fas fa-arrow-left me-2"></i> Quay Lại
+        </button>
+        <h2>Chỉnh Sửa Sản Phẩm</h2>
+        <ul class="nav nav-tabs" id="productTypeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link disabled" id="car-tab" data-bs-toggle="tab" href="#car" role="tab"
+                    aria-controls="car" aria-selected="false" tabindex="-1" aria-disabled="true">Ô TÔ</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link disabled" id="accessory-tab" data-bs-toggle="tab" href="#accessory" role="tab"
+                    aria-controls="accessory" aria-selected="false" tabindex="-1" aria-disabled="true">PHỤ KIỆN</a>
+            </li>
+        </ul>           
+
+        <div class="tab-content mt-3" id="productTypeTabContent">
+            <!-- Form dành cho Xe Ô Tô -->
+            <div class="tab-pane fade" id="car" role="tabpanel" aria-labelledby="car-tab">
+                <form id="editCarForm" method="POST" action="/product/update/:id" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="tenSP" class="form-label">Tên Sản Phẩm</label>
+                                <input type="text" class="form-control" name="tenSP" id="tenSP"  >
+                            </div>
+                            <div class="mb-3">
+                                <label for="iDthuongHieu" class="form-label">Thương hiệu</label>
+                                <select class="form-select" name="iDthuongHieu" id="iDthuongHieu"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="namSanXuat" class="form-label">Năm Sản Xuất</label>
+                                <input type="text" class="form-control" name="namSanXuat" id="namSanXuat"  >
+                            </div>
+                            <div class="mb-3">
+                                <label for="GiaNiemYet" class="form-label">Giá Niêm Yết (₫)</label>
+                                <input type="number" class="form-control" name="GiaNiemYet" id="GiaNiemYet"  >
+                            </div>
+                            <div class="mb-3">
+                                <label for="soKm" class="form-label">Số km đã đi</label>
+                                <input type="number" class="form-control" name="soKm" id="soKm">
+                            </div>
+                            <div class="mb-3">
+                                <label for="trangThai" class="form-label">Trạng Thái Sản Phẩm</label>
+                                <select class="form-select" name="trangThai" id="trangThai"  >
+                                    <option value="3">Mới</option>
+                                    <option value="1">Đã Qua Sử Dụng</option>
+                                    <option value="2">Tân Trang</option>
+                                    <option value="0">Ẩn sản phẩm</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Hình Ảnh Hiện Tại</label>
+                                <div id="currentImages" class="d-flex flex-wrap gap-2 mb-2"></div>
+                                <small class="text-muted">Click vào ảnh để thay thế</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="idNguyenLieu" class="form-label">Nguyên Liệu Xe</label>
+                                <select class="form-select" name="idNguyenLieu" id="idNguyenLieu"  >
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="idKieuDang" class="form-label">Kiểu Dáng</label>
+                                <select class="form-select" name="idKieuDang" id="idKieuDang"  >
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="soChoNgoi" class="form-label">Số Chỗ Ngồi</label>
+                                <select class="form-select" name="soChoNgoi" id="soChoNgoi"  >
+                                    <option value="2">2</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="20">20</option>
+                                    <option value="24">24</option>
+                                    <option value="30">30</option>
+                                    <option value="45">45</option>
+                                    <option value="50">50</option>
+                                    <option value="60">60</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="idMauXe" class="form-label">Màu Xe</label>
+                                <select class="form-select" name="idMauXe" id="idMauXe"  >
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="loaiCanSo" class="form-label">Loại cần số</label>
+                                <select class="form-select" name="loaiCanSo" id="loaiCanSo"  >
+                                    <option value="automatic">Tự động</option>
+                                    <option value="manual">Số sàn</option>
+                                    <option value="cvt">Vô cấp (CVT)</option>
+                                    <option value="dct">Ly hợp kép (DCT)</option>
+                                    <option value="tiptronic">Tiptronic</option>
+                                    <option value="semi-automatic">Bán tự động</option>
+                                </select>
+                            </div>
+                            <div class="form-check mt-5">
+                                <input class="form-check-input" type="checkbox" name="dangkilaithu" id="dangkilaithu">
+                                <label class="form-check-label" for="dangkilaithu">Đăng kí lái thử</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="chiTietSP" class="form-label">Chi Tiết Sản Phẩm</label>
+                            <textarea name="chiTietSP" id="chiTietSP"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-start px-0">
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Cập Nhật
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Form dành cho Phụ Kiện -->
+            <div class="tab-pane fade" id="accessory" role="tabpanel" aria-labelledby="accessory-tab">
+                <form id="editAccessoryForm" method="POST" action="/product/update/:id" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="tenSPPK" class="form-label">Tên Sản Phẩm</label>
+                                <input type="text" class="form-control" id="tenSPPK" name="tenSPPK"  >
+                            </div>
+                            <div class="mb-3">
+                                <label for="iDthuongHieuPK" class="form-label">Thương hiệu</label>
+                                <select class="form-select" id="iDthuongHieuPK" name="iDthuongHieuPK"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="idLoaiPK" class="form-label">Loại phụ kiện</label>
+                                <select class="form-select" id="idLoaiPK" name="idLoaiPK"></select>
+                            </div>
+                           
+                            <div class="mb-3">
+                                <label for="GiaNiemYetPK" class="form-label">Giá Niêm Yết (₫)</label>
+                                <input type="number" class="form-control" id="GiaNiemYetPK" name="GiaNiemYetPK"  >
+                            </div>
+                            <div>
+                                <label class="form-label">Hình Ảnh Hiện Tại</label>
+                                <div id="currentImagesPK" class="d-flex flex-wrap gap-2 mb-2"></div>
+                                <small class="text-muted">Click vào ảnh để thay thế</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="trangThaiPK" class="form-label">Trạng Thái Sản Phẩm</label>
+                                <select class="form-select" id="trangThaiPK" name="trangThaiPK"  >
+                                    <option value="3">Mới</option>
+                                    <option value="1">Đã Qua Sử Dụng</option>
+                                    <option value="2">Tân Trang</option>
+                                    <option value="0">Ẩn sản phẩm</option>
+                                </select>
+                            </div>
+
+                            <div class="form-check mt-5">
+                                <input class="form-check-input" type="checkbox" id="datLichPK" name="datLichPK">
+                                <label class="form-check-label" for="datLichPK">Cho phép đặt</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="chiTietSPPK" class="form-label">Chi Tiết Sản Phẩm</label>
+                            <textarea id="chiTietSPPK" name="chiTietSPPK"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-start px-0">
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Cập Nhật
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Khởi tạo Summernote
+        $(document).ready(function() {
+            $('#chiTietSP').summernote({
+                height: 400,
+                maxTextLength: 10000000
+            });
+            $('#chiTietSPPK').summernote({
+                height: 400,
+                maxTextLength: 10000000
+            });
+        });
+        
+        window.imageChanges = {};
+
+        // Script tự động chuyển tab dựa trên loại sản phẩm
+        document.addEventListener('DOMContentLoaded', function () {
+            const productType = document.getElementById('productType').value;
+    
+            // Kiểm tra giá trị của productType để mở tab tương ứng
+            if (productType.startsWith('XE')) {
+                console.log('productType bắt đầu với "XE", mở tab Car');
+                document.getElementById('car-tab').classList.add('active');
+                document.getElementById('car').classList.add('active', 'show');
+            } else if (productType.startsWith('PK')) {
+                console.log('productType bắt đầu với "PK", mở tab Accessory');
+                document.getElementById('accessory-tab').classList.add('active');
+                document.getElementById('accessory').classList.add('active', 'show');
+            } else {
+                console.log('productType không phù hợp với "XE" hoặc "PK", không làm gì.');
+            }
+        });
+        
+        // Xử lý submit form cập nhật
+        document.getElementById('editCarForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            const formElements = this.elements;
+            
+            for (let element of formElements) {
+                if (element.name) {
+                    if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked ? 'on' : 'off');
+                    } else if (element.tagName === 'TEXTAREA') {
+                        formData.append(element.name, $('#' + element.id).summernote('code'));
+                    } else {
+                        formData.append(element.name, element.value);
+                    }
+                }
+            }
+            
+            for (let index in window.imageChanges) {
+                formData.append('uploadImage', window.imageChanges[index]);
+                formData.append('imageIndex', index);
+            }
+            
+            try {
+                const response = await fetch(window.location.pathname.replace('/edit/', '/update/'), {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    alert('Cập nhật sản phẩm thành công!');
+                    window.location.href = '/employee/san-pham';
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Có lỗi xảy ra');
+                }
+            } catch (error) {
+                alert('Đã xảy ra lỗi khi cập nhật');
+            }
+        });
+        
+        document.getElementById('editAccessoryForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            const formElements = this.elements;
+            
+            for (let element of formElements) {
+                if (element.name) {
+                    if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked ? 'on' : 'off');
+                    } else if (element.tagName === 'TEXTAREA') {
+                        formData.append(element.name, $('#' + element.id).summernote('code'));
+                    } else {
+                        formData.append(element.name, element.value);
+                    }
+                }
+            }
+            
+            for (let index in window.imageChanges) {
+                formData.append('uploadImage', window.imageChanges[index]);
+                formData.append('imageIndex', index);
+            }
+            
+            try {
+                const response = await fetch(window.location.pathname.replace('/edit/', '/update/'), {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    alert('Cập nhật sản phẩm thành công!');
+                    window.location.href = '/employee/san-pham';
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Có lỗi xảy ra');
+                }
+            } catch (error) {
+                alert('Đã xảy ra lỗi khi cập nhật');
+            }
+        });
+    </script>
+</body>
+</html>

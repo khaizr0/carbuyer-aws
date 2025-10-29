@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Nhân Viên</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="stylesheet" href="/Public/css/employee.css">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+    <style>
+        /* Ẩn form mặc định */
+        #addEmployeeForm {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Màu nền mờ */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            z-index: 1000;
+            /* Đảm bảo form hiện lên trên các phần khác */
+        }
+
+        /* Chặn phần nội dung đằng sau khi form hiển thị */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        img {
+            max-width: 80px;
+            /* Đảm bảo hình ảnh không vượt quá chiều rộng container */
+            height: 90px;
+            /* Giữ tỷ lệ khung hình */
+            border-radius: 8px;
+            /* Bo tròn các góc */
+            border: 2px solid #ccc;
+            /* Đường viền xám nhạt */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Hiệu ứng đổ bóng */
+            display: block;
+            /* Loại bỏ khoảng cách dưới hình ảnh trong inline-block */
+            margin: 10px auto;
+            /* Căn giữa hình ảnh */
+            object-fit: cover;
+            /* Giúp ảnh vừa khít khi có kích thước cố định */
+        }
+
+        #editEmployeeForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 600px;
+            max-width: 90%;
+        }
+        
+        #addEmployeeForm {
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 600px;
+            max-width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="d-flex justify-content-between align-items-center text-white">
+        <div class="d-flex align-items-center">
+            <!-- Logo -->
+            <a href="#">
+                <img src="/Public/images/CarLogo.png" alt="Logo"
+                    style="width: 40px; height: auto; margin-right: 10px;">
+            </a>
+            <!-- Navigation Links -->
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Quản lý nhân viên</a>
+                </li>
+            </ul>
+        </div>
+        <!-- User Greeting and Logout -->
+        <div class="text-end">
+            <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
+            <p class="mb-0"><a href="/admin/logout" class="text-white">Đăng xuất</a></p>
+        </div>
+    </header>
+
+    <div class="p-5">
+        <h1>Danh sách nhân viên</h1>
+        <div class="container-fluid d-flex justify-content-between table-options">
+            <div>
+                <form class="input-group">
+                    <input class="form-control" type="search" placeholder="Tìm kiếm nhân viên" aria-label="Search">
+                    <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div>
+                <!-- Nút để mở form -->
+                <button type="button" class="btn btn-trans" id="btnAddEmployee">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="btn btn-trans btn-deleteSelected" id="deleteSelected"><i
+                        class="fas fa-trash"></i></button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fa-solid fa-rectangle-list"></i></th>
+                        <th>Hình ảnh</th>
+                        <th>Họ và tên</th>
+                        <th>ngày sinh</th>
+                        <th>Số CCCD/CMND/Hộ Chiếu</th>
+                        <th>Email</th>
+                        <th>Giới tính</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeList">
+                    <!-- render users list -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- The Form for Adding New Employee -->
+    <div id="overlay"></div>
+    <div id="addEmployeeForm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Thêm Nhân Viên Mới</h5>
+            <button type="button" class="btn-close" id="closeFormX"></button>
+        </div>
+        <form id="createEmployeeForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="hoTen" class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" id="hoTen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ngaySinh" class="form-label">Ngày Sinh</label>
+                        <input type="date" class="form-control" id="ngaySinh" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gioiTinh" class="form-label">Giới Tính</label>
+                        <select class="form-select" id="gioiTinh" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nu">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cccd" class="form-label">CCCD</label>
+                        <input type="text" class="form-control" id="cccd" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="matKhau" class="form-label">Mật Khẩu</label>
+                        <input type="password" class="form-control" id="matKhau" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="anhNhanVien" class="form-label">Ảnh Nhân Viên</label>
+                        <input type="file" class="form-control" id="anhNhanVien" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="phanLoai" class="form-label">Phân Loại</label>
+                        <select class="form-select" id="phanLoai" required>
+                            <option value="0">Admin</option>
+                            <option value="1">Nhân viên</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" id="closeForm">Đóng</button>
+            <button type="submit" class="btn btn-primary">Lưu Nhân Viên</button>
+        </form>
+    </div>
+
+    <!-- The Form for Editing Employee -->
+    <div id="editEmployeeForm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Cập nhật thông tin nhân viên</h5>
+            <button type="button" class="btn-close" id="closeEditFormX"></button>
+        </div>
+        <form id="updateEmployeeForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="hoTen" class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" id="editHoTen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ngaySinh" class="form-label">Ngày Sinh</label>
+                        <input type="date" class="form-control" id="editNgaySinh" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gioiTinh" class="form-label">Giới Tính</label>
+                        <select class="form-select" id="editGioiTinh" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nu">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cccd" class="form-label">CCCD</label>
+                        <input type="text" class="form-control" id="editCccd" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="matKhau" class="form-label">Mật Khẩu</label>
+                        <input type="password" class="form-control" id="editMatKhau">
+                    </div>
+                    <div class="mb-3">
+                        <label for="anhNhanVien" class="form-label">Ảnh Nhân Viên</label>
+                        <input type="file" class="form-control" id="editAnhNhanVien" accept="image/*">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="phanLoai" class="form-label">Phân Loại</label>
+                        <select class="form-select" id="editPhanLoai" required>
+                            <option value="0">Admin</option>
+                            <option value="1">Nhân viên</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" id="closeEditForm">Đóng</button>
+            <button type="submit" class="btn btn-primary">Lưu Nhân Viên</button>
+        </form>
+    </div>
+
+    <script>
+        let tempUsers = [];
+        let userEditId;
+
+        // Hiển thị form khi nhấn nút Thêm Nhân Viên
+        const btnAddEmployee = document.getElementById('btnAddEmployee');
+        const addEmployeeForm = document.getElementById('addEmployeeForm');
+        const editEmployeeForm =document.getElementById('editEmployeeForm');
+        const overlay = document.getElementById('overlay');
+        const closeForm = document.getElementById('closeForm');
+
+        btnAddEmployee.addEventListener('click', () => {
+            addEmployeeForm.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        // Đóng form khi nhấn nút Đóng
+        closeForm.addEventListener('click', () => {
+            addEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Đóng form khi nhấn vào overlay (phần nền mờ)
+        overlay.addEventListener('click', () => {
+            addEmployeeForm.style.display = 'none';
+            editEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Đóng form khi nhấn nút X
+        document.getElementById('closeFormX').addEventListener('click', () => {
+            addEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        document.getElementById('closeEditFormX').addEventListener('click', () => {
+            editEmployeeForm.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        //mở form edit
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.btn-edit')) {
+                // Hiển thị form chỉnh sửa
+                editEmployeeForm.style.display = 'block';
+                overlay.style.display = 'block';
+
+                const editButton = e.target.closest('.btn-edit');
+                userEditId = editButton.getAttribute('data-id');
+                const user = tempUsers.find(user => user.id === userEditId);
+
+                // Điền thông tin vào form chỉnh sửa
+                document.getElementById('editHoTen').value = user.hoTen;
+                document.getElementById('editEmail').value = user.email;
+                document.getElementById('editNgaySinh').value = user.ngaySinh;
+                document.getElementById('editGioiTinh').value = user.gioiTinh;
+                document.getElementById('editCccd').value = user.cccd;
+                document.getElementById('editMatKhau').value = '';
+                document.getElementById('editPhanLoai').value = user.PhanLoai;
+
+
+
+
+            }
+        });
+
+        // Đóng form chỉnh sửa
+        document.getElementById('closeEditForm').addEventListener('click', () => {
+            document.getElementById('editEmployeeForm').style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // api xử lý chức năng create user
+        document.getElementById('createEmployeeForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const hoTen = document.getElementById('hoTen').value;
+            const email = document.getElementById('email').value;
+            const ngaySinh = document.getElementById('ngaySinh').value;
+            const gioiTinh = document.getElementById('gioiTinh').value;
+            const cccd = document.getElementById('cccd').value;
+            const matKhau = document.getElementById('matKhau').value;
+            let PhanLoai = document.getElementById('phanLoai').value;
+            const anhNhanVien = document.getElementById('anhNhanVien').files[0];
+
+            const formData = new FormData();
+            formData.append('hoTen', hoTen);
+            formData.append('email', email);
+            formData.append('ngaySinh', ngaySinh);
+            formData.append('gioiTinh', gioiTinh);
+            formData.append('cccd', cccd);
+            formData.append('matKhau', matKhau);
+            formData.append('PhanLoai', PhanLoai);
+            formData.append('anhNhanVien', anhNhanVien);
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/my/user`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Lỗi: ${response.statusText}`);
+                }
+
+                alert('Thêm nhân viên thành công!');
+                const result = await response.json();
+                console.log('Kết quả từ server:', result);
+
+                addEmployeeForm.style.display = 'none';
+                overlay.style.display = 'none';
+                document.querySelector('.btn-search').click()
+            } catch (error) {
+                console.error('Lỗi khi thêm nhân viên:', error);
+                alert('Không thể thêm nhân viên. Vui lòng thử lại!');
+            }
+        });
+
+
+        // api xử lý chức năng tìm kiếm user
+        document.querySelector('.btn-search').addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            const searchInput = document.querySelector('input[type="search"]').value.trim();
+
+            try {
+                const response = await fetch(`/api/user/search/${searchInput}`);
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const users = await response.json();
+                renderUserList(users);
+                tempUsers = users
+                console.log(tempUsers);
+
+            } catch (error) {
+                console.error('Lỗi khi tìm kiếm:', error);
+                alert('Không thể tìm kiếm nhân viên. Vui lòng thử lại!');
+            }
+        });
+
+        // hàm xử lý render user list
+        function renderUserList(users) {
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+
+            if (users.length === 0) {
+                employeeList.innerHTML = '<tr><td colspan="8">Không tìm thấy nhân viên nào.</td></tr>';
+                return;
+            }
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td><input type="checkbox" class="row-checkbox" data-id="${user.id}"></td>
+            <td><img src="/files/users/${user.anhNhanVien}" alt="">  </td>
+            <td>${user.hoTen}</td>
+            <td>${user.ngaySinh}</td>
+            <td>${user.cccd}</td>
+            <td>${user.email}</td>
+            <td>${user.gioiTinh}</td>
+            <td>
+                <button class="btn btn-trans btn-edit" data-id=${user.id}><i class="fas fa-edit"></i></button>
+                <button class="btn btn-trans btn-delete" data-id=${user.id}><i class="fas fa-trash"></i></button>
+            </td>
+            `;
+                employeeList.appendChild(row);
+            });
+        }
+
+        // thực hiện event search khi trang vừa mở lên để thực hiện render all user
+        document.addEventListener('DOMContentLoaded', async function () {
+            document.querySelector('.btn-search').click();
+        });
+
+        //hàm api xử lý delete user
+        const apiDeleteUser = async (userId) => {
+            const response = await fetch(`/api/my/user/${userId}`, { method: 'DELETE' });
+
+            if (!response.ok) {
+                throw new Error('Không thể xóa nhân viên');
+            }
+
+            return true;
+        }
+
+        // xử lý gọi api delete 1 user 
+        document.addEventListener('click', async function (e) {
+            if (e.target.closest('.btn-delete')) {
+                const deleteButton = e.target.closest('.btn-delete');
+                const userId = deleteButton.getAttribute('data-id');
+                console.log(userId);
+
+                if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
+                    try {
+                        apiDeleteUser(userId)
+                        alert('Xóa nhân viên thành công!');
+                        document.querySelector('.btn-search').click();
+                    } catch (error) {
+                        console.error('Lỗi khi xóa nhân viên:', error);
+                        alert('Không thể xóa nhân viên. Vui lòng thử lại!');
+                    }
+                }
+            }
+        });
+
+        //xử lý goij api delete nhiều user được chọn 
+        document.getElementById('deleteSelected').addEventListener('click', async function () {
+            const selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+
+            if (selectedCheckboxes.length === 0) {
+                alert('Vui lòng chọn ít nhất một nhân viên để xóa.');
+                return;
+            }
+
+            const userIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.getAttribute('data-id'));
+            if (confirm(`Bạn có chắc chắn muốn xóa ${selectedCheckboxes.length} nhân viên đã chọn?`)) {
+
+                try {
+                    // promise.all dùng để xử lý bất đồng bộ + đảm bảo tất cả các promise được hoafn thành 
+                    // trước khi next step
+                    await Promise.all(userIds.map(id => apiDeleteUser(id)))
+                    alert('Xóa nhân viên thành công!');
+                    document.querySelector('.btn-search').click();
+                } catch (error) {
+                    console.error('Lỗi khi xóa nhân viên:', error);
+                    alert('Không thể xóa nhân viên. Vui lòng thử lại!');
+                }
+            }
+        });
+
+        document.getElementById('updateEmployeeForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const hoTen = document.getElementById('editHoTen').value;
+            const email = document.getElementById('editEmail').value;
+            const ngaySinh = document.getElementById('editNgaySinh').value;
+            const gioiTinh = document.getElementById('editGioiTinh').value;
+            const cccd = document.getElementById('editCccd').value;
+            const matKhau = document.getElementById('editMatKhau').value;
+            let PhanLoai = document.getElementById('editPhanLoai').value;
+            const anhNhanVien = document.getElementById('editAnhNhanVien').files[0];
+
+            const formData = new FormData();
+            formData.append('hoTen', hoTen);
+            formData.append('email', email);
+            formData.append('ngaySinh', ngaySinh);
+            formData.append('gioiTinh', gioiTinh);
+            formData.append('cccd', cccd);
+            if (matKhau) { formData.append('matKhau', matKhau); }
+            formData.append('PhanLoai', PhanLoai);
+            if (anhNhanVien) { formData.append('anhNhanVien', anhNhanVien); }
+            
+            try {
+                const response = await fetch(`${BASE_URL}/api/my/user/${userEditId}`, {
+                    method: 'PUT',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Lỗi: ${response.statusText}`);
+                }
+
+                alert('Sửa nhân viên thành công!');
+                const result = await response.json();
+                console.log('Kết quả từ server:', result);
+
+                document.getElementById('updateEmployeeForm').reset();
+                editEmployeeForm.style.display = 'none';
+                overlay.style.display = 'none';
+                document.querySelector('.btn-search').click()
+            } catch (error) {
+                console.error('Lỗi khi cập nhật thông tin nhân viên:', error);
+                alert('Không thể cập nhật thông tin nhân viên. Vui lòng thử lại!');
+            }
+        });
+    </script>
+    <script>
+        const BASE_URL = window.location.origin;
+    </script>
+</body>
+
+</html>
