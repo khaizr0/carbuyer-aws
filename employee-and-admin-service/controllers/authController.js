@@ -1,9 +1,9 @@
 require('dotenv').config();
-const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const { getUserByEmail } = require('../models/User');
 const { getDB } = require('../config/db');
 const { hashPassword, comparePassword } = require('../utils/crypto-helper');
+const { sendResetPasswordEmail } = require('../utils/email-client');
 const path = require('path');
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -60,24 +60,7 @@ const forgotPassword = async (req, res) => {
 
     const resetUrl = `${process.env.BASE_URL}/reset-password/${user.email}/${token}`;
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: 'Password Reset Link',
-      text: `Here is your password reset link: ${resetUrl}`,
-    };
-
-    await transporter.sendMail(mailOptions);
+    await sendResetPasswordEmail(user.email, resetUrl);
     res.redirect('/email-sent-success');
   } catch (error) {
     console.error('Error during forgot password:', error);

@@ -1,0 +1,5 @@
+aws_region = "ap-southeast-1"
+email_host = "smtp.gmail.com"
+email_port = "465"
+email_user = "your_email@gmail.com"
+email_pass = "your_gmail_app_password"

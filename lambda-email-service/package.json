@@ -1,0 +1,12 @@
+{
+  "name": "lambda-email-service",
+  "version": "1.0.0",
+  "description": "Lambda function for sending emails via SES",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "zip -r function.zip . && aws lambda update-function-code --function-name carbuyer-email-service --zip-file fileb://function.zip"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  }
+}

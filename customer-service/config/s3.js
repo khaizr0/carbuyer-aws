@@ -1,13 +1,10 @@
 require('dotenv').config();
 const { S3Client } = require('@aws-sdk/client-s3');
 
-// Config cho AWS S3 thực hoặc MinIO local
+// Dùng IAM Role thay vì hardcoded credentials
 const s3Config = {
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  }
+  region: process.env.AWS_REGION
+  // Không cần credentials - EC2 tự động lấy từ IAM Role
 };
 
 // Nếu có S3_ENDPOINT (MinIO local) thì thêm endpoint và forcePathStyle
