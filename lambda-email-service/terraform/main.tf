@@ -92,6 +92,7 @@ resource "aws_api_gateway_method" "email_post" {
   resource_id   = aws_api_gateway_resource.email_resource.id
   http_method   = "POST"
   authorization = "NONE"
+  api_key_required = true
 }
 
 resource "aws_api_gateway_integration" "lambda_integration" {
@@ -110,6 +111,38 @@ resource "aws_api_gateway_deployment" "email_api_deployment" {
   depends_on = [aws_api_gateway_integration.lambda_integration]
 }
 
+# API Key
+resource "aws_api_gateway_api_key" "email_api_key" {
+  name = "carbuyer-email-api-key"
+}
+
+# Usage Plan
+resource "aws_api_gateway_usage_plan" "email_usage_plan" {
+  name = "carbuyer-email-usage-plan"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.email_api.id
+    stage  = aws_api_gateway_deployment.email_api_deployment.stage_name
+  }
+
+  throttle_settings {
+    burst_limit = 100
+    rate_limit  = 50
+  }
+
+  quota_settings {
+    limit  = 10000
+    period = "DAY"
+  }
+}
+
+# Link API Key to Usage Plan
+resource "aws_api_gateway_usage_plan_key" "email_usage_plan_key" {
+  key_id        = aws_api_gateway_api_key.email_api_key.id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.email_usage_plan.id
+}
+
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
@@ -126,4 +159,9 @@ output "lambda_function_arn" {
 
 output "api_gateway_url" {
   value = "${aws_api_gateway_deployment.email_api_deployment.invoke_url}/send-email"
+}
+
+output "api_key" {
+  value     = aws_api_gateway_api_key.email_api_key.value
+  sensitive = true
 }
