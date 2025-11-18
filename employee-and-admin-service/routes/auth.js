@@ -80,7 +80,10 @@ const employeeLogin = async (req, res) => {
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
     console.log('Login successful for:', userName);
-    return res.redirect('/employee/san-pham');
+    req.session.save((err) => {
+      if (err) console.error('Session save error:', err);
+      return res.redirect('/employee/san-pham');
+    });
   } catch (error) {
     console.error('Employee login error:', error);
     return res.status(500).send('Internal server error: ' + error.message);
@@ -116,7 +119,10 @@ const adminLogin = async (req, res) => {
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
     console.log('Admin login successful for:', userName);
-    return res.redirect('/admin');
+    req.session.save((err) => {
+      if (err) console.error('Session save error:', err);
+      return res.redirect('/admin');
+    });
   } catch (error) {
     console.error('Admin login error:', error);
     return res.status(500).send('Internal server error: ' + error.message);
