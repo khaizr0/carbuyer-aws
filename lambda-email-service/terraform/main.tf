@@ -54,7 +54,7 @@ resource "aws_lambda_function" "email_service" {
   function_name    = "carbuyer-email-service"
   role            = aws_iam_role.lambda_email_role.arn
   handler         = "index.handler"
-  runtime         = "nodejs20.x"
+  runtime         = "nodejs18.x"
   timeout         = 30
   memory_size     = 256
 

@@ -7,6 +7,7 @@
     "deploy": "zip -r function.zip . && aws lambda update-function-code --function-name carbuyer-email-service --zip-file fileb://function.zip"
   },
   "dependencies": {
-    "nodemailer": "^6.9.0"
+    "nodemailer": "^6.9.0",
+    "axios": "^1.6.0"
   }
 }
