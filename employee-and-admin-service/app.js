@@ -27,6 +27,12 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
+// Serve static files for both admin and employee routes
+app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
+app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
+app.use('/admin/Documents', express.static(path.join(__dirname, 'Documents')));
+app.use('/employee/Documents', express.static(path.join(__dirname, 'Documents')));
+// Fallback for direct access
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
 
