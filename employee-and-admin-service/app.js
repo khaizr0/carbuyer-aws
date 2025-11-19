@@ -29,8 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   resave: false, 
-  saveUninitialized: true,
-  cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+  saveUninitialized: false,
+  cookie: { secure: false, httpOnly: false, path: '/' }
 }));
 // Serve static files for both admin and employee routes
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
