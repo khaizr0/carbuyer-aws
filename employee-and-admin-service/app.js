@@ -26,15 +26,28 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
+app.use(session({ 
+  secret: process.env.SESSION_SECRET, 
+  resave: false, 
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true if using HTTPS
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true
+  }
+}));
 // Serve static files for both admin and employee routes
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/admin/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/employee/Documents', express.static(path.join(__dirname, 'Documents')));
-// Fallback for direct access
+// Fallback for direct access - IMPORTANT for ALB routing
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
+// Additional static file serving for root paths
+app.use('/css', express.static(path.join(__dirname, 'Public/css')));
+app.use('/js', express.static(path.join(__dirname, 'Public/JS')));
+app.use('/images', express.static(path.join(__dirname, 'Public/images')));
 
 // Config route
 app.get('/config/config.js', (req, res) => {
