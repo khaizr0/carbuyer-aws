@@ -36,15 +36,14 @@ app.use(session({
     httpOnly: true
   }
 }));
-// Serve static files for both admin and employee routes
+// Static files middleware - MUST be before routes
+app.use('/Public', express.static(path.join(__dirname, 'Public')));
+app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/admin/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/employee/Documents', express.static(path.join(__dirname, 'Documents')));
-// Fallback for direct access - IMPORTANT for ALB routing
-app.use('/Public', express.static(path.join(__dirname, 'Public')));
-app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
-// Additional static file serving for root paths
+// Root level static files
 app.use('/css', express.static(path.join(__dirname, 'Public/css')));
 app.use('/js', express.static(path.join(__dirname, 'Public/JS')));
 app.use('/images', express.static(path.join(__dirname, 'Public/images')));
@@ -59,6 +58,21 @@ app.get('/config/config.js', (req, res) => {
 // Test route
 app.get('/test-user-files', (req, res) => {
   res.sendFile(path.join(__dirname, 'test-user-files.html'));
+});
+
+// Debug route for static files
+app.get('/debug-static', (req, res) => {
+  const fs = require('fs');
+  const publicPath = path.join(__dirname, 'Public');
+  const cssPath = path.join(__dirname, 'Public/css');
+  
+  res.json({
+    publicExists: fs.existsSync(publicPath),
+    cssExists: fs.existsSync(cssPath),
+    publicContents: fs.existsSync(publicPath) ? fs.readdirSync(publicPath) : 'Not found',
+    cssContents: fs.existsSync(cssPath) ? fs.readdirSync(cssPath) : 'Not found',
+    __dirname: __dirname
+  });
 });
 
 // Routes
