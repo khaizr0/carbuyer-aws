@@ -178,10 +178,10 @@ const getEditProductPageController = async (req, res) => {
           if (productType === 'XE') {
               try {
                   const [brands, styles, colors, fuels] = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu').then(r => { if (!r.ok) throw new Error('Failed to fetch brands'); return r.json(); }),
-                      fetch(prefix + '/kieu-dang').then(r => { if (!r.ok) throw new Error('Failed to fetch styles'); return r.json(); }),
-                      fetch(prefix + '/mau-xe').then(r => { if (!r.ok) throw new Error('Failed to fetch colors'); return r.json(); }),
-                      fetch(prefix + '/nguyen-lieu').then(r => { if (!r.ok) throw new Error('Failed to fetch fuels'); return r.json(); })
+                      fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed brands'); return r.json(); }),
+                      fetch(prefix + '/kieu-dang', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed styles'); return r.json(); }),
+                      fetch(prefix + '/mau-xe', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed colors'); return r.json(); }),
+                      fetch(prefix + '/nguyen-lieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed fuels'); return r.json(); })
                   ]);
               } catch (error) {
                   console.error('Error loading data:', error);
@@ -257,8 +257,8 @@ const getEditProductPageController = async (req, res) => {
           } else if (productType === 'PK') {
               try {
                   const [brands, categories] = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu').then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); }),
-                      fetch(prefix + '/category/loai-phu-kien').then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
+                      fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); }),
+                      fetch(prefix + '/category/loai-phu-kien', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
                   ]);
               } catch (error) {
                   console.error('Error loading data:', error);
