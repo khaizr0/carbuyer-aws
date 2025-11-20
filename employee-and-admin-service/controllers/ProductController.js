@@ -169,6 +169,7 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
+      window.S3_PUBLIC_URL = '${process.env.S3_PUBLIC_URL || ''}';
       document.addEventListener('DOMContentLoaded', async function() {
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
@@ -224,7 +225,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < images.length) {
-                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="\${window.S3_PUBLIC_URL || ''}/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
@@ -279,7 +280,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < imagesPK.length) {
-                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="\${window.S3_PUBLIC_URL || ''}/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
