@@ -27,15 +27,13 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ 
-  secret: process.env.SESSION_SECRET || 'carbuyer_session_secret_2024_production', 
+  secret: process.env.SESSION_SECRET, 
   resave: false, 
   saveUninitialized: false,
-  name: 'carbuyer.sid',
   cookie: {
     secure: false, // Set to true if using HTTPS
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true,
-    sameSite: 'lax'
+    httpOnly: true
   }
 }));
 // Static files middleware - MUST be before routes
@@ -77,33 +75,16 @@ app.get('/debug-static', (req, res) => {
   });
 });
 
-// Debug route for session
-app.get('/debug-session', (req, res) => {
-  res.json({
-    sessionID: req.sessionID,
-    session: req.session,
-    userId: req.session.userId,
-    userRole: req.session.userRole,
-    cookies: req.headers.cookie
-  });
-});
-
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
-
-// Admin routes
-app.use('/admin/api/my/user', myUserRoute);
-app.use('/admin/api/user', userRoute);
-
-// Employee routes  
+app.use('/api/my/user', myUserRoute);
+app.use('/api/user', userRoute);
 app.use('/employee', employeeRoutes);
-app.use('/employee/api/user', userRoute);
-
-// Shared routes for both admin and employee
 app.use('/product', productRoutes);
 app.use('/news', newsRoutes);
 app.use('/booking', booking);
+app.use('/employee/booking', bookingRoutes);
 app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
 app.use('/category', categoryRoutes);

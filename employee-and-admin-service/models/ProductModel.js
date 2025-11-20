@@ -97,7 +97,7 @@ const getAllProducts = async () => {
       year: car.namSanXuat,
       mileage: car.soKm ? car.soKm.toLocaleString('vi-VN') + ' km' : '0 km',
       fuelType: fuelMap[car.idNguyenLieu] || 'N/A',
-      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/employee/Public/images/no-image-found.jpg',
+      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
       brandId: car.iDthuongHieu,
       type: 'Xe',
       style: styleMap[car.idKieuDang] || car.idKieuDang,
@@ -118,7 +118,7 @@ const getAllProducts = async () => {
       name: acc.tenSP,
       brand: brandMap[acc.iDthuongHieu] || 'Unknown',
       price: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price),
-      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/employee/Public/images/no-image-found.jpg',
+      imageUrl: imageFileName ? `${process.env.S3_PUBLIC_URL}/Database/Products/${imageFileName}` : '/Public/images/placeholder.png',
       brandId: acc.iDthuongHieu,
       categoryId: acc.idLoai,
       type: 'Phụ kiện',
@@ -151,23 +151,10 @@ const deleteProductById = async (id) => {
 };
 
 const findProductById = async (productId) => {
-  console.log('=== FIND PRODUCT BY ID ===');
-  console.log('Product ID:', productId);
-  
   const docClient = getDB();
   const tableName = productId.startsWith('XE') ? 'XeOto' : 'PhuKien';
-  console.log('Table name:', tableName);
-  
-  try {
-    const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id: productId } }));
-    console.log('DynamoDB result:', result);
-    console.log('Product found:', result.Item ? 'YES' : 'NO');
-    
-    return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
-  } catch (error) {
-    console.error('DynamoDB error:', error);
-    throw error;
-  }
+  const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id: productId } }));
+  return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
 };
 
 const getRelatedProducts = async (kieuDang, currentId) => {

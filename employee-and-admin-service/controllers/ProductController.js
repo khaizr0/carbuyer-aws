@@ -108,7 +108,7 @@ const getRecentProductsController = async (req, res) => {
     
     const formattedProducts = recentProducts.map(product => {
       const imageFileName = product.hinhAnh ? product.hinhAnh.split('||')[0].trim() : '';
-      const imageUrl = imageFileName ? getS3Url(`Database/Products/${imageFileName}`) : '/employee/Public/images/no-image-found.jpg';
+      const imageUrl = imageFileName ? getS3Url(`Database/Products/${imageFileName}`) : '/Public/images/placeholder.png';
       return {
         id: product.id,
         name: product.tenSP,
@@ -154,16 +154,9 @@ const deleteProductByIdController = async (req, res) => {
 const getEditProductPageController = async (req, res) => {
   try {
       const productId = req.params.id;
-      console.log('=== EDIT PRODUCT DEBUG ===');
-      console.log('Product ID:', productId);
-      console.log('User session:', req.session);
-      
       global.IDSP = productId;
 
-      console.log('Finding product by ID...');
       const { product, productType } = await findProductById(productId);
-      console.log('Product found:', product ? 'YES' : 'NO');
-      console.log('Product type:', productType);
 
       if (!product) {
           return res.status(404).json({ message: 'Sản phẩm không tồn tại.' });
@@ -176,7 +169,6 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
-      window.S3_PUBLIC_URL = '${process.env.S3_PUBLIC_URL || ''}';
       document.addEventListener('DOMContentLoaded', async function() {
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
@@ -232,7 +224,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < images.length) {
-                      div.innerHTML = \`<img src="\${window.S3_PUBLIC_URL || ''}/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${images[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
@@ -287,7 +279,7 @@ const getEditProductPageController = async (req, res) => {
                   div.style.cssText = 'width: 100px; height: 100px; position: relative;';
                   
                   if (i < imagesPK.length) {
-                      div.innerHTML = \`<img src="\${window.S3_PUBLIC_URL || ''}/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
+                      div.innerHTML = \`<img src="${process.env.S3_PUBLIC_URL}/Database/Products/\${imagesPK[i]}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">\`;
                   } else {
                       div.innerHTML = '<div class="border rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa;"><i class="fas fa-plus fa-2x text-muted"></i></div>';
                   }
@@ -331,16 +323,13 @@ const getEditProductPageController = async (req, res) => {
           </html>
       `);
   } catch (error) {
-      console.error('=== EDIT PRODUCT ERROR ===');
-      console.error('Error details:', error);
-      console.error('Error stack:', error.stack);
-      console.error('Product ID:', req.params.id);
+      console.error('Lỗi khi tải trang chỉnh sửa sản phẩm:', error);
       res.status(500).json({ message: 'Đã có lỗi xảy ra. Vui lòng thử lại sau!' });
   }
 };
 
 const updateProduct = async (req, res) => {
-  const productId = req.params.id; 
+  const productId = global.IDSP; 
 
   try {
       const { product, productType } = await findProductById(productId);
@@ -406,9 +395,6 @@ const updateProduct = async (req, res) => {
           return res.status(200).json({ message: 'Cập nhật sản phẩm thành công.' });
       });
   } catch (error) {
-      console.error('=== UPDATE PRODUCT ERROR ===');
-      console.error('Error details:', error);
-      console.error('Product ID:', req.params.id);
       res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại.' });
   }
 };
