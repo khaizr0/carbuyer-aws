@@ -29,14 +29,16 @@ app.use(express.urlencoded({ extended: true }));
 app.set('trust proxy', 1); // Trust first proxy (ALB)
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
-  resave: false, 
-  saveUninitialized: false,
+  resave: true, 
+  saveUninitialized: true,
   cookie: {
-    secure: false, // Set to true if using HTTPS
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: 'lax'
-  }
+    sameSite: 'lax',
+    path: '/'
+  },
+  name: 'employee.sid'
 }));
 // Static files middleware - MUST be before routes
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
