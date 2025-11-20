@@ -169,7 +169,7 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
-      document.addEventListener('DOMContentLoaded', async function() {
+      (async function() {
           const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
@@ -303,7 +303,7 @@ const getEditProductPageController = async (req, res) => {
                   containerPK.appendChild(div);
               }
           }
-      });
+      })();
       </script>
       `;
 
