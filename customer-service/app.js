@@ -143,6 +143,115 @@ app.post('/reset-password*', (req, res) => {
   res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
 });
 
+// Add all other HTTP methods for admin service routes
+app.post('/news/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/news/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/news/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/booking/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/booking/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/booking/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/review/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/review/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/review/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/slider/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/slider/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/slider/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/category/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/category/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/category/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/kieu-dang/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/kieu-dang/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/kieu-dang/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/mau-xe/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/mau-xe/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/mau-xe/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/nguyen-lieu/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/nguyen-lieu/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/nguyen-lieu/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/files/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/files/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/files/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
 // Routes
 app.use('/', authRoutes);
 app.use('/', otherRoutes);
