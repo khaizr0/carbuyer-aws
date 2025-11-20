@@ -10,7 +10,7 @@ router.get('/employee/login', (req, res) => {
 });
 
 router.get('/admin/login', (req, res) => {
-  if (req.session.userId) return res.redirect('/admin');
+  if (req.session.userId) return res.redirect('/admin/');
   res.sendFile(path.join(__dirname, '..', 'views', 'authentication', 'Admin-login.html'));
 });
 
@@ -36,6 +36,15 @@ router.get('/reset-password', resetPassword);
 
 // session
 router.get('/admin', (req, res) => {
+  if (!req.session.userId) return res.redirect('/admin/login');
+  if (req.session.userRole !== 0) {
+    req.session.destroy();
+    return res.redirect('/admin/login');
+  }
+  res.sendFile(path.join(__dirname, '..', 'views', 'admin', 'home.html'));
+});
+
+router.get('/admin/', (req, res) => {
   if (!req.session.userId) return res.redirect('/admin/login');
   if (req.session.userRole !== 0) {
     req.session.destroy();
@@ -116,7 +125,7 @@ const adminLogin = async (req, res) => {
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
     console.log('Admin login successful for:', userName);
-    return res.redirect('/admin');
+    return res.redirect('/admin/');
   } catch (error) {
     console.error('Admin login error:', error);
     return res.status(500).send('Internal server error: ' + error.message);
