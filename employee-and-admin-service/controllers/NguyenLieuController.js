@@ -2,13 +2,8 @@ const { docClient } = require('../config/dynamodb');
 const { ScanCommand, PutCommand, GetCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
 const getAll = async (req, res) => {
-    try {
-        const data = await docClient.send(new ScanCommand({ TableName: 'NguyenLieuXe' }));
-        res.json(data.Items || []);
-    } catch (error) {
-        console.error('NguyenLieu getAll error:', error);
-        res.status(500).json({ error: error.message });
-    }
+    const data = await docClient.send(new ScanCommand({ TableName: 'NguyenLieuXe' }));
+    res.json(data.Items);
 };
 
 const create = async (req, res) => {

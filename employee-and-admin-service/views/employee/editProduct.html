@@ -7,16 +7,16 @@
     <title>Chỉnh Sửa Sản Phẩm</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/employee/Public/css/employee.css">
+    <link rel="stylesheet" href="/Public/css/employee.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-    <link rel="icon" type="image/x-icon" href="/employee/Public/images/CarLogo.png">
+    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
 </head>
 <body>
     <header class="d-flex justify-content-between align-items-center text-white p-3">
         <div class="d-flex align-items-center">
-            <a href="#"><img src="/employee/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
+            <a href="#"><img src="/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
         </div>
         <div class="text-end">
             <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
@@ -251,29 +251,19 @@
 
         // Script tự động chuyển tab dựa trên loại sản phẩm
         document.addEventListener('DOMContentLoaded', function () {
-            const productTypeElement = document.getElementById('productType');
-            if (!productTypeElement) {
-                console.error('Không tìm thấy element productType');
-                return;
-            }
-            const productType = productTypeElement.value;
-            console.log('Product type:', productType);
+            const productType = document.getElementById('productType').value;
     
             // Kiểm tra giá trị của productType để mở tab tương ứng
-            if (productType === 'XE') {
-                console.log('productType là "XE", mở tab Car');
+            if (productType.startsWith('XE')) {
+                console.log('productType bắt đầu với "XE", mở tab Car');
                 document.getElementById('car-tab').classList.add('active');
                 document.getElementById('car').classList.add('active', 'show');
-                document.getElementById('accessory-tab').classList.remove('active');
-                document.getElementById('accessory').classList.remove('active', 'show');
-            } else if (productType === 'PK') {
-                console.log('productType là "PK", mở tab Accessory');
+            } else if (productType.startsWith('PK')) {
+                console.log('productType bắt đầu với "PK", mở tab Accessory');
                 document.getElementById('accessory-tab').classList.add('active');
                 document.getElementById('accessory').classList.add('active', 'show');
-                document.getElementById('car-tab').classList.remove('active');
-                document.getElementById('car').classList.remove('active', 'show');
             } else {
-                console.log('productType không phù hợp với "XE" hoặc "PK":', productType);
+                console.log('productType không phù hợp với "XE" hoặc "PK", không làm gì.');
             }
         });
         

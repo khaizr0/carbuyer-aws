@@ -169,69 +169,17 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
-      window.addEventListener('load', async function() {
-          await new Promise(r => setTimeout(r, 1000));
-          const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
+      document.addEventListener('DOMContentLoaded', async function() {
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
 
           if (productType === 'XE') {
-              let brands, styles, colors, fuels;
-              try {
-                  const responses = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu', {
-                          method: 'GET',
-                          credentials: 'same-origin',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      }),
-                      fetch(prefix + '/kieu-dang', {
-                          method: 'GET', 
-                          credentials: 'same-origin',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      }),
-                      fetch(prefix + '/mau-xe', {
-                          method: 'GET',
-                          credentials: 'same-origin', 
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      }),
-                      fetch(prefix + '/nguyen-lieu', {
-                          method: 'GET',
-                          credentials: 'same-origin',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      })
-                  ]);
-                  
-                  // Check if all responses are ok
-                  for (let i = 0; i < responses.length; i++) {
-                      if (!responses[i].ok) {
-                          const errorText = await responses[i].text();
-                          console.error(\`API \${i} failed:\`, responses[i].status, errorText);
-                          throw new Error(\`API call \${i} failed with status \${responses[i].status}\`);
-                      }
-                  }
-                  
-                  [brands, styles, colors, fuels] = await Promise.all(
-                      responses.map(r => r.json())
-                  );
-              } catch (error) {
-                  console.error('Error loading data:', error);
-                  if (confirm('Không thể tải dữ liệu. Bạn có muốn tải lại trang không?')) {
-                      window.location.reload();
-                  }
-                  return;
-              }
+              const [brands, styles, colors, fuels] = await Promise.all([
+                  fetch('/category/thuong-hieu').then(r => r.json()),
+                  fetch('/kieu-dang').then(r => r.json()),
+                  fetch('/mau-xe').then(r => r.json()),
+                  fetch('/nguyen-lieu').then(r => r.json())
+              ]);
               
               document.getElementById('iDthuongHieu').innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
                   .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
@@ -299,46 +247,10 @@ const getEditProductPageController = async (req, res) => {
                   container.appendChild(div);
               }
           } else if (productType === 'PK') {
-              let brands, categories;
-              try {
-                  const responses = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu', {
-                          method: 'GET',
-                          credentials: 'same-origin',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      }),
-                      fetch(prefix + '/category/loai-phu-kien', {
-                          method: 'GET',
-                          credentials: 'same-origin',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': 'application/json'
-                          }
-                      })
-                  ]);
-                  
-                  // Check if all responses are ok
-                  for (let i = 0; i < responses.length; i++) {
-                      if (!responses[i].ok) {
-                          const errorText = await responses[i].text();
-                          console.error(\`API \${i} failed:\`, responses[i].status, errorText);
-                          throw new Error(\`API call \${i} failed with status \${responses[i].status}\`);
-                      }
-                  }
-                  
-                  [brands, categories] = await Promise.all(
-                      responses.map(r => r.json())
-                  );
-              } catch (error) {
-                  console.error('Error loading data:', error);
-                  if (confirm('Không thể tải dữ liệu cho phụ kiện. Bạn có muốn tải lại trang không?')) {
-                      window.location.reload();
-                  }
-                  return;
-              }
+              const [brands, categories] = await Promise.all([
+                  fetch('/category/thuong-hieu').then(r => r.json()),
+                  fetch('/category/loai-phu-kien').then(r => r.json())
+              ]);
               
               document.getElementById('iDthuongHieuPK').innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)
                   .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
