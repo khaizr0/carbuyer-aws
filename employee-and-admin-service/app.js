@@ -26,6 +26,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1); // Trust first proxy (ALB)
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   resave: false, 
@@ -33,7 +34,8 @@ app.use(session({
   cookie: {
     secure: false, // Set to true if using HTTPS
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true
+    httpOnly: true,
+    sameSite: 'lax'
   }
 }));
 // Static files middleware - MUST be before routes
