@@ -64,6 +64,12 @@ app.get('/admin/config/config.js', (req, res) => {
   res.send(`const mapConfig = { url: "${process.env.GOOGLE_MAPS_EMBED_URL}" };`);
 });
 
+// Debug middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Session: ${req.session?.userId ? 'Yes' : 'No'}`);
+  next();
+});
+
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
