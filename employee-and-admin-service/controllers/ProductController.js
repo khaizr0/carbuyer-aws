@@ -170,6 +170,7 @@ const getEditProductPageController = async (req, res) => {
       const scriptFillData = `
       <script>
       window.addEventListener('load', async function() {
+          await new Promise(r => setTimeout(r, 1000));
           const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
