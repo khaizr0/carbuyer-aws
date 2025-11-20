@@ -151,10 +151,23 @@ const deleteProductById = async (id) => {
 };
 
 const findProductById = async (productId) => {
+  console.log('=== FIND PRODUCT BY ID ===');
+  console.log('Product ID:', productId);
+  
   const docClient = getDB();
   const tableName = productId.startsWith('XE') ? 'XeOto' : 'PhuKien';
-  const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id: productId } }));
-  return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
+  console.log('Table name:', tableName);
+  
+  try {
+    const result = await docClient.send(new GetCommand({ TableName: tableName, Key: { id: productId } }));
+    console.log('DynamoDB result:', result);
+    console.log('Product found:', result.Item ? 'YES' : 'NO');
+    
+    return { product: result.Item, productType: tableName === 'XeOto' ? 'XE' : 'PK' };
+  } catch (error) {
+    console.error('DynamoDB error:', error);
+    throw error;
+  }
 };
 
 const getRelatedProducts = async (kieuDang, currentId) => {

@@ -154,9 +154,16 @@ const deleteProductByIdController = async (req, res) => {
 const getEditProductPageController = async (req, res) => {
   try {
       const productId = req.params.id;
+      console.log('=== EDIT PRODUCT DEBUG ===');
+      console.log('Product ID:', productId);
+      console.log('User session:', req.session);
+      
       global.IDSP = productId;
 
+      console.log('Finding product by ID...');
       const { product, productType } = await findProductById(productId);
+      console.log('Product found:', product ? 'YES' : 'NO');
+      console.log('Product type:', productType);
 
       if (!product) {
           return res.status(404).json({ message: 'Sản phẩm không tồn tại.' });
@@ -324,7 +331,10 @@ const getEditProductPageController = async (req, res) => {
           </html>
       `);
   } catch (error) {
-      console.error('Lỗi khi tải trang chỉnh sửa sản phẩm:', error);
+      console.error('=== EDIT PRODUCT ERROR ===');
+      console.error('Error details:', error);
+      console.error('Error stack:', error.stack);
+      console.error('Product ID:', req.params.id);
       res.status(500).json({ message: 'Đã có lỗi xảy ra. Vui lòng thử lại sau!' });
   }
 };

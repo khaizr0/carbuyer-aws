@@ -37,6 +37,15 @@ app.get('/test-user-files', (req, res) => {
   res.sendFile(path.join(__dirname, 'test-user-files.html'));
 });
 
+// Admin/Employee redirects - must be before other routes
+app.get('/admin*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}${req.originalUrl}`);
+});
+
+app.get('/employee*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}${req.originalUrl}`);
+});
+
 // Routes
 app.use('/', authRoutes);
 app.use('/', otherRoutes);
