@@ -176,8 +176,9 @@ const getEditProductPageController = async (req, res) => {
           const product = ${JSON.stringify(product)};
 
           if (productType === 'XE') {
+              let brands, styles, colors, fuels;
               try {
-                  const [brands, styles, colors, fuels] = await Promise.all([
+                  [brands, styles, colors, fuels] = await Promise.all([
                       fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed brands'); return r.json(); }),
                       fetch(prefix + '/kieu-dang', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed styles'); return r.json(); }),
                       fetch(prefix + '/mau-xe', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed colors'); return r.json(); }),
@@ -255,8 +256,9 @@ const getEditProductPageController = async (req, res) => {
                   container.appendChild(div);
               }
           } else if (productType === 'PK') {
+              let brands, categories;
               try {
-                  const [brands, categories] = await Promise.all([
+                  [brands, categories] = await Promise.all([
                       fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); }),
                       fetch(prefix + '/category/loai-phu-kien', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
                   ]);
