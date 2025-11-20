@@ -169,18 +169,24 @@ const getEditProductPageController = async (req, res) => {
 
       const scriptFillData = `
       <script>
-      (async function() {
+      $(document).ready(async function() {
           const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
 
           if (productType === 'XE') {
-              const [brands, styles, colors, fuels] = await Promise.all([
-                  fetch(prefix + '/category/thuong-hieu').then(r => r.json()),
-                  fetch(prefix + '/kieu-dang').then(r => r.json()),
-                  fetch(prefix + '/mau-xe').then(r => r.json()),
-                  fetch(prefix + '/nguyen-lieu').then(r => r.json())
-              ]);
+              try {
+                  const [brands, styles, colors, fuels] = await Promise.all([
+                      fetch(prefix + '/category/thuong-hieu').then(r => { if (!r.ok) throw new Error('Failed to fetch brands'); return r.json(); }),
+                      fetch(prefix + '/kieu-dang').then(r => { if (!r.ok) throw new Error('Failed to fetch styles'); return r.json(); }),
+                      fetch(prefix + '/mau-xe').then(r => { if (!r.ok) throw new Error('Failed to fetch colors'); return r.json(); }),
+                      fetch(prefix + '/nguyen-lieu').then(r => { if (!r.ok) throw new Error('Failed to fetch fuels'); return r.json(); })
+                  ]);
+              } catch (error) {
+                  console.error('Error loading data:', error);
+                  alert('Không thể tải dữ liệu. Vui lòng thử lại.');
+                  return;
+              }
               
               document.getElementById('iDthuongHieu').innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
                   .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
@@ -248,10 +254,16 @@ const getEditProductPageController = async (req, res) => {
                   container.appendChild(div);
               }
           } else if (productType === 'PK') {
-              const [brands, categories] = await Promise.all([
-                  fetch(prefix + '/category/thuong-hieu').then(r => r.json()),
-                  fetch(prefix + '/category/loai-phu-kien').then(r => r.json())
-              ]);
+              try {
+                  const [brands, categories] = await Promise.all([
+                      fetch(prefix + '/category/thuong-hieu').then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); }),
+                      fetch(prefix + '/category/loai-phu-kien').then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
+                  ]);
+              } catch (error) {
+                  console.error('Error loading data:', error);
+                  alert('Không thể tải dữ liệu. Vui lòng thử lại.');
+                  return;
+              }
               
               document.getElementById('iDthuongHieuPK').innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)
                   .map(b => \`<option value="\${b.id}">\${b.TenTH}</option>\`).join('');
@@ -303,7 +315,7 @@ const getEditProductPageController = async (req, res) => {
                   containerPK.appendChild(div);
               }
           }
-      })();
+      });
       </script>
       `;
 
