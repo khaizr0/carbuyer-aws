@@ -12,4 +12,8 @@ router.post('/thuong-hieu', controller.createThuongHieu);
 router.put('/thuong-hieu/:id', controller.updateThuongHieu);
 router.delete('/thuong-hieu/:id', controller.deleteThuongHieu);
 
+router.get('/kieu-dang', controller.getAllKieuDang);
+router.get('/mau-xe', controller.getAllMauXe);
+router.get('/nguyen-lieu', controller.getAllNguyenLieu);
+
 module.exports = router;

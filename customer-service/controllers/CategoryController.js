@@ -94,3 +94,33 @@ exports.deleteThuongHieu = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// KieuDang
+exports.getAllKieuDang = async (req, res) => {
+  try {
+    const { Items } = await docClient.send(new ScanCommand({ TableName: 'KieuDang' }));
+    res.json(Items);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// MauXe
+exports.getAllMauXe = async (req, res) => {
+  try {
+    const { Items } = await docClient.send(new ScanCommand({ TableName: 'MauXe' }));
+    res.json(Items);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// NguyenLieuXe
+exports.getAllNguyenLieu = async (req, res) => {
+  try {
+    const { Items } = await docClient.send(new ScanCommand({ TableName: 'NguyenLieuXe' }));
+    res.json(Items);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

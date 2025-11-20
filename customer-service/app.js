@@ -48,6 +48,7 @@ app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
 app.use('/category', categoryRoutes);
 app.use('/files', userFilesRoutes);
+app.use('/', categoryRoutes);
 
 // 404 errors
 app.use((req, res) => {
