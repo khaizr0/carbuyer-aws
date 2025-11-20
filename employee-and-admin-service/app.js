@@ -37,61 +37,57 @@ app.use(session({
   }
 }));
 // Static files middleware - MUST be before routes
-app.use('/Public', express.static(path.join(__dirname, 'Public')));
-app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/admin/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/employee/Documents', express.static(path.join(__dirname, 'Documents')));
-// Root level static files
-app.use('/css', express.static(path.join(__dirname, 'Public/css')));
-app.use('/js', express.static(path.join(__dirname, 'Public/JS')));
-app.use('/images', express.static(path.join(__dirname, 'Public/images')));
+app.use('/admin/css', express.static(path.join(__dirname, 'Public/css')));
+app.use('/employee/css', express.static(path.join(__dirname, 'Public/css')));
+app.use('/admin/js', express.static(path.join(__dirname, 'Public/JS')));
+app.use('/employee/js', express.static(path.join(__dirname, 'Public/JS')));
+app.use('/admin/images', express.static(path.join(__dirname, 'Public/images')));
+app.use('/employee/images', express.static(path.join(__dirname, 'Public/images')));
 
 // Config route
-app.get('/config/config.js', (req, res) => {
+app.get('/employee/config/config.js', (req, res) => {
+  res.type('application/javascript');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.send(`const mapConfig = { url: "${process.env.GOOGLE_MAPS_EMBED_URL}" };`);
+});
+app.get('/admin/config/config.js', (req, res) => {
   res.type('application/javascript');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.send(`const mapConfig = { url: "${process.env.GOOGLE_MAPS_EMBED_URL}" };`);
 });
 
-// Test route
-app.get('/test-user-files', (req, res) => {
-  res.sendFile(path.join(__dirname, 'test-user-files.html'));
-});
-
-// Debug route for static files
-app.get('/debug-static', (req, res) => {
-  const fs = require('fs');
-  const publicPath = path.join(__dirname, 'Public');
-  const cssPath = path.join(__dirname, 'Public/css');
-  
-  res.json({
-    publicExists: fs.existsSync(publicPath),
-    cssExists: fs.existsSync(cssPath),
-    publicContents: fs.existsSync(publicPath) ? fs.readdirSync(publicPath) : 'Not found',
-    cssContents: fs.existsSync(cssPath) ? fs.readdirSync(cssPath) : 'Not found',
-    __dirname: __dirname
-  });
-});
-
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
-app.use('/api/my/user', myUserRoute);
-app.use('/api/user', userRoute);
+app.use('/admin/api/my/user', myUserRoute);
+app.use('/admin/api/user', userRoute);
 app.use('/employee', employeeRoutes);
-app.use('/product', productRoutes);
-app.use('/news', newsRoutes);
-app.use('/booking', booking);
-app.use('/employee/booking', bookingRoutes);
-app.use('/review', reviewRoutes);
-app.use('/slider', sliderRoutes);
-app.use('/category', categoryRoutes);
-app.use('/kieu-dang', kieuDangRoutes);
-app.use('/mau-xe', mauXeRoutes);
-app.use('/nguyen-lieu', nguyenLieuRoutes);
-app.use('/files', userFilesRoutes);
+app.use('/employee/product', productRoutes);
+app.use('/admin/product', productRoutes);
+app.use('/employee/news', newsRoutes);
+app.use('/admin/news', newsRoutes);
+app.use('/employee/booking', booking);
+app.use('/admin/booking', booking);
+app.use('/employee/bookings', bookingRoutes);
+app.use('/admin/bookings', bookingRoutes);
+app.use('/employee/review', reviewRoutes);
+app.use('/admin/review', reviewRoutes);
+app.use('/employee/slider', sliderRoutes);
+app.use('/admin/slider', sliderRoutes);
+app.use('/employee/category', categoryRoutes);
+app.use('/admin/category', categoryRoutes);
+app.use('/employee/kieu-dang', kieuDangRoutes);
+app.use('/admin/kieu-dang', kieuDangRoutes);
+app.use('/employee/mau-xe', mauXeRoutes);
+app.use('/admin/mau-xe', mauXeRoutes);
+app.use('/employee/nguyen-lieu', nguyenLieuRoutes);
+app.use('/admin/nguyen-lieu', nguyenLieuRoutes);
+app.use('/employee/files', userFilesRoutes);
+app.use('/admin/files', userFilesRoutes);
 
 // 404 errors
 app.use((req, res) => {

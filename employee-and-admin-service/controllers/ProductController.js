@@ -170,15 +170,16 @@ const getEditProductPageController = async (req, res) => {
       const scriptFillData = `
       <script>
       document.addEventListener('DOMContentLoaded', async function() {
+          const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
           const productType = '${productType}';
           const product = ${JSON.stringify(product)};
 
           if (productType === 'XE') {
               const [brands, styles, colors, fuels] = await Promise.all([
-                  fetch('/category/thuong-hieu').then(r => r.json()),
-                  fetch('/kieu-dang').then(r => r.json()),
-                  fetch('/mau-xe').then(r => r.json()),
-                  fetch('/nguyen-lieu').then(r => r.json())
+                  fetch(prefix + '/category/thuong-hieu').then(r => r.json()),
+                  fetch(prefix + '/kieu-dang').then(r => r.json()),
+                  fetch(prefix + '/mau-xe').then(r => r.json()),
+                  fetch(prefix + '/nguyen-lieu').then(r => r.json())
               ]);
               
               document.getElementById('iDthuongHieu').innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
@@ -248,8 +249,8 @@ const getEditProductPageController = async (req, res) => {
               }
           } else if (productType === 'PK') {
               const [brands, categories] = await Promise.all([
-                  fetch('/category/thuong-hieu').then(r => r.json()),
-                  fetch('/category/loai-phu-kien').then(r => r.json())
+                  fetch(prefix + '/category/thuong-hieu').then(r => r.json()),
+                  fetch(prefix + '/category/loai-phu-kien').then(r => r.json())
               ]);
               
               document.getElementById('iDthuongHieuPK').innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)

@@ -18,21 +18,22 @@ router.get('/login', (req, res) => {
   res.redirect('/employee/login');
 });
 
-router.get('/forgot', (req, res) => {
+router.get('/employee/forgot', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views','authentication', 'forgot-password.html'));
+});
+router.get('/admin/forgot', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views','authentication', 'forgot-password.html'));
 });
 
-router.get('/reset-password', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views','authentication', 'reset-password.html'));
+router.get('/employee/email-sent-success', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views','authentication', 'email-sent-success.html'));
 });
-
-router.get('/email-sent-success', (req, res) => {
+router.get('/admin/email-sent-success', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views','authentication', 'email-sent-success.html'));
 });
 
-router.get('/reset-password/:email/:token', resetPasswordPage);
-
-router.get('/reset-password', resetPassword);
+router.get('/employee/reset-password/:email/:token', resetPasswordPage);
+router.get('/admin/reset-password/:email/:token', resetPasswordPage);
 
 // session
 router.get('/admin', (req, res) => {
@@ -127,10 +128,10 @@ router.post('/employee/login', employeeLogin);
 router.post('/admin/login', adminLogin);
 router.post('/login', login);
 
-router.post('/forgot-password', forgotPassword);
+router.post('/employee/forgot-password', forgotPassword);
+router.post('/admin/forgot-password', forgotPassword);
 
-router.post('/reset-password', resetPassword);
-
-router.post('/reset-password/:email/:token', resetPassword);
+router.post('/employee/reset-password/:email/:token', resetPassword);
+router.post('/admin/reset-password/:email/:token', resetPassword);
 
 module.exports = router;

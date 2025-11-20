@@ -1,9 +1,10 @@
 let allData = [];
+const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
 
 document.addEventListener("DOMContentLoaded", loadData);
 
 async function loadData() {
-    const res = await fetch('/category/thuong-hieu');
+    const res = await fetch(prefix + '/category/thuong-hieu');
     allData = await res.json();
     renderData(allData);
 }
@@ -42,7 +43,7 @@ document.querySelector('.table-options input[type="search"]').addEventListener('
 document.getElementById("createForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const res = await fetch('/category/thuong-hieu', {
+    const res = await fetch(prefix + '/category/thuong-hieu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -67,7 +68,7 @@ document.addEventListener("click", async (e) => {
     if (e.target.closest(".delete-btn")) {
         if (confirm("Xóa thương hiệu này?")) {
             const id = e.target.closest(".delete-btn").dataset.id;
-            const res = await fetch(`/category/thuong-hieu/${id}`, { method: 'DELETE' });
+            const res = await fetch(`${prefix}/category/thuong-hieu/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 alert("Xóa thành công!");
                 loadData();
@@ -80,7 +81,7 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
-    const res = await fetch(`/category/thuong-hieu/${id}`, {
+    const res = await fetch(`${prefix}/category/thuong-hieu/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))

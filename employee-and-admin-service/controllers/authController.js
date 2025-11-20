@@ -58,10 +58,11 @@ const forgotPassword = async (req, res) => {
     const payload = { email: user.email, id: user._id };
     const token = jwt.sign(payload, secret, { expiresIn: '15m' });
 
-    const resetUrl = `${process.env.BASE_URL}/reset-password/${user.email}/${token}`;
+    const prefix = user.PhanLoai === 0 ? '/admin' : '/employee';
+    const resetUrl = `${process.env.BASE_URL}${prefix}/reset-password/${user.email}/${token}`;
 
     await sendResetPasswordEmail(user.email, resetUrl);
-    res.redirect('/email-sent-success');
+    res.redirect(prefix + '/email-sent-success');
   } catch (error) {
     console.error('Error during forgot password:', error);
     res.status(500).send('Internal server error');

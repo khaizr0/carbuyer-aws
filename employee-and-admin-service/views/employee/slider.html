@@ -6,13 +6,13 @@
     <title>Quản lý Slider</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-    <link rel="stylesheet" href="/Public/css/employee.css">
-    <link rel="icon" type="image/x-icon" href="/Public/images/CarLogo.png">
+    <link rel="stylesheet" href="/employee/Public/css/employee.css">
+    <link rel="icon" type="image/x-icon" href="/employee/Public/images/CarLogo.png">
 </head>
 <body>
     <header class="d-flex justify-content-between align-items-center text-white p-3">
         <div class="d-flex align-items-center">
-            <a href="#"><img src="/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
+            <a href="#"><img src="/employee/Public/images/CarLogo.png" alt="Logo" style="width: 40px; height: auto; margin-right: 10px;"></a>
         </div>
         <div class="text-end">
             <div class="mb-0 fw-bold fs-5">Xin chào, ABC</div>
@@ -117,7 +117,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         async function loadSliders() {
-            const response = await fetch('/slider');
+            const response = await fetch('/employee/slider');
             const sliders = await response.json();
             const tbody = document.getElementById('slider-table-body');
             tbody.innerHTML = sliders.map(s => `
@@ -135,14 +135,14 @@
         document.getElementById('createSliderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            await fetch('/slider/create', { method: 'POST', body: formData });
+            await fetch('/employee/slider/create', { method: 'POST', body: formData });
             bootstrap.Modal.getInstance(document.getElementById('createSliderModal')).hide();
             e.target.reset();
             loadSliders();
         });
 
         async function editSlider(id) {
-            const response = await fetch(`/slider/${id}`);
+            const response = await fetch(`/employee/slider/${id}`);
             const slider = await response.json();
             document.getElementById('editSliderId').value = slider.id;
             document.getElementById('editTieuDe').value = slider.tieuDe || '';
@@ -157,14 +157,14 @@
             formData.append('tieuDe', document.getElementById('editTieuDe').value);
             const fileInput = document.getElementById('editHinhAnh');
             if (fileInput.files[0]) formData.append('uploadImage', fileInput.files[0]);
-            await fetch(`/slider/${id}`, { method: 'PUT', body: formData });
+            await fetch(`/employee/slider/${id}`, { method: 'PUT', body: formData });
             bootstrap.Modal.getInstance(document.getElementById('editSliderModal')).hide();
             loadSliders();
         });
 
         async function deleteSlider(id) {
             if (confirm('Xác nhận xóa?')) {
-                await fetch(`/slider/${id}`, { method: 'DELETE' });
+                await fetch(`/employee/slider/${id}`, { method: 'DELETE' });
                 loadSliders();
             }
         }

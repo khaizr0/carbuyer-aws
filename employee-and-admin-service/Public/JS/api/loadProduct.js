@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const prefix = window.location.pathname.startsWith('/admin') ? '/admin' : '/employee';
     loadCategories();
     fetchProducts();
     
     async function loadCategories() {
         try {
             const [brands, categories, styles, colors, fuels] = await Promise.all([
-                fetch('/category/thuong-hieu').then(r => r.json()),
-                fetch('/category/loai-phu-kien').then(r => r.json()),
-                fetch('/kieu-dang').then(r => r.json()),
-                fetch('/mau-xe').then(r => r.json()),
-                fetch('/nguyen-lieu').then(r => r.json())
+                fetch(prefix + '/category/thuong-hieu').then(r => r.json()),
+                fetch(prefix + '/category/loai-phu-kien').then(r => r.json()),
+                fetch(prefix + '/kieu-dang').then(r => r.json()),
+                fetch(prefix + '/mau-xe').then(r => r.json()),
+                fetch(prefix + '/nguyen-lieu').then(r => r.json())
             ]);
             
             // Load brands for car
@@ -60,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function fetchProducts() {
         try {
-            const response = await fetch('/product/');
+            const response = await fetch(prefix + '/product/');
             const products = await response.json();
             
             const carList = document.getElementById('carList');
@@ -95,14 +96,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sửa sản phẩm
     window.editProduct = function(id) {
         console.log('Edit product:', id);
-        window.location.href = `/product/edit/${id}`;
+        window.location.href = `${prefix}/product/edit/${id}`;
     }
     
     // Xoá sản phẩm
     window.deleteProduct = async function (id) {
         if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
             try {
-                const response = await fetch(`/product/${id}`, {
+                const response = await fetch(`${prefix}/product/${id}`, {
                     method: 'DELETE',
                 });
                 if (response.ok) {
@@ -160,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('/product/create-car', {
+                const response = await fetch(prefix + '/product/create-car', {
                     method: 'POST',
                     body: formData 
                 });
@@ -222,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('/product/create-accessory', {
+                const response = await fetch(prefix + '/product/create-accessory', {
                     method: 'POST',
                     body: formData 
                 });
