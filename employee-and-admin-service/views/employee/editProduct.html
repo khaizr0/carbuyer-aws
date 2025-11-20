@@ -251,19 +251,29 @@
 
         // Script tự động chuyển tab dựa trên loại sản phẩm
         document.addEventListener('DOMContentLoaded', function () {
-            const productType = document.getElementById('productType').value;
+            const productTypeElement = document.getElementById('productType');
+            if (!productTypeElement) {
+                console.error('Không tìm thấy element productType');
+                return;
+            }
+            const productType = productTypeElement.value;
+            console.log('Product type:', productType);
     
             // Kiểm tra giá trị của productType để mở tab tương ứng
-            if (productType.startsWith('XE')) {
-                console.log('productType bắt đầu với "XE", mở tab Car');
+            if (productType === 'XE') {
+                console.log('productType là "XE", mở tab Car');
                 document.getElementById('car-tab').classList.add('active');
                 document.getElementById('car').classList.add('active', 'show');
-            } else if (productType.startsWith('PK')) {
-                console.log('productType bắt đầu với "PK", mở tab Accessory');
+                document.getElementById('accessory-tab').classList.remove('active');
+                document.getElementById('accessory').classList.remove('active', 'show');
+            } else if (productType === 'PK') {
+                console.log('productType là "PK", mở tab Accessory');
                 document.getElementById('accessory-tab').classList.add('active');
                 document.getElementById('accessory').classList.add('active', 'show');
+                document.getElementById('car-tab').classList.remove('active');
+                document.getElementById('car').classList.remove('active', 'show');
             } else {
-                console.log('productType không phù hợp với "XE" hoặc "PK", không làm gì.');
+                console.log('productType không phù hợp với "XE" hoặc "PK":', productType);
             }
         });
         

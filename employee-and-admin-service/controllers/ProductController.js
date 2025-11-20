@@ -178,15 +178,58 @@ const getEditProductPageController = async (req, res) => {
           if (productType === 'XE') {
               let brands, styles, colors, fuels;
               try {
-                  [brands, styles, colors, fuels] = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed brands'); return r.json(); }),
-                      fetch(prefix + '/kieu-dang', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed styles'); return r.json(); }),
-                      fetch(prefix + '/mau-xe', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed colors'); return r.json(); }),
-                      fetch(prefix + '/nguyen-lieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed fuels'); return r.json(); })
+                  const responses = await Promise.all([
+                      fetch(prefix + '/category/thuong-hieu', {
+                          method: 'GET',
+                          credentials: 'same-origin',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      }),
+                      fetch(prefix + '/kieu-dang', {
+                          method: 'GET', 
+                          credentials: 'same-origin',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      }),
+                      fetch(prefix + '/mau-xe', {
+                          method: 'GET',
+                          credentials: 'same-origin', 
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      }),
+                      fetch(prefix + '/nguyen-lieu', {
+                          method: 'GET',
+                          credentials: 'same-origin',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      })
                   ]);
+                  
+                  // Check if all responses are ok
+                  for (let i = 0; i < responses.length; i++) {
+                      if (!responses[i].ok) {
+                          const errorText = await responses[i].text();
+                          console.error(\`API \${i} failed:\`, responses[i].status, errorText);
+                          throw new Error(\`API call \${i} failed with status \${responses[i].status}\`);
+                      }
+                  }
+                  
+                  [brands, styles, colors, fuels] = await Promise.all(
+                      responses.map(r => r.json())
+                  );
               } catch (error) {
                   console.error('Error loading data:', error);
-                  alert('Không thể tải dữ liệu. Vui lòng thử lại.');
+                  if (confirm('Không thể tải dữ liệu. Bạn có muốn tải lại trang không?')) {
+                      window.location.reload();
+                  }
                   return;
               }
               
@@ -258,13 +301,42 @@ const getEditProductPageController = async (req, res) => {
           } else if (productType === 'PK') {
               let brands, categories;
               try {
-                  [brands, categories] = await Promise.all([
-                      fetch(prefix + '/category/thuong-hieu', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); }),
-                      fetch(prefix + '/category/loai-phu-kien', {credentials: 'same-origin'}).then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
+                  const responses = await Promise.all([
+                      fetch(prefix + '/category/thuong-hieu', {
+                          method: 'GET',
+                          credentials: 'same-origin',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      }),
+                      fetch(prefix + '/category/loai-phu-kien', {
+                          method: 'GET',
+                          credentials: 'same-origin',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': 'application/json'
+                          }
+                      })
                   ]);
+                  
+                  // Check if all responses are ok
+                  for (let i = 0; i < responses.length; i++) {
+                      if (!responses[i].ok) {
+                          const errorText = await responses[i].text();
+                          console.error(\`API \${i} failed:\`, responses[i].status, errorText);
+                          throw new Error(\`API call \${i} failed with status \${responses[i].status}\`);
+                      }
+                  }
+                  
+                  [brands, categories] = await Promise.all(
+                      responses.map(r => r.json())
+                  );
               } catch (error) {
                   console.error('Error loading data:', error);
-                  alert('Không thể tải dữ liệu. Vui lòng thử lại.');
+                  if (confirm('Không thể tải dữ liệu cho phụ kiện. Bạn có muốn tải lại trang không?')) {
+                      window.location.reload();
+                  }
                   return;
               }
               

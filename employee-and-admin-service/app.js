@@ -66,8 +66,40 @@ app.get('/admin/config/config.js', (req, res) => {
 
 // Debug middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Session: ${req.session?.userId ? 'Yes' : 'No'}`);
+  console.log(`${req.method} ${req.path} - Session: ${req.session?.userId ? 'Yes' : 'No'} - Role: ${req.session?.userRole}`);
+  if (req.path.includes('/category/') || req.path.includes('/kieu-dang') || req.path.includes('/mau-xe') || req.path.includes('/nguyen-lieu')) {
+    console.log('API Call - Session details:', {
+      userId: req.session?.userId,
+      userRole: req.session?.userRole,
+      sessionId: req.sessionID
+    });
+  }
   next();
+});
+
+// Test route
+app.get('/test-db', async (req, res) => {
+  try {
+    const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
+    const { getDB } = require('./config/db');
+    const docClient = getDB();
+    
+    const result = await docClient.send(new ScanCommand({ 
+      TableName: 'ThuongHieu',
+      Limit: 5
+    }));
+    
+    res.json({
+      success: true,
+      count: result.Items?.length || 0,
+      items: result.Items || []
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // Routes
