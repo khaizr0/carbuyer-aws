@@ -91,13 +91,19 @@ app.get('/debug-session', (req, res) => {
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
-app.use('/api/my/user', myUserRoute);
-app.use('/api/user', userRoute);
+
+// Admin routes
+app.use('/admin/api/my/user', myUserRoute);
+app.use('/admin/api/user', userRoute);
+
+// Employee routes  
 app.use('/employee', employeeRoutes);
+app.use('/employee/api/user', userRoute);
+
+// Shared routes for both admin and employee
 app.use('/product', productRoutes);
 app.use('/news', newsRoutes);
 app.use('/booking', booking);
-app.use('/employee/booking', bookingRoutes);
 app.use('/review', reviewRoutes);
 app.use('/slider', sliderRoutes);
 app.use('/category', categoryRoutes);

@@ -95,19 +95,36 @@ app.get('/files/*', (req, res) => {
 });
 
 app.get('/api/*', (req, res) => {
-  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  // Check if it's admin API
+  if (req.originalUrl.includes('/api/my/user')) {
+    res.redirect(302, `${process.env.BASE_URL}/admin${req.originalUrl}`);
+  } else {
+    res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  }
 });
 
 app.post('/api/*', (req, res) => {
-  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  if (req.originalUrl.includes('/api/my/user')) {
+    res.redirect(307, `${process.env.BASE_URL}/admin${req.originalUrl}`);
+  } else {
+    res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  }
 });
 
 app.put('/api/*', (req, res) => {
-  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  if (req.originalUrl.includes('/api/my/user')) {
+    res.redirect(307, `${process.env.BASE_URL}/admin${req.originalUrl}`);
+  } else {
+    res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  }
 });
 
 app.delete('/api/*', (req, res) => {
-  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  if (req.originalUrl.includes('/api/my/user')) {
+    res.redirect(307, `${process.env.BASE_URL}/admin${req.originalUrl}`);
+  } else {
+    res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+  }
 });
 
 app.post('/product/*', (req, res) => {

@@ -108,7 +108,7 @@ const getRecentProductsController = async (req, res) => {
     
     const formattedProducts = recentProducts.map(product => {
       const imageFileName = product.hinhAnh ? product.hinhAnh.split('||')[0].trim() : '';
-      const imageUrl = imageFileName ? getS3Url(`Database/Products/${imageFileName}`) : '/Public/images/placeholder.png';
+      const imageUrl = imageFileName ? getS3Url(`Database/Products/${imageFileName}`) : '/employee/Public/images/no-image-found.jpg';
       return {
         id: product.id,
         name: product.tenSP,
