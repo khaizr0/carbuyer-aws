@@ -26,12 +26,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ 
-  secret: process.env.SESSION_SECRET, 
-  resave: false, 
-  saveUninitialized: false,
-  cookie: { secure: false, httpOnly: false, path: '/' }
-}));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 // Serve static files for both admin and employee routes
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
