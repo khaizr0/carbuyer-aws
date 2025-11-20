@@ -6,11 +6,11 @@ const { getRecentProductsController, getAllProductsController, deleteProductById
 
 router.get('/recent-products', getRecentProductsController);
 router.get('/', getAllProductsController);
-router.delete('/:id', deleteProductByIdController);
-router.post('/create-car', createCarProduct);
-router.post('/create-accessory', createAccessoryProduct);
+router.delete('/:id', employeeAuth, deleteProductByIdController);
+router.post('/create-car', employeeAuth, createCarProduct);
+router.post('/create-accessory', employeeAuth, createAccessoryProduct);
 router.get('/edit/:id', employeeAuth, getEditProductPageController);
-router.post('/update/:id', updateProduct);
+router.post('/update/:id', employeeAuth, updateProduct);
 router.get('/products/:id', getProductByIdController);
 router.get('/related/:id', getRelatedProductsController);
 router.get('/search', require('../controllers/ProductController').searchProductsController);

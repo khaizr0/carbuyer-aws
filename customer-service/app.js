@@ -54,6 +54,95 @@ app.get('/employee/*', (req, res) => {
   res.redirect(302, `${process.env.BASE_URL}${req.originalUrl}`);
 });
 
+app.get('/product/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/news/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/booking/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/review/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/slider/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/category/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/kieu-dang/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/mau-xe/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/nguyen-lieu/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/files/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/api/*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/api/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/api/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/api/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/product/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.put('/product/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.delete('/product/*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+// Auth related redirects
+app.get('/forgot', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/reset-password*', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.get('/email-sent-success', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/forgot-password', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
+app.post('/reset-password*', (req, res) => {
+  res.redirect(307, `${process.env.BASE_URL}/employee${req.originalUrl}`);
+});
+
 // Routes
 app.use('/', authRoutes);
 app.use('/', otherRoutes);

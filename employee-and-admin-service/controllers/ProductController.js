@@ -340,7 +340,7 @@ const getEditProductPageController = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const productId = global.IDSP; 
+  const productId = req.params.id; 
 
   try {
       const { product, productType } = await findProductById(productId);
@@ -406,6 +406,9 @@ const updateProduct = async (req, res) => {
           return res.status(200).json({ message: 'Cập nhật sản phẩm thành công.' });
       });
   } catch (error) {
+      console.error('=== UPDATE PRODUCT ERROR ===');
+      console.error('Error details:', error);
+      console.error('Product ID:', req.params.id);
       res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại.' });
   }
 };
