@@ -38,11 +38,19 @@ app.get('/test-user-files', (req, res) => {
 });
 
 // Admin/Employee redirects - must be before other routes
-app.get('/admin*', (req, res) => {
+app.get('/admin', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/admin/`);
+});
+
+app.get('/admin/*', (req, res) => {
   res.redirect(302, `${process.env.BASE_URL}${req.originalUrl}`);
 });
 
-app.get('/employee*', (req, res) => {
+app.get('/employee', (req, res) => {
+  res.redirect(302, `${process.env.BASE_URL}/employee/`);
+});
+
+app.get('/employee/*', (req, res) => {
   res.redirect(302, `${process.env.BASE_URL}${req.originalUrl}`);
 });
 
