@@ -78,20 +78,23 @@ app.get('/debug-static', (req, res) => {
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
-app.use('/api/my/user', myUserRoute);
-app.use('/api/user', userRoute);
+
+// Admin only routes
+app.use('/admin/api/my/user', myUserRoute);
+app.use('/admin/files', userFilesRoutes);
+
+// Employee routes (admin + employee can access)
 app.use('/employee', employeeRoutes);
-app.use('/product', productRoutes);
-app.use('/news', newsRoutes);
-app.use('/booking', booking);
+app.use('/employee/api/user', userRoute);
+app.use('/employee/product', productRoutes);
+app.use('/employee/news', newsRoutes);
 app.use('/employee/booking', bookingRoutes);
-app.use('/review', reviewRoutes);
-app.use('/slider', sliderRoutes);
-app.use('/category', categoryRoutes);
-app.use('/kieu-dang', kieuDangRoutes);
-app.use('/mau-xe', mauXeRoutes);
-app.use('/nguyen-lieu', nguyenLieuRoutes);
-app.use('/files', userFilesRoutes);
+app.use('/employee/review', reviewRoutes);
+app.use('/employee/slider', sliderRoutes);
+app.use('/employee/category', categoryRoutes);
+app.use('/employee/kieu-dang', kieuDangRoutes);
+app.use('/employee/mau-xe', mauXeRoutes);
+app.use('/employee/nguyen-lieu', nguyenLieuRoutes);
 
 // 404 errors
 app.use((req, res) => {
