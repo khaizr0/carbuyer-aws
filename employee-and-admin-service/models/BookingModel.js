@@ -30,7 +30,8 @@ class BookingModel {
                 tenSP: productName,
                 idSP: booking.idXe || booking.idPhuKien,
                 loaiDichVu: productType,
-                date: formattedDate
+                date: formattedDate,
+                email: booking.email || null
             };
         }));
     
@@ -83,7 +84,8 @@ class BookingModel {
                 tenSP: productName,
                 idSP: booking.idXe || booking.idPhuKien,
                 loaiDichVu: productType,
-                date: formattedDate
+                date: formattedDate,
+                email: booking.email || null
             };
         }));
     }

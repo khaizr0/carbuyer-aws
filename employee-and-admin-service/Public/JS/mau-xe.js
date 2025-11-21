@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', loadData);
 
 async function loadData() {
-    const res = await fetch('/mau-xe');
+    const res = await fetch('/private/mau-xe');
     const data = await res.json();
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = data.map(item => `
@@ -19,7 +19,7 @@ async function loadData() {
 document.getElementById('createForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    await fetch('/mau-xe', {
+    await fetch('/private/mau-xe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -33,7 +33,7 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
-    await fetch(`/mau-xe/${id}`, {
+    await fetch(`/private/mau-xe/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -50,7 +50,7 @@ function editItem(item) {
 
 async function deleteItem(id) {
     if (confirm('Xóa màu xe này?')) {
-        await fetch(`/mau-xe/${id}`, { method: 'DELETE' });
+        await fetch(`/private/mau-xe/${id}`, { method: 'DELETE' });
         loadData();
     }
 }

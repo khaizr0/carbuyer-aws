@@ -36,7 +36,7 @@ class BookingController {
                         <td>${booking.loaiDichVu}</td>
                         <td>${BookingController.getTrangThaiText(booking.trangThai)}</td>
                         <td>
-                            <form action="/lichHen/done" method="POST" style="display:inline;">
+                            <form action="/employee/booking/done" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-success" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                     <i class="fas fa-check"></i>
@@ -46,7 +46,7 @@ class BookingController {
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
-                            <form action="/lichHen/delete" method="POST" style="display:inline;">
+                            <form action="/employee/booking/delete" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
@@ -92,7 +92,7 @@ class BookingController {
                         <td>${booking.loaiDichVu}</td>
                         <td>${BookingController.getTrangThaiText(booking.trangThai)}</td>
                         <td>
-                            <form action="/lichHen/done" method="POST" style="display:inline;">
+                            <form action="/employee/booking/done" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-success" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                     <i class="fas fa-check"></i>
@@ -102,7 +102,7 @@ class BookingController {
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
-                            <form action="/lichHen/delete" method="POST" style="display:inline;">
+                            <form action="/employee/booking/delete" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="${booking.id}">
                                 <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
@@ -127,7 +127,7 @@ class BookingController {
         try {
             const { id } = req.body;
             await BookingModel.updateBookingStatus(id, 1);
-            res.redirect('/lichHen');
+            res.redirect('/employee/lich-hen');
         } catch (error) {
             console.error('Lỗi đánh dấu hoàn thành:', error);
             res.status(500).send('Có lỗi xảy ra khi đánh dấu hoàn thành');
@@ -138,7 +138,7 @@ class BookingController {
         try {
             const { id, newDate, newTime } = req.body;
             await BookingModel.changeBookingDateTime(id, newDate, newTime);
-            res.redirect('/lichHen');
+            res.redirect('/employee/lich-hen');
         } catch (error) {
             console.error('Lỗi thay đổi thời gian:', error);
             res.status(500).send('Có lỗi xảy ra khi thay đổi thời gian');
@@ -149,7 +149,7 @@ class BookingController {
         try {
             const { id } = req.body;
             await BookingModel.deleteBooking(id);
-            res.redirect('/lichHen');
+            res.redirect('/employee/lich-hen');
         } catch (error) {
             console.error('Lỗi xóa lịch hẹn:', error);
             res.status(500).send('Có lỗi xảy ra khi xóa lịch hẹn');

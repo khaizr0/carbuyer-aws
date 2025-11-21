@@ -175,10 +175,10 @@ const getEditProductPageController = async (req, res) => {
 
           if (productType === 'XE') {
               const [brands, styles, colors, fuels] = await Promise.all([
-                  fetch('/category/thuong-hieu').then(r => r.json()),
-                  fetch('/kieu-dang').then(r => r.json()),
-                  fetch('/mau-xe').then(r => r.json()),
-                  fetch('/nguyen-lieu').then(r => r.json())
+                  fetch('/private/category/thuong-hieu').then(r => r.json()),
+                  fetch('/private/kieu-dang').then(r => r.json()),
+                  fetch('/private/mau-xe').then(r => r.json()),
+                  fetch('/private/nguyen-lieu').then(r => r.json())
               ]);
               
               document.getElementById('iDthuongHieu').innerHTML = brands.filter(b => b.idPhanLoaiTH === 0)
@@ -248,8 +248,8 @@ const getEditProductPageController = async (req, res) => {
               }
           } else if (productType === 'PK') {
               const [brands, categories] = await Promise.all([
-                  fetch('/category/thuong-hieu').then(r => r.json()),
-                  fetch('/category/loai-phu-kien').then(r => r.json())
+                  fetch('/private/category/thuong-hieu').then(r => r.json()),
+                  fetch('/private/category/loai-phu-kien').then(r => r.json())
               ]);
               
               document.getElementById('iDthuongHieuPK').innerHTML = brands.filter(b => b.idPhanLoaiTH === 1)

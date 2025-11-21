@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const tableBody = document.querySelector("table tbody");
     try {
-        const response = await fetch('/news');
+        const response = await fetch('/private/news');
         const newsData = await response.json();
         tableBody.innerHTML = newsData.map(news => {
             const plainText = news.chiTietBaiViet.replace(/<[^>]*>/g, '').substring(0, 100);
@@ -65,7 +65,7 @@ document.getElementById("createNewsForm").addEventListener("submit", async (even
     const formData = new FormData(event.target);
     formData.set('chiTietBaiViet', $('#editor').summernote('code'));
     try {
-        const response = await fetch('/news/create', { method: 'POST', body: formData });
+        const response = await fetch('/private/news/create', { method: 'POST', body: formData });
         if (response.ok) {
             alert("Thêm tin tức mới thành công!");
             location.reload();
@@ -83,7 +83,7 @@ document.addEventListener("click", async (event) => {
     if (event.target.closest(".edit-news")) {
         const id = event.target.closest(".edit-news").dataset.id;
         try {
-            const response = await fetch(`/news/${id}`);
+            const response = await fetch(`/private/news/${id}`);
             const news = await response.json();
             document.getElementById('editTenTT').value = news.tenTT;
             document.getElementById('editTrangThai').value = news.trangThai ? "1" : "0";
@@ -103,7 +103,7 @@ document.getElementById("editNewsForm").addEventListener("submit", async (event)
     formData.set('chiTietBaiViet', $('#editEditor').summernote('code'));
     const id = formData.get('id');
     try {
-        const response = await fetch(`/news/${id}`, { method: 'PUT', body: formData });
+        const response = await fetch(`/private/news/${id}`, { method: 'PUT', body: formData });
         if (response.ok) {
             alert("Cập nhật tin tức thành công!");
             location.reload();
@@ -122,7 +122,7 @@ document.addEventListener("click", async (event) => {
         const id = event.target.closest(".delete-news").dataset.id;
         if (confirm("Bạn có chắc chắn muốn xóa?")) {
             try {
-                const response = await fetch(`/news/${id}`, { method: 'DELETE' });
+                const response = await fetch(`/private/news/${id}`, { method: 'DELETE' });
                 if (response.ok) {
                     alert("Xóa tin tức thành công!");
                     location.reload();

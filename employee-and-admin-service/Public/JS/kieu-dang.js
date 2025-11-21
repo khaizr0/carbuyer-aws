@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', loadData);
 
 async function loadData() {
-    const res = await fetch('/kieu-dang');
+    const res = await fetch('/private/kieu-dang');
     const data = await res.json();
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = data.map(item => `
@@ -19,7 +19,7 @@ async function loadData() {
 document.getElementById('createForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    await fetch('/kieu-dang', {
+    await fetch('/private/kieu-dang', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -33,7 +33,7 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
-    await fetch(`/kieu-dang/${id}`, {
+    await fetch(`/private/kieu-dang/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -50,7 +50,7 @@ function editItem(item) {
 
 async function deleteItem(id) {
     if (confirm('Xóa kiểu dáng này?')) {
-        await fetch(`/kieu-dang/${id}`, { method: 'DELETE' });
+        await fetch(`/private/kieu-dang/${id}`, { method: 'DELETE' });
         loadData();
     }
 }

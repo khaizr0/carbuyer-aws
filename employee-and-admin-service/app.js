@@ -37,16 +37,12 @@ app.use(session({
   }
 }));
 // Static files middleware - MUST be before routes
-app.use('/Public', express.static(path.join(__dirname, 'Public')));
-app.use('/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/admin/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/employee/Public', express.static(path.join(__dirname, 'Public')));
+app.use('/private/Public', express.static(path.join(__dirname, 'Public')));
 app.use('/admin/Documents', express.static(path.join(__dirname, 'Documents')));
 app.use('/employee/Documents', express.static(path.join(__dirname, 'Documents')));
-// Root level static files
-app.use('/css', express.static(path.join(__dirname, 'Public/css')));
-app.use('/js', express.static(path.join(__dirname, 'Public/JS')));
-app.use('/images', express.static(path.join(__dirname, 'Public/images')));
+app.use('/private/Documents', express.static(path.join(__dirname, 'Documents')));
 
 // Config route
 app.get('/config/config.js', (req, res) => {
@@ -78,20 +74,20 @@ app.get('/debug-static', (req, res) => {
 // Routes
 app.get('/', (req, res) => res.redirect('/employee/login'));
 app.use('/', authRoutes);
-app.use('/api/my/user', myUserRoute);
-app.use('/api/user', userRoute);
 app.use('/employee', employeeRoutes);
-app.use('/product', productRoutes);
-app.use('/news', newsRoutes);
-app.use('/booking', booking);
 app.use('/employee/booking', bookingRoutes);
-app.use('/review', reviewRoutes);
-app.use('/slider', sliderRoutes);
-app.use('/category', categoryRoutes);
-app.use('/kieu-dang', kieuDangRoutes);
-app.use('/mau-xe', mauXeRoutes);
-app.use('/nguyen-lieu', nguyenLieuRoutes);
-app.use('/files', userFilesRoutes);
+app.use('/private/my/user', myUserRoute);
+app.use('/private/user', userRoute);
+app.use('/private/product', productRoutes);
+app.use('/private/news', newsRoutes);
+app.use('/private/booking', booking);
+app.use('/private/review', reviewRoutes);
+app.use('/private/slider', sliderRoutes);
+app.use('/private/category', categoryRoutes);
+app.use('/private/kieu-dang', kieuDangRoutes);
+app.use('/private/mau-xe', mauXeRoutes);
+app.use('/private/nguyen-lieu', nguyenLieuRoutes);
+app.use('/private/files', userFilesRoutes);
 
 // 404 errors
 app.use((req, res) => {
