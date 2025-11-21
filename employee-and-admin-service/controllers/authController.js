@@ -92,8 +92,13 @@ const resetPasswordPage = async (req, res) => {
     global.emailRS = email; 
     global.tokenRS = token;
 
-    // Send the reset-password.html file, including email and token in query parameters
-    res.sendFile(path.join(__dirname, '../views/authentication/reset-password.html'));
+    // Read and modify HTML to inject correct paths
+    const fs = require('fs');
+    const htmlPath = path.join(__dirname, '../views/authentication/reset-password.html');
+    let html = fs.readFileSync(htmlPath, 'utf8');
+        html = html.replace(/\/private\/Public/g, '/admin/Public');
+    
+    res.send(html);
 
   } catch (error) {
     console.error('Error during reset password page:', error);
