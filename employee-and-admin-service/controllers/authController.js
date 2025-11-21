@@ -25,7 +25,7 @@ const login = async (req, res) => {
     if (!comparePassword(password, user.matKhau)) {
       return res.status(400).send('Invalid password');
     }
-    console.log(user);
+
     
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
@@ -72,8 +72,7 @@ const forgotPassword = async (req, res) => {
 const resetPasswordPage = async (req, res) => {
   const { email, token } = req.params;
 
-  console.log('Email:', email);  
-  console.log('Token:', token);  
+  
 
   try {
     if (!email || !token) {
@@ -111,9 +110,7 @@ const resetPassword = async (req, res) => {
   const email = global.emailRS;
   const token = global.tokenRS;
 
-  console.log('-----------------------');
-  console.log('Email:', email); 
-  console.log('Token:', token);
+
 
   if (!email || !token) {
     return res.status(400).send('Không thể tìm thấy email hoặc token');

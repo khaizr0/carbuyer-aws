@@ -46,7 +46,7 @@ const createDatLichController = async (data) => {
         };
         
         await transporter.sendMail(mailOptions);
-        console.log('Email đã gửi thành công tới:', data.email);
+        console.log('Email đã gửi thành công');
       } catch (emailError) {
         // Bỏ qua lỗi email
       }
@@ -84,17 +84,10 @@ const getAllDatLichController = async () => {
 
 const updateDatLichController = async (id, data) => {
   try {
-    console.log('=== UPDATE BOOKING ===');
-    console.log('ID:', id);
-    console.log('New data:', data);
-    
     const BookingModel = require('../models/BookingModel');
     const result = await docClient.send(new GetCommand({ TableName: 'DatLichKH', Key: { id } }));
     const oldBooking = result.Item;
     
-    console.log('Old booking email:', oldBooking?.email);
-    
-    // Merge old booking với new data, giữ lại email
     const updatedBooking = {
       ...oldBooking,
       ...data,
@@ -102,11 +95,7 @@ const updateDatLichController = async (id, data) => {
       email: data.email || oldBooking?.email || null
     };
     
-    console.log('Updated booking email:', updatedBooking.email);
-    
-    // Nếu date hoặc time thay đổi, gọi email
     if (oldBooking && (oldBooking.date !== data.date || oldBooking.time !== data.time)) {
-      console.log('Date/time changed, calling changeBookingDateTime...');
       await BookingModel.changeBookingDateTime(id, data.date, data.time);
     }
     

@@ -61,7 +61,6 @@ async function sendNewBookingNotification(bookingData) {
       `
     });
   } catch (error) {
-    console.error('Lỗi khi gửi email:', error);
   }
 }
 

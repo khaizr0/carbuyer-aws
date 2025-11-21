@@ -19,7 +19,7 @@ async function sendBookingConfirmationEmail(bookingData) {
         'x-api-key': LAMBDA_API_KEY
       }
     });
-    console.log('Booking confirmation email sent to:', bookingData.email);
+    console.log('Booking confirmation email sent successfully');
   } catch (error) {
     console.error('Failed to send booking confirmation email:', error.message);
   }
