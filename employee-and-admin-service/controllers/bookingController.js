@@ -23,7 +23,9 @@ class BookingController {
                     return res.status(500).send('Có lỗi xảy ra khi tải trang');
                 }
     
-                const bookingRows = bookings.map(booking => `
+                const bookingRows = bookings.map(booking => {
+                    const dateForInput = booking.date.split('/').reverse().join('-');
+                    return `
                     <tr>
                         <td><input type="checkbox" class="row-checkbox" data-id="${booking.id}"></td>
                         <td>${booking.tenSP}</td>
@@ -42,7 +44,7 @@ class BookingController {
                                     <i class="fas fa-check"></i>
                                 </button>
                             </form>
-                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${booking.date}"
+                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${dateForInput}"
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
@@ -52,7 +54,7 @@ class BookingController {
                             </form>
                         </td>
                     </tr>
-                `).join('');
+                `}).join('');
     
                 const modifiedHTML = data.replace(
                     /<tbody>[\s\S]*?<\/tbody>/,
@@ -79,7 +81,9 @@ class BookingController {
                     return res.status(500).send('Có lỗi xảy ra khi tải trang');
                 }
     
-                const bookingRows = bookings.map(booking => `
+                const bookingRows = bookings.map(booking => {
+                    const dateForInput = booking.date.split('/').reverse().join('-');
+                    return `
                     <tr>
                         <td><input type="checkbox" class="row-checkbox" data-id="${booking.id}"></td>
                         <td>${booking.tenSP}</td>
@@ -98,7 +102,7 @@ class BookingController {
                                     <i class="fas fa-check"></i>
                                 </button>
                             </form>
-                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${booking.date}"
+                            <button class="btn btn-warning change-time-btn" data-id="${booking.id}" data-date="${dateForInput}"
                                 data-time="${booking.time}" data-bs-toggle="modal" data-bs-target="#changeTimeModal" ${booking.trangThai === 1 ? 'style="display:none;"' : ''}>
                                 <i class="fas fa-clock"></i>
                             </button>
@@ -108,7 +112,7 @@ class BookingController {
                             </form>
                         </td>
                     </tr>
-                `).join('');
+                `}).join('');
     
                 const modifiedHTML = data.replace(
                     /<tbody>[\s\S]*?<\/tbody>/,

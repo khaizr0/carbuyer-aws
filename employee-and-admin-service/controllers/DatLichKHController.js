@@ -1,6 +1,6 @@
 const { addBooking, getBookingById, getAllBookings, deleteBookingById } = require('../models/DatLichKHModel');
 const { docClient } = require('../config/dynamodb');
-const { PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const { PutCommand, DeleteCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -84,12 +84,39 @@ const getAllDatLichController = async () => {
 
 const updateDatLichController = async (id, data) => {
   try {
+    console.log('=== UPDATE BOOKING ===');
+    console.log('ID:', id);
+    console.log('New data:', data);
+    
+    const BookingModel = require('../models/BookingModel');
+    const result = await docClient.send(new GetCommand({ TableName: 'DatLichKH', Key: { id } }));
+    const oldBooking = result.Item;
+    
+    console.log('Old booking email:', oldBooking?.email);
+    
+    // Merge old booking với new data, giữ lại email
+    const updatedBooking = {
+      ...oldBooking,
+      ...data,
+      id,
+      email: data.email || oldBooking?.email || null
+    };
+    
+    console.log('Updated booking email:', updatedBooking.email);
+    
+    // Nếu date hoặc time thay đổi, gọi email
+    if (oldBooking && (oldBooking.date !== data.date || oldBooking.time !== data.time)) {
+      console.log('Date/time changed, calling changeBookingDateTime...');
+      await BookingModel.changeBookingDateTime(id, data.date, data.time);
+    }
+    
     await docClient.send(new PutCommand({
       TableName: 'DatLichKH',
-      Item: { id, ...data }
+      Item: updatedBooking
     }));
     return { success: true };
   } catch (error) {
+    console.error('Error in updateDatLichController:', error);
     throw new Error('Có lỗi khi cập nhật lịch hẹn.');
   }
 };

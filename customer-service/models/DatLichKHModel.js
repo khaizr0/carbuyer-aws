@@ -85,6 +85,7 @@ const DatLichKHModel = {
       time: data.time,
       date: formattedDate,
       soDT: data.soDT,
+      email: data.email || null,
       idXe: idXe || null,
       idPhuKien: idPhuKien || null,
       trangThai: data.trangThai || 0,

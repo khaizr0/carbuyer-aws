@@ -1,5 +1,6 @@
 const { ScanCommand, GetCommand, PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const { getDB } = require('../config/db');
+const { sendBookingConfirmationEmail } = require('../utils/email-client');
 
 class BookingModel {
     static async getAllBookings() {
@@ -100,15 +101,25 @@ class BookingModel {
         return { modifiedCount: 1 };
     }
 
-    static async changeBookingDateTime(id, newDate, newTime) {
+    static async changeBookingDateTime(id, newDate, newTime, email = null) {
         const docClient = getDB();
         const result = await docClient.send(new GetCommand({ TableName: 'DatLichKH', Key: { id } }));
         const booking = result.Item;
         if (!booking) return { modifiedCount: 0 };
-        booking.date = newDate;
-        booking.time = newTime;
-        booking.trangThai = 2;
-        await docClient.send(new PutCommand({ TableName: 'DatLichKH', Item: booking }));
+        
+        const emailToUse = email || booking.email;
+        
+        if (emailToUse) {
+            await sendBookingConfirmationEmail({
+                email: emailToUse,
+                hoTenKH: booking.hoTenKH,
+                id: booking.id,
+                soDT: booking.soDT,
+                ngayTao: newDate,
+                time: newTime
+            });
+        }
+        
         return { modifiedCount: 1 };
     }
 

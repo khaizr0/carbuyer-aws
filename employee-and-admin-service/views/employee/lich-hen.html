@@ -108,6 +108,10 @@
                                 <input type="text" class="form-control" id="editSoDT" required>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmail">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Ngày</label>
                                 <input type="date" class="form-control" id="editDate" required>
                             </div>
@@ -132,7 +136,13 @@
                                 </select>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <button type="submit" class="btn btn-primary" id="saveBtn">
+                                    <span id="saveBtnText">Lưu</span>
+                                    <span id="saveBtnLoader" style="display: none;">
+                                        <span class="spinner-border spinner-border-sm" role="status"></span>
+                                        Đang lưu...
+                                    </span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -214,6 +224,7 @@
             document.getElementById('editId').value = booking.id;
             document.getElementById('editHoTen').value = booking.hoTenKH;
             document.getElementById('editSoDT').value = booking.soDT;
+            document.getElementById('editEmail').value = booking.email || '';
             document.getElementById('editDate').value = booking.date;
             document.getElementById('editTime').value = booking.time;
             document.getElementById('editIdXe').value = booking.idXe || '';
@@ -225,25 +236,44 @@
         document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!confirm("Bạn có chắc chắn muốn cập nhật thông tin lịch hẹn này?")) return;
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const saveBtnText = document.getElementById('saveBtnText');
+            const saveBtnLoader = document.getElementById('saveBtnLoader');
+            
+            saveBtn.disabled = true;
+            saveBtnText.style.display = 'none';
+            saveBtnLoader.style.display = 'inline';
+            
             const id = document.getElementById('editId').value;
             const data = {
                 hoTenKH: document.getElementById('editHoTen').value,
                 soDT: document.getElementById('editSoDT').value,
+                email: document.getElementById('editEmail').value || null,
                 date: document.getElementById('editDate').value,
                 time: document.getElementById('editTime').value,
                 idXe: document.getElementById('editIdXe').value || null,
                 idPhuKien: document.getElementById('editIdPhuKien').value || null,
                 trangThai: parseInt(document.getElementById('editTrangThai').value)
             };
-            const res = await fetch('/private/booking/' + id, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            if (res.ok) {
-                alert('Cập nhật thành công!');
-                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-                loadBookings();
+            
+            try {
+                const res = await fetch('/private/booking/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    alert('Cập nhật thành công!');
+                    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+                    loadBookings();
+                } else {
+                    alert('Có lỗi xảy ra!');
+                }
+            } finally {
+                saveBtn.disabled = false;
+                saveBtnText.style.display = 'inline';
+                saveBtnLoader.style.display = 'none';
             }
         });
 
