@@ -3,7 +3,7 @@ let allData = [];
 document.addEventListener("DOMContentLoaded", loadData);
 
 async function loadData() {
-    const res = await fetch('/employee/category/loai-phu-kien');
+    const res = await fetch('/category/loai-phu-kien');
     allData = await res.json();
     renderData(allData);
 }
@@ -41,7 +41,7 @@ document.querySelector('.table-options input[type="search"]').addEventListener('
 document.getElementById("createForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const res = await fetch('/employee/category/loai-phu-kien', {
+    const res = await fetch('/category/loai-phu-kien', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -65,7 +65,7 @@ document.addEventListener("click", async (e) => {
     if (e.target.closest(".delete-btn")) {
         if (confirm("Xóa loại phụ kiện này?")) {
             const id = e.target.closest(".delete-btn").dataset.id;
-            const res = await fetch(`/employee/category/loai-phu-kien/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/category/loai-phu-kien/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 alert("Xóa thành công!");
                 loadData();
@@ -78,7 +78,7 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
-    const res = await fetch(`/employee/category/loai-phu-kien/${id}`, {
+    const res = await fetch(`/category/loai-phu-kien/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))

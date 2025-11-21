@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', loadData);
 
 async function loadData() {
-    const res = await fetch('/employee/nguyen-lieu');
+    const res = await fetch('/nguyen-lieu');
     const data = await res.json();
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = data.map(item => `
@@ -19,7 +19,7 @@ async function loadData() {
 document.getElementById('createForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    await fetch('/employee/nguyen-lieu', {
+    await fetch('/nguyen-lieu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -33,7 +33,7 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
-    await fetch(`/employee/nguyen-lieu/${id}`, {
+    await fetch(`/nguyen-lieu/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Object.fromEntries(formData))
@@ -50,7 +50,7 @@ function editItem(item) {
 
 async function deleteItem(id) {
     if (confirm('Xóa nguyên liệu này?')) {
-        await fetch(`/employee/nguyen-lieu/${id}`, { method: 'DELETE' });
+        await fetch(`/nguyen-lieu/${id}`, { method: 'DELETE' });
         loadData();
     }
 }

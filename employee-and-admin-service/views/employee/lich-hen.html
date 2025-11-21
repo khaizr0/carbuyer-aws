@@ -146,7 +146,7 @@
         let allBookings = [];
 
         async function loadBookings() {
-            const res = await fetch('/employee/booking/all');
+            const res = await fetch('/booking/all');
             allBookings = await res.json();
             renderTable(allBookings);
         }
@@ -197,7 +197,7 @@
         async function markDone(id) {
             if (confirm('Đánh dấu lịch hẹn này là hoàn thành?')) {
                 const booking = allBookings.find(b => b.id === id);
-                const res = await fetch('/employee/booking/' + id, {
+                const res = await fetch('/booking/' + id, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...booking, trangThai: 1 })
@@ -235,7 +235,7 @@
                 idPhuKien: document.getElementById('editIdPhuKien').value || null,
                 trangThai: parseInt(document.getElementById('editTrangThai').value)
             };
-            const res = await fetch('/employee/booking/' + id, {
+            const res = await fetch('/booking/' + id, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -249,7 +249,7 @@
 
         async function deleteBooking(id) {
             if (confirm('Bạn có chắc chắn muốn xóa lịch hẹn này?')) {
-                const res = await fetch('/employee/booking/' + id, { method: 'DELETE' });
+                const res = await fetch('/booking/' + id, { method: 'DELETE' });
                 if (res.ok) {
                     alert('Xóa thành công!');
                     loadBookings();

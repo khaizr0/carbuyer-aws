@@ -126,7 +126,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         async function loadReviews() {
-            const response = await fetch('/employee/review');
+            const response = await fetch('/review');
             const reviews = await response.json();
             const tbody = document.getElementById('review-table-body');
             tbody.innerHTML = reviews.map(r => `
@@ -145,7 +145,7 @@
         document.getElementById('createReviewForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            await fetch('/employee/review/create', {
+            await fetch('/review/create', {
                 method: 'POST',
                 body: formData
             });
@@ -155,7 +155,7 @@
         });
 
         async function editReview(id) {
-            const response = await fetch(`/employee/review/${id}`);
+            const response = await fetch(`/review/${id}`);
             const review = await response.json();
             document.getElementById('editReviewId').value = review.id;
             document.getElementById('editTenKH').value = review.tenKH;
@@ -172,14 +172,14 @@
             formData.append('noiDung', document.getElementById('editNoiDung').value);
             const fileInput = document.getElementById('editHinhAnh');
             if (fileInput.files[0]) formData.append('uploadImage', fileInput.files[0]);
-            await fetch(`/employee/review/${id}`, { method: 'PUT', body: formData });
+            await fetch(`/review/${id}`, { method: 'PUT', body: formData });
             bootstrap.Modal.getInstance(document.getElementById('editReviewModal')).hide();
             loadReviews();
         });
 
         async function deleteReview(id) {
             if (confirm('Xác nhận xóa?')) {
-                await fetch(`/employee/review/${id}`, { method: 'DELETE' });
+                await fetch(`/review/${id}`, { method: 'DELETE' });
                 loadReviews();
             }
         }
