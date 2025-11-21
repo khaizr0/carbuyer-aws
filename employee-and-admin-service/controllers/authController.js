@@ -61,7 +61,7 @@ const forgotPassword = async (req, res) => {
     const resetUrl = `${process.env.BASE_URL}/reset-password/${user.email}/${token}`;
 
     await sendResetPasswordEmail(user.email, resetUrl);
-    res.redirect('/email-sent-success');
+    res.redirect('/private/email-sent-success');
   } catch (error) {
     console.error('Error during forgot password:', error);
     res.status(500).send('Internal server error');

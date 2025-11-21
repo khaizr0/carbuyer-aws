@@ -26,7 +26,7 @@ router.get('/reset-password', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views','authentication', 'reset-password.html'));
 });
 
-router.get('/email-sent-success', (req, res) => {
+router.get('/private/email-sent-success', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views','authentication', 'email-sent-success.html'));
 });
 
