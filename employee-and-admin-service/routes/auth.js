@@ -19,11 +19,19 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/forgot', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views','authentication', 'forgot-password.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views','authentication', 'forgot-password.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace(/\/private\/Public/g, '/admin/Public');
+  res.send(html);
 });
 
 router.get('/reset-password', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views','authentication', 'reset-password.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views','authentication', 'reset-password.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace(/\/private\/Public/g, '/admin/Public');
+  res.send(html);
 });
 
 router.get('/private/email-sent-success', (req, res) => {
