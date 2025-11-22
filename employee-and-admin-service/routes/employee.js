@@ -6,47 +6,91 @@ const employeeAuth = require('../middlewares/employeeAuth');
 const checkAuth = employeeAuth;
 
 router.get('/san-pham', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'san-pham.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'san-pham.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/tin-tuc', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'tin-tuc.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'tin-tuc.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/lich-hen', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'lich-hen.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'lich-hen.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/danh-gia', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'danh-gia.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'danh-gia.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/slider', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'slider.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'slider.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/loai-phu-kien', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'loai-phu-kien.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'loai-phu-kien.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/thuong-hieu', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'thuong-hieu.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'thuong-hieu.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/kieu-dang', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'kieu-dang.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'kieu-dang.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/mau-xe', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'mau-xe.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'mau-xe.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/nguyen-lieu', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'nguyen-lieu.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'nguyen-lieu.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/categories', checkAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'views', 'employee', 'categories.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'employee', 'categories.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/dashboard', checkAuth, (req, res) => {

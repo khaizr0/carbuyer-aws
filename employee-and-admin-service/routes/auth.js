@@ -64,33 +64,25 @@ const employeeLogin = async (req, res) => {
     const { getUserByEmail } = require('../models/User');
     const { comparePassword } = require('../utils/crypto-helper');
     
-    console.log('Login attempt for:', userName);
     const user = await getUserByEmail(userName);
     
     if (!user) {
-      console.log('User not found:', userName);
       return res.status(400).send('User not found');
     }
     
-    console.log('User found:', user.email, 'Role:', user.PhanLoai);
-    console.log('Password hash format:', user.matKhau);
-    
     if (!comparePassword(password, user.matKhau)) {
-      console.log('Invalid password for:', userName);
       return res.status(400).send('Invalid password');
     }
     
     if (user.PhanLoai !== 1) {
-      console.log('Not authorized - Role:', user.PhanLoai);
       return res.status(403).send('Not authorized');
     }
     
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
-    console.log('Login successful for:', userName);
+    req.session.userName = user.hoTen;
     return res.redirect('/employee/san-pham');
   } catch (error) {
-    console.error('Employee login error:', error);
     return res.status(500).send('Internal server error: ' + error.message);
   }
 };
@@ -101,32 +93,25 @@ const adminLogin = async (req, res) => {
     const { getUserByEmail } = require('../models/User');
     const { comparePassword } = require('../utils/crypto-helper');
     
-    console.log('Admin login attempt for:', userName);
     const user = await getUserByEmail(userName);
     
     if (!user) {
-      console.log('User not found:', userName);
       return res.status(400).send('User not found');
     }
     
-    console.log('User found:', user.email, 'Role:', user.PhanLoai);
-    
     if (!comparePassword(password, user.matKhau)) {
-      console.log('Invalid password for:', userName);
       return res.status(400).send('Invalid password');
     }
     
     if (user.PhanLoai !== 0) {
-      console.log('Not authorized - Role:', user.PhanLoai);
       return res.status(403).send('Not authorized');
     }
     
     req.session.userId = user.id;
     req.session.userRole = user.PhanLoai;
-    console.log('Admin login successful for:', userName);
+    req.session.userName = user.hoTen;
     return res.redirect('/admin');
   } catch (error) {
-    console.error('Admin login error:', error);
     return res.status(500).send('Internal server error: ' + error.message);
   }
 };
