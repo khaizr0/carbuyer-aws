@@ -49,7 +49,11 @@ router.get('/admin', (req, res) => {
     req.session.destroy();
     return res.redirect('/admin/login');
   }
-  res.sendFile(path.join(__dirname, '..', 'views', 'admin', 'home.html'));
+  const fs = require('fs');
+  const htmlPath = path.join(__dirname, '..', 'views', 'admin', 'home.html');
+  let html = fs.readFileSync(htmlPath, 'utf8');
+  html = html.replace('Xin chào, ABC', `Xin chào, ${req.session.userName || 'User'}`);
+  res.send(html);
 });
 
 router.get('/admin/logout', (req, res) => {
